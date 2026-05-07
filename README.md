@@ -2,66 +2,118 @@
 
 # ⚡ VaroDashboard
 
-**A modern, highly customizable self-hosted dashboard**
+### Self-hosted dashboard with *total design control*
 
-Built with SvelteKit 2 + Svelte 5 (Runes) • Glassmorphism UI • Script Execution • 6 Themes
+**SvelteKit 2** · **Svelte 5 Runes** · **80+ CSS Variables** · **7 Themes** · **Script Engine**
+
+[![Built with Svelte](https://img.shields.io/badge/Svelte_5-Runes-FF3E00?style=flat-square&logo=svelte)](https://svelte.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178C6?style=flat-square&logo=typescript)](https://typescriptlang.org)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker)](https://docker.com)
+[![License](https://img.shields.io/badge/License-GPL--3.0-green?style=flat-square)](LICENSE)
+
+[Quick Start](#-quick-start) · [Configuration](#-configuration) · [Themes](#-theme-system) · [Dev Guide](#-developer-guide)
 
 </div>
 
 ---
 
-## 🎯 What is this?
+## 🎯 What Is This?
 
-A personal dashboard/homepage to replace [gethomepage/homepage](https://github.com/gethomepage/homepage) with **full design control**. Everything is customizable — themes, layout, colors, services, scripts — without restarting the server.
+VaroDashboard is a personal homepage/dashboard designed to replace tools like [Homepage](https://github.com/gethomepage/homepage), [Dashy](https://github.com/Lissy93/dashy), or [Homarr](https://github.com/ajnart/homarr) — with **zero design constraints**.
 
-### Why not use Homepage/Dashy/Homarr?
+Every pixel is configurable: colors, fonts, spacing, borders, shadows, glassmorphism, card styles, layouts — all via CSS variables and JSON configs. No YAML, no container restarts, no hardcoded limits.
 
-| Problem | VaroDashboard Solution |
-|---|---|
-| Homepage requires YAML editing + container restart | JSON config, changes apply instantly |
-| Limited design customization | 80+ CSS variables, custom themes, full glassmorphism |
-| No script execution | Execute scripts with parameters from the UI |
-| Widget constraints, hard-coded limits | Extensible component system |
-| Can't customize everything | Override ANY design token from config |
+### How It Compares
+
+| | Homepage | Dashy | **VaroDashboard** |
+|---|:---:|:---:|:---:|
+| Config format | YAML | YAML | **JSON** |
+| Restart to apply | Yes | Sometimes | **Never** |
+| Custom themes | Limited presets | CSS overrides | **80+ tokens + structural overrides** |
+| Font customizable | No | No | **Per-theme** |
+| Card style customizable | No | Partial | **Glass / Solid / Custom** |
+| Script execution | No | No | **Yes, with params** |
+| Runtime theme switching | Limited | Yes | **Yes, instant + persisted** |
+| Technology | Go + React | Vue 2 | **SvelteKit 2 + Svelte 5** |
+| Bundle size impact | ~300KB JS | ~500KB JS | **~40KB JS** (compiled) |
 
 ---
 
 ## ✨ Features
 
-- 🎨 **6 Built-in Themes** — Dark, Light, Midnight, Cyberpunk, Nord, Emerald
-- 🔧 **Fully Customizable** — Override any of the 80+ CSS variables from config
-- 📦 **Service Tiles** — Organized groups with live status indicators (HTTP ping)
-- ⚡ **Script Execution** — Launch scripts with parameters from the dashboard
-- 🔍 **Multi-Engine Search** — Google, DuckDuckGo, YouTube, GitHub, Reddit (`Ctrl+K` or `/`)
-- 🔖 **Bookmarks** — Organized bookmark groups
-- 🕐 **Live Clock** — Time and date display
-- 🎯 **Collapsible Groups** — Keep your dashboard organized
-- 📱 **Responsive** — Desktop, tablet, and mobile
-- 🐳 **Docker Ready** — Deploy in seconds
-- 🚀 **Lightning Fast** — Svelte compiles to vanilla JS, no runtime overhead
+<table>
+<tr><td>
+
+**🎨 7 Built-in Themes**
+Dark · Light · Midnight · Cyberpunk · Nord · Emerald · VaroServer
+
+</td><td>
+
+**⚙️ 80+ Design Tokens**
+Override any CSS variable per-theme: colors, fonts, spacing, shadows, borders
+
+</td></tr>
+<tr><td>
+
+**📦 Service Tiles**
+Grouped cards with live HTTP status indicators, color-coded icons, and glow effects
+
+</td><td>
+
+**⚡ Script Execution**
+Launch server scripts with parameterized forms — safely, with whitelist + sanitization
+
+</td></tr>
+<tr><td>
+
+**🔍 Multi-Engine Search**
+Google, DuckDuckGo, YouTube, GitHub, Reddit — `Ctrl+K` or `/` to focus, `Tab` to cycle
+
+</td><td>
+
+**🔖 Bookmark Groups**
+Organized link collections with category headers
+
+</td></tr>
+<tr><td>
+
+**📱 Responsive Layout**
+Desktop, tablet, and mobile — CSS Grid auto-fill adapts to any screen
+
+</td><td>
+
+**🐳 Docker Ready**
+Multi-stage Dockerfile, resource-capped compose, volume-mapped config
+
+</td></tr>
+</table>
 
 ---
 
 ## 🚀 Quick Start
 
-### Docker (Recommended)
+### Option 1: Docker (Recommended)
 
 ```bash
+git clone https://github.com/VaroTv7/varodashboard.git
+cd varodashboard
 docker compose up -d
 ```
 
-Open `http://localhost:3456`
+Dashboard at **`http://localhost:3456`**
 
-### From Source (Development)
+### Option 2: From Source
 
 ```bash
+git clone https://github.com/VaroTv7/varodashboard.git
+cd varodashboard
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`
+Dashboard at **`http://localhost:5173`**
 
-### Production Build
+### Option 3: Production Build
 
 ```bash
 npm run build
@@ -70,23 +122,49 @@ node build
 
 ---
 
-## 🏗️ Architecture & Tech Stack
+## 🏗️ Architecture
 
-| Layer | Technology | Why |
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        BROWSER                              │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐   │
+│  │ Services │ │ Scripts  │ │ Search   │ │ Theme System │   │
+│  │ Tiles    │ │ Tiles    │ │ Widget   │ │ 80+ CSS Vars │   │
+│  └────┬─────┘ └────┬─────┘ └──────────┘ └──────────────┘   │
+│       │             │                                        │
+├───────┼─────────────┼────────────────────────────────────────┤
+│       │  SvelteKit  │  Server                                │
+│  ┌────┴─────┐ ┌─────┴────┐ ┌────────────┐                   │
+│  │ /api/    │ │ /api/    │ │ /api/      │                   │
+│  │ status   │ │ scripts  │ │ config     │                   │
+│  │ (HTTP    │ │ (exec    │ │ (JSON R/W) │                   │
+│  │  ping)   │ │  engine) │ │            │                   │
+│  └────┬─────┘ └────┬─────┘ └─────┬──────┘                   │
+│       │             │             │                           │
+│       ▼             ▼             ▼                           │
+│  Your Services  Your Scripts   config/*.json                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Tech Stack
+
+| Layer | Technology | Rationale |
 |---|---|---|
-| **Framework** | SvelteKit 2 | Full-stack: SSR + API routes, file-based routing |
-| **UI** | Svelte 5 (Runes) | Signal-based reactivity (`$state`, `$derived`, `$effect`), compiles to vanilla JS |
-| **Language** | TypeScript 6 | Type safety everywhere |
-| **Styling** | Vanilla CSS + Custom Properties | Full control, runtime theme switching, no TailwindCSS dependency |
-| **Backend** | SvelteKit API Routes | No separate backend needed, Node.js access for scripts |
-| **Config** | JSON files | Easy to edit, version-controllable |
-| **Deployment** | Docker + Node adapter | Production-ready |
+| **Framework** | SvelteKit 2 | Full-stack (SSR + API), file-based routing, zero-config |
+| **UI Reactivity** | Svelte 5 Runes | `$state()`, `$derived()`, `$effect()` — compiles to vanilla JS, no Virtual DOM |
+| **Language** | TypeScript | Type safety on both client and server |
+| **Styling** | CSS Custom Properties | Full runtime control, no build-time utility classes, theme-agnostic |
+| **Fonts** | Inter + JetBrains Mono | Sans-serif default, monospace for VaroServer theme |
+| **Backend** | SvelteKit API Routes | Node.js server routes for config I/O, health checks, script execution |
+| **Config** | JSON files | Human-editable, no restart, version-controllable |
+| **Deploy** | Docker + node-adapter | Multi-stage build, ~50MB image, resource-capped |
 
-### Why Svelte 5 over React/Next.js?
-- **~40% smaller bundles** — compiles away the framework
-- **No Virtual DOM** — surgical DOM updates via signals
-- **Runes** — explicit reactivity with `$state()`, `$derived()`, `$effect()`
-- **Ideal for low-power hardware** (e.g., Intel N150)
+### Why Svelte 5?
+
+- **~40% smaller bundles** — the framework is compiled away
+- **No Virtual DOM** — surgical DOM updates through Runes signals
+- **Ideal for low-power hardware** — tested on Intel N150 with 256MB container limit
+- **Scoped styles** — each component's CSS is isolated at build time
 
 ---
 
@@ -94,89 +172,82 @@ node build
 
 ```
 varodashboard/
-├── config/                          # ← YOUR CONFIGURATION (edit these!)
-│   ├── settings.json                #   Dashboard settings, theme, search engines
-│   ├── services.json                #   Service tiles (groups + services)
-│   ├── bookmarks.json               #   Bookmark links
-│   └── scripts.json                 #   Executable scripts
+│
+├── config/                              ← EDIT THESE (your configuration)
+│   ├── settings.json                    Theme, title, layout, search engines
+│   ├── services.json                    Service tiles and groups
+│   ├── bookmarks.json                   Bookmark links
+│   └── scripts.json                     Executable scripts
 │
 ├── src/
-│   ├── app.html                     # HTML shell (Google Fonts, FOUC prevention)
-│   ├── app.css                      # 🎨 DESIGN SYSTEM — All CSS variables & themes
+│   ├── app.html                         HTML shell (fonts, FOUC prevention)
+│   ├── app.css                          🎨 DESIGN SYSTEM (80+ vars, 7 themes, animations)
 │   │
 │   ├── lib/
 │   │   ├── components/
-│   │   │   ├── layout/
-│   │   │   │   └── Header.svelte    # Top bar: logo, search, clock, theme switcher
+│   │   │   ├── layout/Header.svelte     Top bar: logo, search, clock, theme switcher
 │   │   │   ├── tiles/
-│   │   │   │   ├── ServiceTile.svelte   # Service card with status + glow effects
-│   │   │   │   ├── ScriptTile.svelte    # Script launcher with parameter modal
-│   │   │   │   └── BookmarkTile.svelte  # Compact bookmark link
+│   │   │   │   ├── ServiceTile.svelte   Service card with status + glow + hover
+│   │   │   │   ├── ScriptTile.svelte    Script launcher with parameter modal
+│   │   │   │   └── BookmarkTile.svelte  Compact bookmark link
 │   │   │   ├── widgets/
-│   │   │   │   ├── SearchWidget.svelte  # Multi-engine search (Ctrl+K)
-│   │   │   │   └── ClockWidget.svelte   # Live clock
+│   │   │   │   ├── SearchWidget.svelte  Multi-engine search (Ctrl+K, /, Tab)
+│   │   │   │   └── ClockWidget.svelte   Live clock with date
 │   │   │   ├── editor/
-│   │   │   │   └── ThemeSwitcher.svelte # Theme dropdown selector
+│   │   │   │   └── ThemeSwitcher.svelte Theme dropdown with swatches
 │   │   │   └── ui/
-│   │   │       ├── Modal.svelte     # Reusable modal dialog
-│   │   │       ├── Toast.svelte     # Notification toasts
-│   │   │       └── StatusDot.svelte # Online/offline indicator
+│   │   │       ├── Modal.svelte         Reusable modal dialog
+│   │   │       ├── Toast.svelte         Notification toasts
+│   │   │       └── StatusDot.svelte     Animated status indicator
 │   │   │
-│   │   └── server/                  # ⚙️ SERVER-SIDE CODE
-│   │       ├── config.ts            # JSON config reader/writer
-│   │       ├── scripts.ts           # Script execution engine (whitelist)
-│   │       └── status.ts            # Service HTTP health checker
+│   │   └── server/                      ⚙️ SERVER-ONLY CODE
+│   │       ├── config.ts                JSON config reader/writer with defaults
+│   │       ├── scripts.ts               Whitelist-based script execution engine
+│   │       └── status.ts                HTTP health checker (HEAD requests)
 │   │
 │   └── routes/
-│       ├── +layout.svelte           # Root layout (theme application)
-│       ├── +layout.server.ts        # Loads all configs on server
-│       ├── +page.svelte             # 🏠 MAIN DASHBOARD PAGE
+│       ├── +layout.svelte               Root layout (theme + CSS var injection)
+│       ├── +layout.server.ts            Server-side config loader
+│       ├── +page.svelte                 🏠 Main dashboard page
 │       └── api/
-│           ├── config/+server.ts    # GET/PUT config API
-│           ├── status/+server.ts    # POST service status checks
-│           └── scripts/+server.ts   # GET list / POST execute scripts
+│           ├── config/+server.ts        GET/PUT — read/write config files
+│           ├── status/+server.ts        POST — batch service status check
+│           └── scripts/+server.ts       GET/POST — list/execute scripts
 │
-├── static/
-│   └── favicon.svg                  # SVG favicon
-│
-├── Dockerfile                       # Multi-stage production build
-├── docker-compose.yml               # Docker deployment config
-├── svelte.config.js                 # SvelteKit config (Node adapter)
-├── vite.config.ts                   # Vite bundler config
-├── package.json                     # Dependencies & scripts
-└── tsconfig.json                    # TypeScript config
+├── Dockerfile                           Multi-stage production build
+├── docker-compose.yml                   Deploy with volumes + resource limits
+└── package.json                         Dependencies & npm scripts
 ```
 
 ---
 
-## ⚙️ Configuration Guide
+## ⚙️ Configuration
 
-All config lives in `config/`. Edit these files and refresh the browser — no restart needed.
+All config lives in `config/`. **Edit → Refresh → Done.** No restart needed.
 
-### `config/settings.json` — Global Settings
+### `settings.json` — Global Settings
 
 ```jsonc
 {
-  "title": "VaroDashboard",         // Dashboard title in header
-  "subtitle": "Your Command Center", // Subtitle under title
-  "theme": "dark",                   // Active theme: dark|light|midnight|cyberpunk|nord|emerald
-  "customTheme": {                   // Override ANY CSS variable
-    "--color-primary": "hsl(160, 80%, 50%)",
-    "--hue-primary": "160"
+  "title": "VaroDashboard",             // Header title
+  "subtitle": "Your Command Center",     // Header subtitle
+  "theme": "dark",                       // dark | light | midnight | cyberpunk | nord | emerald | varoserver
+  "customTheme": {                       // Override ANY CSS variable at runtime
+    "--color-primary": "#cba6f7",
+    "--hue-primary": "271"
   },
   "layout": {
-    "style": "grid",                 // Layout mode
-    "columns": "auto",               // Grid columns (auto = responsive)
-    "tileSize": "normal",            // Tile size
-    "showHeader": true,              // Show/hide header
-    "showSearch": true,              // Show/hide search bar
-    "showClock": true,               // Show/hide clock
-    "showGreeting": true,            // Show/hide greeting message
-    "groupsCollapsible": true        // Allow group collapse
+    "style": "grid",                     // Layout mode
+    "columns": "auto",                   // Grid columns (auto = responsive)
+    "showHeader": true,                  // Toggle header visibility
+    "showSearch": true,                  // Toggle search bar
+    "showClock": true,                   // Toggle clock widget
+    "showGreeting": true,                // Toggle greeting message
+    "groupsCollapsible": true            // Allow groups to collapse
   },
   "search": {
-    "defaultEngine": "google",       // Default search engine
-    "engines": {                     // Available engines (name → URL prefix)
+    "defaultEngine": "google",           // Default search provider
+    "engines": {                         // Add/remove/rename engines freely
       "google": "https://www.google.com/search?q=",
       "duckduckgo": "https://duckduckgo.com/?q=",
       "youtube": "https://www.youtube.com/results?search_query=",
@@ -187,24 +258,24 @@ All config lives in `config/`. Edit these files and refresh the browser — no r
 }
 ```
 
-### `config/services.json` — Service Tiles
+### `services.json` — Service Tiles
 
 ```jsonc
 {
   "groups": [
     {
-      "name": "Media",              // Group name displayed in header
-      "icon": "play-circle",        // Group icon (emoji or icon name)
-      "collapsed": false,            // Start collapsed?
+      "name": "Media",                   // Group header
+      "icon": "play-circle",             // Group icon
+      "collapsed": false,                // Start collapsed?
       "services": [
         {
-          "name": "Jellyfin",        // Service display name
-          "url": "http://192.168.1.100:8096",  // URL to open when clicked
-          "icon": "tv",             // Icon name (see Available Icons below)
-          "color": "#9b59b6",       // Accent color for this tile
-          "description": "Media Server",  // Subtitle text
-          "statusCheck": true,      // Enable HTTP ping status check
-          "openInNewTab": true      // Open in new tab on click
+          "name": "Jellyfin",            // Display name
+          "url": "http://192.168.1.100:8096",
+          "icon": "tv",                  // See icon list below
+          "color": "#9b59b6",            // Tile accent color
+          "description": "Media Server",
+          "statusCheck": true,           // Enable HTTP health ping
+          "openInNewTab": true
         }
       ]
     }
@@ -212,37 +283,37 @@ All config lives in `config/`. Edit these files and refresh the browser — no r
 }
 ```
 
-**Available Icons:** `tv`, `film`, `monitor`, `download`, `container`, `shield`, `activity`, `git-branch`, `lock`, `play-circle`, `server`, `wrench`, `refresh-cw`, `trash-2`, `gamepad-2`
+**Icons:** `tv` · `film` · `monitor` · `download` · `container` · `shield` · `activity` · `git-branch` · `lock` · `play-circle` · `server` · `wrench` · `refresh-cw` · `trash-2` · `gamepad-2`
 
-### `config/scripts.json` — Script Execution
+### `scripts.json` — Script Execution
 
 ```jsonc
 {
   "scripts": [
     {
-      "id": "search-game",           // Unique script ID
-      "name": "Search Game",          // Display name
+      "id": "search-game",              // Unique identifier
+      "name": "Search Game",
       "description": "Search for a game across multiple sources",
-      "icon": "gamepad-2",            // Icon
-      "color": "#9b59b6",             // Accent color
-      "command": "python3 scripts/search_game.py",  // Command to execute
-      "parameters": [                  // Parameters the user fills in
+      "icon": "gamepad-2",
+      "color": "#9b59b6",
+      "command": "python3 scripts/search_game.py",   // Server-side only
+      "parameters": [
         {
-          "name": "game",             // Parameter name (passed as --game "value")
-          "label": "Game Name",       // Label shown in form
-          "type": "text",             // Input type: text, number, etc.
-          "required": true,           // Required field?
+          "name": "game",                // Becomes --game "value"
+          "label": "Game Name",
+          "type": "text",
+          "required": true,
           "placeholder": "Enter game name..."
         }
       ],
-      "timeout": 30,                   // Max execution time in seconds
-      "confirm": false                 // Ask confirmation before running?
+      "timeout": 30,                     // Max seconds
+      "confirm": false                   // Require confirmation dialog?
     }
   ]
 }
 ```
 
-### `config/bookmarks.json` — Bookmark Links
+### `bookmarks.json` — Bookmark Links
 
 ```jsonc
 {
@@ -261,156 +332,173 @@ All config lives in `config/`. Edit these files and refresh the browser — no r
 
 ---
 
-## 🎨 Theme System — How It Works
+## 🎨 Theme System
 
-The theme engine uses **CSS Custom Properties** (CSS variables) organized in 3 tiers:
+The theming engine is the core differentiator. It uses **CSS Custom Properties** in 3 tiers, and themes can override **everything** — not just colors, but fonts, spacing, card styles, borders, and animations.
 
-### Tier 1: Primitive Tokens (Hue/Saturation)
-```css
---hue-primary: 235;     /* Primary color hue (0-360) */
---sat-primary: 70%;     /* Primary color saturation */
---hue-accent: 270;      /* Accent color hue */
---sat-accent: 80%;      /* Accent color saturation */
+### The 7 Built-in Themes
+
+| Theme | Base | Primary | Style |
+|---|---|---|---|
+| **Dark** | Deep blue `#0a0e1a` | Indigo `hsl(235,70%,65%)` | Glassmorphism, blur, gradients |
+| **Light** | Off-white `#eef0f6` | Indigo | Frosted glass on light |
+| **Midnight** | True dark `#0d1321` | Blue `hsl(220,75%)` | Ultra dark, subtle glows |
+| **Cyberpunk** | Purple-black `#1a0a2e` | Hot pink + Cyan | Neon glows, high contrast |
+| **Nord** | Arctic `#2e3440` | Muted blue | Calm, subdued, Nordic |
+| **Emerald** | Dark green `#0d1f17` | Green `hsl(155,70%)` | Nature, teal accents |
+| **VaroServer** | Catppuccin `#1e1e2e` | Mauve `#cba6f7` | **JetBrains Mono**, solid cards, compact, no glass |
+
+### Token Architecture
+
+```
+Tier 1: Primitives          Tier 2: Semantic              Tier 3: Components
+──────────────────          ────────────────              ──────────────────
+--hue-primary: 235    →     --color-primary: ...    →     --tile-min-width: 280px
+--sat-primary: 70%    →     --color-bg: ...         →     --header-height: 64px
+--hue-accent: 270     →     --glass-bg: ...         →     --radius-md: 12px
+                             --color-text: ...       →     --shadow-lg: ...
+                             --color-success: ...    →     --transition-normal: 250ms
 ```
 
-### Tier 2: Semantic Tokens (Colors, Surfaces, Glass)
+### What Can a Theme Change?
+
+| Category | Variables | Example |
+|---|---|---|
+| **Backgrounds** | `--color-bg`, `--color-bg-pattern`, `--color-surface-*` | Solid vs gradient vs none |
+| **Glass Effects** | `--glass-bg`, `--glass-blur`, `--glass-border`, `--glass-shadow` | Glassmorphism or solid cards |
+| **Colors** | `--color-primary`, `--color-accent`, `--color-text-*` | Full palette control |
+| **Status** | `--color-success`, `--color-error`, `--color-warning` | Custom indicator colors |
+| **Spacing** | `--space-xs` through `--space-3xl` | Compact vs spacious layout |
+| **Radius** | `--radius-xs` through `--radius-full` | Sharp vs rounded corners |
+| **Shadows** | `--shadow-sm` through `--shadow-xl`, `--shadow-glow` | Flat vs elevated |
+| **Typography** | `--font-xs` through `--font-4xl` | Size scale |
+| **Transitions** | `--transition-fast`, `--transition-normal`, `--transition-slow` | Animation speed |
+| **Layout** | `--header-height`, `--tile-min-width`, `--tile-gap` | Grid density |
+| **Font Family** | Via structural CSS overrides | Any Google Font |
+| **Card Style** | Via structural CSS overrides | Remove blur, change padding, borders |
+
+### Example: VaroServer Theme (Deep Customization)
+
+The VaroServer theme demonstrates the full extent of customization — it changes not just colors but the **entire visual language**:
+
 ```css
---color-bg: ...;              /* Page background */
---color-surface: ...;         /* Card/tile background */
---color-primary: ...;         /* Primary accent color */
---color-text: ...;            /* Main text color */
---color-text-secondary: ...;  /* Secondary text */
---glass-bg: ...;              /* Glassmorphism background */
---glass-blur: 24px;           /* Backdrop blur amount */
---glass-border: ...;          /* Glass border color */
+/* Variables: Catppuccin Mocha palette */
+[data-theme="varoserver"] {
+  --color-bg: #1e1e2e;
+  --color-surface: #181825;
+  --glass-bg: #181825;          /* Solid, not transparent */
+  --glass-blur: 0px;            /* No blur */
+  --color-primary: #cba6f7;     /* Mauve */
+  --color-accent: #89b4fa;      /* Blue */
+  --tile-min-width: 200px;      /* More compact grid */
+  --font-base: 0.7rem;          /* Smaller text */
+}
+
+/* Structural: JetBrains Mono font for everything */
+html[data-theme="varoserver"] * {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Structural: Solid cards, no glass effect */
+html[data-theme="varoserver"] .service-tile {
+  background: #181825 !important;
+  backdrop-filter: none !important;
+  border: 1px solid #313244 !important;
+}
 ```
 
-### Tier 3: Component Tokens (Spacing, Radius, Shadows)
-```css
---radius-md: 12px;            /* Border radius */
---shadow-lg: ...;             /* Box shadow */
---transition-normal: 250ms;   /* Animation duration */
---tile-min-width: 280px;      /* Min tile width in grid */
---header-height: 64px;        /* Header height */
-```
+### Creating Your Own Theme
 
-### Creating a Custom Theme
-
-**Method 1**: Override in `settings.json`
+**Method 1: Quick — CSS variable overrides in `settings.json`**
 ```json
 {
   "customTheme": {
     "--hue-primary": "160",
     "--color-bg": "hsl(160, 25%, 5%)",
-    "--color-surface": "hsla(160, 20%, 10%, 0.8)"
+    "--color-primary": "#50fa7b"
   }
 }
 ```
 
-**Method 2**: Add a new theme in `src/app.css`
-```css
-[data-theme="my-theme"] {
-  --hue-primary: 45;
-  --sat-primary: 90%;
-  --color-bg: hsl(30, 20%, 5%);
-  --color-surface: hsla(30, 15%, 10%, 0.8);
-  /* ... override any variable ... */
-}
-```
-Then add it to `ThemeSwitcher.svelte` in the `themes` array.
+**Method 2: Full — New theme block in `src/app.css`**
 
-### Full List of CSS Variables
+1. Add a `[data-theme="my-theme"]` block with variable overrides
+2. Optionally add `html[data-theme="my-theme"]` rules for structural changes (font, card style, etc.)
+3. Register it in `ThemeSwitcher.svelte`:
 
-The complete list is in `src/app.css`. There are **80+ variables** you can override, organized by:
-- Backgrounds & Surfaces (`--color-bg`, `--color-surface-*`)
-- Glass effects (`--glass-*`)
-- Colors (`--color-primary`, `--color-accent`, `--color-text-*`)
-- Status colors (`--color-success`, `--color-error`, `--color-warning`)
-- Spacing (`--space-xs` through `--space-3xl`)
-- Border radius (`--radius-xs` through `--radius-full`)
-- Shadows (`--shadow-sm` through `--shadow-xl`, `--shadow-glow`)
-- Transitions (`--transition-fast`, `--transition-normal`, `--transition-slow`)
-- Typography (`--font-xs` through `--font-4xl`)
-- Layout (`--header-height`, `--content-max-width`, `--tile-min-width`)
-
----
-
-## 🔧 How to Modify
-
-### Add a New Component
-
-1. Create `src/lib/components/tiles/MyTile.svelte`
-2. Import it in `src/routes/+page.svelte`
-3. Add it to the template
-
-### Add a New API Endpoint
-
-1. Create `src/routes/api/myendpoint/+server.ts`
-2. Export `GET`, `POST`, `PUT`, or `DELETE` functions
-3. Access from frontend with `fetch('/api/myendpoint')`
-
-### Add a New Widget
-
-1. Create `src/lib/components/widgets/MyWidget.svelte`
-2. Add it to `Header.svelte` or `+page.svelte`
-
-### Add a New Icon
-
-Edit the `iconMap` in `ServiceTile.svelte` — add an SVG path:
 ```ts
-const iconMap: Record<string, string> = {
-  'my-icon': 'M12 2L2 22h20L12 2z',  // SVG path data
-  // ...
-};
-```
-
-### Modify the Grid Layout
-
-In `src/app.css`, change:
-```css
-:root {
-  --tile-min-width: 280px;   /* Make tiles wider/narrower */
-  --tile-gap: 16px;          /* Space between tiles */
-  --content-max-width: 1600px; /* Dashboard max width */
-}
+const themes = [
+  // ...existing themes...
+  { id: 'my-theme', name: 'My Theme', color: '#hexcolor' }
+];
 ```
 
 ---
 
-## 🔒 Script Security
+## 🔒 Security
 
-Scripts use a **whitelist-only** approach:
-- Only scripts defined in `config/scripts.json` can be executed
-- Parameters are sanitized (shell characters stripped: `; & | \` $ ( ) { } [ ] ! # ~ < >`)
-- Each script has a configurable timeout
-- Scripts can require confirmation before execution
-- The `command` field is never exposed to the frontend API
+### Script Execution
+
+- **Whitelist-only** — only scripts defined in `config/scripts.json` can run
+- **Parameter sanitization** — shell metacharacters stripped: `` ; & | \ ` $ ( ) { } [ ] ! # ~ < > ``
+- **Configurable timeout** — prevent runaway processes
+- **Confirmation dialogs** — optional per-script
+- **Command hidden** — the `command` field is never sent to the frontend
+
+### API
+
+- Config API accepts only known file names (`settings`, `services`, `bookmarks`, `scripts`)
+- Status checks use `HEAD` requests with 5-second timeouts
+- No authentication by default — designed for local/VPN access
 
 ---
 
-## 📦 API Endpoints
+## 📦 API Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/api/config?name=settings` | Read a config file |
-| `PUT` | `/api/config?name=settings` | Write a config file |
-| `POST` | `/api/status` | Check service statuses (batch) |
-| `GET` | `/api/scripts` | List available scripts (no commands) |
-| `POST` | `/api/scripts` | Execute a script with params |
+| `PUT` | `/api/config?name=settings` | Write/update a config file |
+| `POST` | `/api/status` | Batch health check for services |
+| `GET` | `/api/scripts` | List scripts (commands excluded) |
+| `POST` | `/api/scripts` | Execute a script with parameters |
 
-### Status Check Example
+<details>
+<summary><strong>Example: Check service status</strong></summary>
+
 ```bash
-curl -X POST http://localhost:5173/api/status \
+curl -X POST http://localhost:3456/api/status \
   -H "Content-Type: application/json" \
   -d '{"services": [{"name": "Jellyfin", "url": "http://192.168.1.100:8096"}]}'
 ```
 
-### Script Execution Example
+Response:
+```json
+{
+  "results": [
+    { "name": "Jellyfin", "online": true, "responseTime": 42 }
+  ]
+}
+```
+</details>
+
+<details>
+<summary><strong>Example: Execute a script</strong></summary>
+
 ```bash
-curl -X POST http://localhost:5173/api/scripts \
+curl -X POST http://localhost:3456/api/scripts \
   -H "Content-Type: application/json" \
   -d '{"id": "search-game", "params": {"game": "Elden Ring"}}'
 ```
+
+Response:
+```json
+{
+  "success": true,
+  "output": "Found 3 results for 'Elden Ring'..."
+}
+```
+</details>
 
 ---
 
@@ -424,9 +512,8 @@ services:
     ports:
       - "3456:3000"
     volumes:
-      - ./config:/app/config        # Your config files
-      - ./scripts:/app/scripts      # Your scripts
-      # - /var/run/docker.sock:/var/run/docker.sock:ro  # Docker status
+      - ./config:/app/config          # Your JSON configs
+      - ./scripts:/app/scripts        # Your executable scripts
     restart: unless-stopped
     deploy:
       resources:
@@ -435,24 +522,200 @@ services:
           memory: 256M
 ```
 
+**Notes:**
+- Config changes in `./config/` are picked up on browser refresh
+- Scripts go in `./scripts/` and must be registered in `scripts.json`
+- Uncomment `docker.sock` mount for future Docker status integration
+
 ---
 
-## 🔍 Keyboard Shortcuts
+## ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
 |---|---|
 | `/` or `Ctrl+K` | Focus search bar |
-| `Tab` (in search) | Cycle search engines |
+| `Tab` | Cycle search engine (in search) |
 | `Escape` | Clear search / close modals |
+
+---
+
+## 🔧 Developer Guide
+
+### Adding a New Component
+
+```
+1. Create   src/lib/components/tiles/MyTile.svelte
+2. Import   in src/routes/+page.svelte
+3. Use      CSS variables for all colors/spacing (theme-compatible)
+```
+
+### Adding a New API Endpoint
+
+```
+1. Create   src/routes/api/myendpoint/+server.ts
+2. Export   GET, POST, PUT, or DELETE handler functions
+3. Call     fetch('/api/myendpoint') from the frontend
+```
+
+### Adding a New Icon
+
+In `ServiceTile.svelte`, add to the `iconMap`:
+
+```ts
+const iconMap: Record<string, string> = {
+  'my-icon': 'M12 2L2 22h20L12 2z',   // SVG path data (24x24 viewBox)
+};
+```
+
+### Adding a New Theme
+
+1. Add CSS variable block in `src/app.css` under `[data-theme="my-theme"]`
+2. For structural changes (font, card style), add `html[data-theme="my-theme"]` overrides
+3. Register in `src/lib/components/editor/ThemeSwitcher.svelte`
+
+### Modifying the Grid
+
+Override these variables in your theme or `settings.json`:
+
+```css
+--tile-min-width: 280px;       /* Tile minimum width */
+--tile-gap: 16px;              /* Gap between tiles */
+--content-max-width: 1600px;   /* Dashboard max width */
+```
+
+---
+
+## 📚 Full CSS Variable Reference
+
+<details>
+<summary><strong>Click to expand — all 80+ variables</strong></summary>
+
+**Backgrounds & Surfaces**
+```
+--color-bg                    Page background
+--color-bg-pattern            Background gradient overlay
+--color-surface               Card background (can be semi-transparent)
+--color-surface-solid         Card background (always opaque)
+--color-surface-hover         Card hover state
+--color-surface-active        Card active/pressed state
+--color-surface-raised        Elevated surface
+```
+
+**Glass Effects**
+```
+--glass-bg                    Glassmorphism background
+--glass-bg-hover              Glass hover state
+--glass-border                Glass border
+--glass-border-hover          Glass border on hover
+--glass-blur                  Backdrop blur amount (0px = solid)
+--glass-shadow                Glass box shadow
+```
+
+**Colors**
+```
+--color-primary               Primary accent color
+--color-primary-hover         Primary hover state
+--color-primary-glow          Primary glow (for shadows)
+--color-primary-subtle        Primary at ~10% opacity
+--color-accent                Secondary accent
+--color-accent-glow           Accent glow
+```
+
+**Text**
+```
+--color-text                  Primary text
+--color-text-secondary        Secondary text
+--color-text-muted            Muted/hint text
+--color-text-inverse          Text on primary backgrounds
+```
+
+**Status**
+```
+--color-success / --color-success-glow
+--color-warning / --color-warning-glow
+--color-error / --color-error-glow
+--color-info
+```
+
+**Borders**
+```
+--color-border                Default border
+--color-border-hover          Border on hover
+--color-border-focus          Border on focus
+```
+
+**Spacing**
+```
+--space-xs (4px) → --space-sm (8px) → --space-md (16px)
+→ --space-lg (24px) → --space-xl (32px) → --space-2xl (48px)
+→ --space-3xl (64px)
+```
+
+**Radius**
+```
+--radius-xs (6px) → --radius-sm (8px) → --radius-md (12px)
+→ --radius-lg (16px) → --radius-xl (20px) → --radius-2xl (24px)
+→ --radius-full (9999px)
+```
+
+**Shadows**
+```
+--shadow-sm / --shadow-md / --shadow-lg / --shadow-xl
+--shadow-glow                 Primary color glow
+--shadow-glow-accent          Accent color glow
+```
+
+**Transitions**
+```
+--transition-fast (150ms)
+--transition-normal (250ms)
+--transition-slow (400ms)
+--transition-spring (500ms, bouncy)
+--transition-theme (600ms, for theme changes)
+```
+
+**Typography**
+```
+--font-xs (0.7rem) → --font-sm (0.8rem) → --font-base (0.9rem)
+→ --font-md (1rem) → --font-lg (1.15rem) → --font-xl (1.35rem)
+→ --font-2xl (1.6rem) → --font-3xl (2rem) → --font-4xl (2.5rem)
+```
+
+**Layout**
+```
+--header-height (64px)
+--content-max-width (1600px)
+--tile-min-width (280px)
+--tile-gap (16px)
+```
+
+</details>
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Drag-and-drop tile reordering
+- [ ] Live theme editor with color pickers
+- [ ] Docker container status integration (`docker.sock`)
+- [ ] Weather widget
+- [ ] System monitor widget (CPU, RAM, disk)
+- [ ] WebSocket real-time updates
+- [ ] Settings page with full UI editor
+- [ ] Import/export themes
 
 ---
 
 ## 📜 License
 
-GPL-3.0
+[GPL-3.0](LICENSE)
 
 ---
 
 <div align="center">
-  Made with ❤️ by <a href="https://github.com/VaroTv7">VaroTv7</a>
+
+Made with ❤️ by [VaroTv7](https://github.com/VaroTv7)
+
+**⚡ VaroDashboard** — *Your infrastructure, your design.*
+
 </div>
