@@ -1,0 +1,44 @@
+{
+	"scripts": [
+		{
+			"id": "search-game",
+			"name": "Search Game",
+			"description": "Search for a game across multiple sources",
+			"icon": "gamepad-2",
+			"color": "#9b59b6",
+			"command": "python3 scripts/search_game.py",
+			"parameters": [
+				{
+					"name": "game",
+					"label": "Game Name",
+					"type": "text",
+					"required": true,
+					"placeholder": "Enter game name..."
+				}
+			],
+			"timeout": 30
+		},
+		{
+			"id": "system-update",
+			"name": "System Update",
+			"description": "Update all system packages",
+			"icon": "refresh-cw",
+			"color": "#2ecc71",
+			"command": "apt update && apt upgrade -y",
+			"parameters": [],
+			"timeout": 300,
+			"confirm": true
+		},
+		{
+			"id": "docker-cleanup",
+			"name": "Docker Cleanup",
+			"description": "Remove unused Docker images and volumes",
+			"icon": "trash-2",
+			"color": "#e74c3c",
+			"command": "docker system prune -f",
+			"parameters": [],
+			"timeout": 60,
+			"confirm": true
+		}
+	]
+}

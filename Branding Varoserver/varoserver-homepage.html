@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>varoserver — Homepage</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#1e1e2e;overflow:hidden;font-family:'JetBrains Mono',monospace;}
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#313244;border-radius:2px;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const C = {
+  bg:'#1e1e2e', mantle:'#181825', crust:'#11111b',
+  surface0:'#313244', surface1:'#45475a', overlay:'#6c7086',
+  subtext:'#a6adc8', text:'#cdd6f4',
+  mauve:'#cba6f7', blue:'#89b4fa', sapphire:'#74c7ec',
+  teal:'#94e2d5', green:'#a6e3a1', yellow:'#f9e2af',
+  peach:'#fab387', red:'#f38ba8', pink:'#f5c2e7',
+};
+
+// SVG icon paths (simple, geometric, recognisable)
+const ICONS = {
+  adguard: (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" stroke={c} strokeWidth="1.5" fill={c+'20'}/><path d="M9 12l2 2 4-4" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  npm:     (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="3" y="6" width="18" height="12" rx="2" stroke={c} strokeWidth="1.5"/><path d="M3 12h18M12 6v12" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  portainer:(c)=> <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="4" y="4" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5"/><rect x="14" y="4" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5"/><rect x="4" y="14" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5"/><rect x="14" y="14" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5" fill={c+'20'}/></svg>,
+  uptime:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="12" cy="12" r="8" stroke={c} strokeWidth="1.5"/><path d="M12 7v5l3 3" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  beszel:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><polyline points="2,14 6,10 10,14 14,8 18,12 22,6" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  wireguard:(c)=> <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 2L4 6v6c0 4 3.6 8 8 9 4.4-1 8-5 8-9V6L12 2z" stroke={c} strokeWidth="1.5" fill="none"/><circle cx="12" cy="12" r="2.5" fill={c}/></svg>,
+  diane:   (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" stroke={c} strokeWidth="1.5" fill={c+'15'}/><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.2"/><circle cx="12" cy="12" r="1" fill={c}/></svg>,
+  ollama:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="9" cy="10" r="3" stroke={c} strokeWidth="1.5"/><circle cx="15" cy="10" r="3" stroke={c} strokeWidth="1.5"/><path d="M6 17c0-2 1.8-3 6-3s6 1 6 3" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  n8n:     (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="5" cy="12" r="2.5" stroke={c} strokeWidth="1.3"/><circle cx="19" cy="12" r="2.5" stroke={c} strokeWidth="1.3"/><circle cx="12" cy="6" r="2.5" stroke={c} strokeWidth="1.3"/><circle cx="12" cy="18" r="2.5" stroke={c} strokeWidth="1.3"/><line x1="7.5" y1="12" x2="16.5" y2="12" stroke={c} strokeWidth="1.3"/><line x1="12" y1="8.5" x2="12" y2="15.5" stroke={c} strokeWidth="1.3"/></svg>,
+  telegram:(c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 5L2 12.5l7 1M21 5l-5 14-4.5-6L21 5zM9 13.5L14 9" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  ha:      (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M3 12L12 3l9 9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><path d="M5 10v9h5v-5h4v5h5v-9" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  matter:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="4" r="1.5" fill={c}/><circle cx="12" cy="20" r="1.5" fill={c}/><circle cx="4" cy="12" r="1.5" fill={c}/><circle cx="20" cy="12" r="1.5" fill={c}/><line x1="12" y1="6" x2="12" y2="9" stroke={c} strokeWidth="1.2"/><line x1="12" y1="15" x2="12" y2="18" stroke={c} strokeWidth="1.2"/><line x1="6" y1="12" x2="9" y2="12" stroke={c} strokeWidth="1.2"/><line x1="15" y1="12" x2="18" y2="12" stroke={c} strokeWidth="1.2"/></svg>,
+  nextcloud:(c)=> <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 6C9 6 6.5 8 6 11c-1.5.2-3 1.5-3 3.5C3 17 4.8 18 7 18h10c2.2 0 4-1 4-3.5 0-2-1.5-3.3-3-3.5C17.5 8 15 6 12 6z" stroke={c} strokeWidth="1.5"/></svg>,
+  paperless:(c)=> <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M6 4h9l4 4v12H6V4z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><path d="M15 4v4h4" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><line x1="9" y1="13" x2="16" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="9" y1="16" x2="13" y2="16" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  affine:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5"/></svg>,
+  outline: (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="3" y="4" width="18" height="16" rx="2" stroke={c} strokeWidth="1.5"/><line x1="7" y1="9" x2="17" y2="9" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="7" y1="13" x2="14" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  siftly:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M5 3h14l-5 8v7l-4-2v-5L5 3z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
+  jellyfin:(c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M8 5l9 7-9 7V5z" fill={c+'30'} stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
+  immich:  (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="3" y="5" width="18" height="14" rx="2" stroke={c} strokeWidth="1.5"/><circle cx="9" cy="11" r="2" stroke={c} strokeWidth="1.3"/><path d="M3 17l4-4 3 3 4-5 5 6" stroke={c} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  komga:   (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="5" y="3" width="11" height="14" rx="1" stroke={c} strokeWidth="1.5"/><rect x="7" y="6" width="11" height="14" rx="1" stroke={c} strokeWidth="1.5" fill={c+'15'}/></svg>,
+  romm:    (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="4" y="8" width="16" height="10" rx="2" stroke={c} strokeWidth="1.5"/><line x1="12" y1="8" x2="12" y2="5" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><circle cx="12" cy="4" r="1" fill={c}/><line x1="8" y1="13" x2="16" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><circle cx="9" cy="16" r="1" fill={c}/><circle cx="15" cy="16" r="1" fill={c}/></svg>,
+  minecraft:(c)=> <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="4" y="4" width="7" height="7" stroke={c} strokeWidth="1.5" fill={c+'15'}/><rect x="13" y="4" width="7" height="7" stroke={c} strokeWidth="1.5"/><rect x="4" y="13" width="7" height="7" stroke={c} strokeWidth="1.5"/><rect x="13" y="13" width="7" height="7" stroke={c} strokeWidth="1.5" fill={c+'15'}/></svg>,
+  foundry: (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><polygon points="12,3 20,8 20,16 12,21 4,16 4,8" stroke={c} strokeWidth="1.5" fill={c+'10'}/><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.2"/></svg>,
+  gamevault:(c)=> <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="2" y="7" width="20" height="13" rx="2" stroke={c} strokeWidth="1.5"/><path d="M8 3h8M12 3v4" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><line x1="8" y1="13.5" x2="16" y2="13.5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="12" y1="9.5" x2="12" y2="17.5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  promptvault:(c)=><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="4" y="3" width="16" height="18" rx="2" stroke={c} strokeWidth="1.5"/><path d="M8 8h4M8 12h8M8 16h5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><path d="M15 8l1.5 2-1.5 2" stroke={c} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  varologs:(c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="3" y="4" width="18" height="16" rx="2" stroke={c} strokeWidth="1.5"/><line x1="7" y1="9" x2="9" y2="9" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="11" y1="9" x2="17" y2="9" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="7" y1="13" x2="9" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="11" y1="13" x2="15" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  varodesign:(c)=><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><circle cx="12" cy="12" r="4" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="4" r="1.5" fill={c}/><circle cx="20" cy="12" r="1.5" fill={c}/><circle cx="12" cy="20" r="1.5" fill={c}/><circle cx="4" cy="12" r="1.5" fill={c}/></svg>,
+  cosas:   (c) => <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M3 6h18M3 12h18M3 18h18" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><circle cx="7" cy="6" r="1.5" fill={c}/><circle cx="7" cy="18" r="1.5" fill={c}/></svg>,
+};
+
+const SERVICES = {
+  infra: {
+    label:'Infraestructura', icon:'⬡', color:C.mauve,
+    items:[
+      {name:'AdGuard Home',  port:3000,  desc:'DNS · blocker',       mem:'~32MB',  status:'up',     ico:'adguard'},
+      {name:'NPM',           port:81,    desc:'Reverse proxy · SSL', mem:'~85MB',  status:'up',     ico:'npm'},
+      {name:'Portainer',     port:9000,  desc:'Docker manager',      mem:'~60MB',  status:'up',     ico:'portainer'},
+      {name:'Uptime Kuma',   port:3001,  desc:'Monitorización',      mem:'~120MB', status:'up',     ico:'uptime'},
+      {name:'Beszel',        port:8090,  desc:'Métricas sistema',    mem:'~40MB',  status:'up',     ico:'beszel'},
+      {name:'WireGuard',     port:51821, desc:'VPN · WG-Easy',       mem:'~7MB',   status:'up',     ico:'wireguard'},
+    ]
+  },
+  ai: {
+    label:'IA & Automatización', icon:'◎', color:C.blue,
+    items:[
+      {name:'Diane',         port:18789, desc:'OpenClaw · Gemma 4',  mem:'~746MB', status:'up',     ico:'diane', special:'diane'},
+      {name:'Ollama Local',  port:11434, desc:'Modelos ligeros',     mem:'~113MB', status:'up',     ico:'ollama'},
+      {name:'n8n',           port:5678,  desc:'Automatizaciones',    mem:'~92MB',  status:'up',     ico:'n8n'},
+      {name:'Claude Bot',    port:null,  desc:'@varocualdecode_bot',  mem:'~50MB',  status:'up',     ico:'telegram'},
+    ]
+  },
+  smarthome: {
+    label:'Smart Home', icon:'⌂', color:C.green,
+    items:[
+      {name:'Home Assistant',port:8123,  desc:'Domótica · host mode', mem:'~400MB', status:'up',    ico:'ha'},
+      {name:'Matter Server', port:null,  desc:'Thread · Avahi mDNS',  mem:'~30MB',  status:'paused',ico:'matter'},
+    ]
+  },
+  prod: {
+    label:'Productividad', icon:'◫', color:C.sapphire,
+    items:[
+      {name:'Nextcloud',     port:8088,  desc:'Cloud storage',       mem:'~200MB', status:'up',     ico:'nextcloud'},
+      {name:'Paperless-NGX', port:8000,  desc:'Gestión documentos',  mem:'~382MB', status:'up',     ico:'paperless'},
+      {name:'Affine',        port:3010,  desc:'Notas colaborativas', mem:'~171MB', status:'up',     ico:'affine'},
+      {name:'Outline',       port:3002,  desc:'Wiki homelab',        mem:'~80MB',  status:'up',     ico:'outline'},
+      {name:'Siftly',        port:3060,  desc:'Bookmarks · Claude',  mem:'~60MB',  status:'up',     ico:'siftly'},
+    ]
+  },
+  media: {
+    label:'Media', icon:'▶', color:C.peach,
+    items:[
+      {name:'Jellyfin',      port:8096,  desc:'Media server · host', mem:'~220MB', status:'up',     ico:'jellyfin'},
+      {name:'Immich',        port:2283,  desc:'Fotos · SSD local',   mem:'~300MB', status:'up',     ico:'immich'},
+      {name:'Komga',         port:25600, desc:'Cómics',              mem:'~90MB',  status:'up',     ico:'komga'},
+      {name:'RomM',          port:8980,  desc:'ROMs manager',        mem:'~111MB', status:'up',     ico:'romm'},
+    ]
+  },
+  gaming: {
+    label:'Gaming', icon:'◈', color:C.yellow,
+    items:[
+      {name:'MC Survival',   port:25565, desc:'Paper · 1.21',        mem:'~2GB',   status:'up',     ico:'minecraft'},
+      {name:'MC Cobblemon',  port:25566, desc:'Cobblemon mod',        mem:'~2GB',   status:'up',     ico:'minecraft'},
+      {name:'Foundry VTT',   port:30000, desc:'TTRPG · tabletop',    mem:'~79MB',  status:'up',     ico:'foundry'},
+      {name:'GameVault',     port:8087,  desc:'Game library',        mem:'~86MB',  status:'up',     ico:'gamevault'},
+    ]
+  },
+  apps: {
+    label:'Varo Apps', icon:'◇', color:C.pink,
+    items:[
+      {name:'VaroPromptVault',port:8091, desc:'Prompt library',      mem:'~52MB',  status:'up',     ico:'promptvault'},
+      {name:'VaroLogs',       port:8400, desc:'Log viewer',          mem:'~33MB',  status:'up',     ico:'varologs'},
+      {name:'VaroDesign',     port:8086, desc:'Design renders',      mem:'~1MB',   status:'up',     ico:'varodesign'},
+      {name:'Cosas en Casa',  port:8110, desc:'Lista del hogar',     mem:'~19MB',  status:'up',     ico:'cosas'},
+    ]
+  },
+};
+
+const ALL_KEY = 'all';
+
+// V constellation logo
+function VLogo({size=32, color=C.mauve, aL=C.blue, aR=C.green}) {
+  const n = [{x:6,y:8,r:3.5,c:color},{x:17,y:26,r:2.5,c:color,o:0.75},{x:28,y:48,r:4,c:aL},{x:39,y:26,r:2.5,c:color,o:0.75},{x:50,y:8,r:3.5,c:aR},{x:11,y:17,r:1.5,c:color,o:0.45},{x:23,y:37,r:1.5,c:aL,o:0.45},{x:33,y:37,r:1.5,c:aL,o:0.45},{x:45,y:17,r:1.5,c:aR,o:0.45}];
+  const e = [[0,5],[5,1],[1,6],[6,2],[4,8],[8,3],[3,7],[7,2]];
+  return (
+    <svg width={size} height={size} viewBox="-8 0 72 64" fill="none">
+      {e.map(([a,b],i)=>(<line key={i} x1={n[a].x} y1={n[a].y} x2={n[b].x} y2={n[b].y} stroke={n[a].c} strokeWidth="1.2" opacity="0.6"/>))}
+      {n.map((nd,i)=>(<circle key={i} cx={nd.x} cy={nd.y} r={nd.r} fill={nd.c} opacity={nd.o??1}/>))}
+    </svg>
+  );
+}
+
+function StatusDot({status}) {
+  const col = status==='up'?C.green:status==='paused'?C.overlay:C.red;
+  return <div style={{width:7,height:7,borderRadius:'50%',background:col,boxShadow:status==='up'?`0 0 6px ${col}`:undefined,flexShrink:0}}/>;
+}
+
+function ServiceCard({item, catColor}) {
+  const [hovered, setHovered] = React.useState(false);
+  const iconFn = ICONS[item.ico];
+  return (
+    <div
+      onMouseEnter={()=>setHovered(true)}
+      onMouseLeave={()=>setHovered(false)}
+      style={{
+        background: hovered ? C.surface0 : C.mantle,
+        borderRadius:10,
+        padding:'14px 16px',
+        border:`1px solid ${hovered ? catColor+'35' : C.surface0}`,
+        cursor:'pointer',
+        transition:'all 0.15s ease',
+        display:'flex',
+        flexDirection:'column',
+        gap:10,
+        transform: hovered ? 'translateY(-1px)' : 'none',
+        boxShadow: hovered ? `0 4px 20px rgba(0,0,0,0.3),0 0 0 1px ${catColor}20` : 'none',
+      }}>
+      <div style={{display:'flex',alignItems:'center',gap:10}}>
+        {/* icon badge */}
+        <div style={{
+          width:36,height:36,borderRadius:8,flexShrink:0,
+          background:`${catColor}12`,
+          border:`1px solid ${catColor}25`,
+          display:'flex',alignItems:'center',justifyContent:'center',
+          transition:'border-color 0.15s',
+          ...(hovered?{borderColor:catColor+'50',background:`${catColor}20`}:{})
+        }}>
+          {iconFn ? iconFn(hovered ? catColor : catColor+'99') : (
+            <span style={{color:catColor,fontSize:12,fontWeight:700}}>{item.name.slice(0,2).toUpperCase()}</span>
+          )}
+        </div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{color:C.text,fontSize:11,fontWeight:600,letterSpacing:0.3,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+            {item.name}
+          </div>
+          <div style={{color:C.overlay,fontSize:9,marginTop:1,letterSpacing:0.3}}>{item.desc}</div>
+        </div>
+        <StatusDot status={item.status}/>
+      </div>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{background:`${catColor}15`,borderRadius:20,padding:'1px 8px',color:catColor,fontSize:8,letterSpacing:0.5,border:`1px solid ${catColor}25`}}>
+          {item.port ? `:${item.port}` : 'polling'}
+        </div>
+        <div style={{color:C.surface1,fontSize:8}}>{item.mem}</div>
+      </div>
+    </div>
+  );
+}
+
+function useTime() {
+  const [t, setT] = React.useState(new Date());
+  React.useEffect(() => {
+    const id = setInterval(() => setT(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return t;
+}
+
+function useAnimatedStats() {
+  const [stats, setStats] = React.useState({cpu:62,ram:51,nas:38,uptime:'22d 14h'});
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      setStats(s => ({
+        ...s,
+        cpu: Math.max(20, Math.min(90, s.cpu + (Math.random()-0.5)*4)),
+        ram: Math.max(30, Math.min(80, s.ram + (Math.random()-0.5)*2)),
+      }));
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
+  return stats;
+}
+
+function App() {
+  const [activeCategory, setActiveCategory] = React.useState(() =>
+    localStorage.getItem('vs-hp-cat') || ALL_KEY
+  );
+  const time = useTime();
+  const stats = useAnimatedStats();
+  const [tweakOpen, setTweakOpen] = React.useState(false);
+  const [tweakCompact, setTweakCompact] = React.useState(false);
+
+  React.useEffect(() => {
+    localStorage.setItem('vs-hp-cat', activeCategory);
+  }, [activeCategory]);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweakOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweakOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const visibleCategories = activeCategory === ALL_KEY
+    ? Object.entries(SERVICES)
+    : Object.entries(SERVICES).filter(([k]) => k === activeCategory);
+
+  const totalServices = Object.values(SERVICES).reduce((a,cat)=>a+cat.items.length, 0);
+  const upServices = Object.values(SERVICES).reduce((a,cat)=>a+cat.items.filter(i=>i.status==='up').length, 0);
+
+  const StatBar = ({label, value, color}) => (
+    <div style={{display:'flex',alignItems:'center',gap:6}}>
+      <span style={{color:C.overlay,fontSize:8,letterSpacing:1,width:28}}>{label}</span>
+      <div style={{width:48,height:3,background:C.surface0,borderRadius:2,overflow:'hidden'}}>
+        <div style={{height:'100%',width:`${value}%`,background:color,borderRadius:2,transition:'width 1.5s ease'}}/>
+      </div>
+      <span style={{color,fontSize:8,width:28}}>{Math.round(value)}%</span>
+    </div>
+  );
+
+  const timeStr = time.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const dateStr = time.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+
+  const gridCols = tweakCompact
+    ? 'repeat(auto-fill, minmax(150px, 1fr))'
+    : 'repeat(auto-fill, minmax(190px, 1fr))';
+
+  return (
+    <div style={{width:'100vw',height:'100vh',background:C.bg,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+
+      {/* TOP BAR */}
+      <div style={{height:52,background:C.crust,borderBottom:`1px solid ${C.surface0}`,display:'flex',alignItems:'center',padding:'0 20px',gap:16,flexShrink:0}}>
+        {/* logo */}
+        <div style={{display:'flex',alignItems:'center',gap:8,paddingRight:16,borderRight:`1px solid ${C.surface0}`}}>
+          <VLogo size={24}/>
+          <span style={{color:C.text,fontSize:12,fontWeight:600,letterSpacing:2}}>varoserver</span>
+        </div>
+
+        {/* stats */}
+        <div style={{display:'flex',gap:14,alignItems:'center'}}>
+          <StatBar label="CPU" value={stats.cpu} color={C.mauve}/>
+          <StatBar label="RAM" value={stats.ram} color={C.blue}/>
+          <StatBar label="NAS" value={stats.nas} color={C.green}/>
+        </div>
+
+        {/* divider */}
+        <div style={{width:1,height:20,background:C.surface0}}/>
+
+        {/* uptime + services */}
+        <div style={{display:'flex',gap:10,alignItems:'center'}}>
+          <div style={{borderRadius:20,padding:'2px 10px',border:`1px solid ${C.green}30`,color:C.green,fontSize:8,background:`${C.green}0d`,letterSpacing:0.5}}>● NOMINAL</div>
+          <span style={{color:C.overlay,fontSize:8}}>{upServices}/{totalServices} servicios</span>
+          <span style={{color:C.surface1,fontSize:8}}>⬆ {stats.uptime}</span>
+        </div>
+
+        {/* spacer */}
+        <div style={{flex:1}}/>
+
+        {/* time */}
+        <div style={{textAlign:'right'}}>
+          <div style={{color:C.subtext,fontSize:11,fontWeight:600,letterSpacing:1,fontVariantNumeric:'tabular-nums'}}>{timeStr}</div>
+          <div style={{color:C.overlay,fontSize:8,letterSpacing:1}}>{dateStr} · varoserver</div>
+        </div>
+
+        {/* ip */}
+        <div style={{borderLeft:`1px solid ${C.surface0}`,paddingLeft:14}}>
+          <div style={{color:C.overlay,fontSize:8,letterSpacing:1}}>192.168.1.56</div>
+          <div style={{color:C.surface1,fontSize:7,letterSpacing:1}}>Intel N150 · 16GB</div>
+        </div>
+      </div>
+
+      <div style={{flex:1,display:'flex',overflow:'hidden'}}>
+
+        {/* SIDEBAR */}
+        <div style={{width:196,background:C.mantle,borderRight:`1px solid ${C.surface0}`,display:'flex',flexDirection:'column',padding:'16px 10px',gap:4,flexShrink:0}}>
+          {/* all */}
+          <SidebarItem
+            label="Todos los servicios"
+            icon="◉"
+            color={C.mauve}
+            count={totalServices}
+            active={activeCategory===ALL_KEY}
+            onClick={()=>setActiveCategory(ALL_KEY)}
+          />
+          <div style={{height:1,background:C.surface0,margin:'6px 0'}}/>
+
+          {Object.entries(SERVICES).map(([key,cat])=>(
+            <SidebarItem key={key}
+              label={cat.label}
+              icon={cat.icon}
+              color={cat.color}
+              count={cat.items.length}
+              active={activeCategory===key}
+              onClick={()=>setActiveCategory(key)}
+            />
+          ))}
+
+          {/* diane status at bottom */}
+          <div style={{marginTop:'auto',background:`${C.blue}08`,borderRadius:8,padding:'10px 12px',border:`1px solid ${C.blue}20`}}>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
+              <VLogo size={18} color={C.blue} aL={C.blue} aR={C.sapphire}/>
+              <span style={{color:C.blue,fontSize:10,fontWeight:600,letterSpacing:1}}>diane</span>
+              <div style={{width:5,height:5,borderRadius:'50%',background:C.green,boxShadow:`0 0 5px ${C.green}`,marginLeft:'auto'}}/>
+            </div>
+            <div style={{color:C.overlay,fontSize:8,lineHeight:1.5}}>Gemma 4 26B<br/>192.168.1.136:11434</div>
+          </div>
+        </div>
+
+        {/* MAIN */}
+        <div style={{flex:1,overflow:'auto',padding:'20px 24px'}}>
+          {visibleCategories.map(([key,cat])=>(
+            <div key={key} style={{marginBottom:28}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+                <span style={{color:cat.color,fontSize:14}}>{cat.icon}</span>
+                <span style={{color:C.text,fontSize:12,fontWeight:600,letterSpacing:1}}>{cat.label}</span>
+                <div style={{height:1,flex:1,background:C.surface0,marginLeft:8}}/>
+                <span style={{color:C.overlay,fontSize:8,letterSpacing:1}}>{cat.items.filter(i=>i.status==='up').length}/{cat.items.length} up</span>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:gridCols,gap:10}}>
+                {cat.items.map(item=>(
+                  <ServiceCard key={item.name} item={item} catColor={cat.color}/>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* TWEAKS */}
+      {tweakOpen && (
+        <div style={{position:'fixed',bottom:20,right:20,background:C.crust,border:`1px solid ${C.mauve}40`,borderRadius:10,padding:18,zIndex:9999,width:220,boxShadow:'0 8px 40px rgba(0,0,0,0.6)'}}>
+          <div style={{color:C.mauve,fontSize:11,fontWeight:600,letterSpacing:2,marginBottom:14}}>TWEAKS</div>
+          <div style={{marginBottom:12}}>
+            <div style={{color:C.overlay,fontSize:9,letterSpacing:1,marginBottom:6}}>VISTA DE CARDS</div>
+            <div style={{display:'flex',gap:6}}>
+              {[['Normal',false],['Compacta',true]].map(([l,v])=>(
+                <button key={l} onClick={()=>setTweakCompact(v)}
+                  style={{flex:1,padding:'4px 0',borderRadius:4,border:`1px solid ${tweakCompact===v?C.mauve:'rgba(255,255,255,0.1)'}`,background:tweakCompact===v?`${C.mauve}20`:'transparent',color:tweakCompact===v?C.mauve:C.overlay,fontSize:9,cursor:'pointer'}}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{color:C.overlay,fontSize:8,lineHeight:1.6,borderTop:`1px solid ${C.surface0}`,paddingTop:10,marginTop:4}}>
+            Stats CPU/RAM animados en vivo<br/>
+            Sidebar filtra por categoría
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SidebarItem({label,icon,color,count,active,onClick}) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={()=>setHov(true)}
+      onMouseLeave={()=>setHov(false)}
+      style={{
+        padding:'7px 10px',borderRadius:7,cursor:'pointer',
+        background: active ? `${color}15` : hov ? `${C.surface0}80` : 'transparent',
+        border: `1px solid ${active ? color+'30' : 'transparent'}`,
+        display:'flex',alignItems:'center',gap:8,
+        transition:'all 0.12s',
+      }}>
+      <span style={{color: active||hov ? color : C.overlay,fontSize:11,width:16,textAlign:'center'}}>{icon}</span>
+      <span style={{color: active ? color : hov ? C.subtext : C.overlay,fontSize:10,flex:1,letterSpacing:0.3,fontWeight:active?600:400}}>{label}</span>
+      <span style={{color:C.surface1,fontSize:8,background:C.surface0,borderRadius:10,padding:'1px 6px'}}>{count}</span>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

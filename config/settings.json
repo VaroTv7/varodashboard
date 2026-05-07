@@ -1,0 +1,31 @@
+{
+	"title": "VaroDashboard",
+	"subtitle": "Your Command Center",
+	"language": "en",
+	"background": {
+		"type": "gradient",
+		"value": ""
+	},
+	"layout": {
+		"style": "grid",
+		"columns": "auto",
+		"tileSize": "normal",
+		"showHeader": true,
+		"showSearch": true,
+		"showClock": true,
+		"showGreeting": true,
+		"groupsCollapsible": true
+	},
+	"theme": "dark",
+	"customTheme": {},
+	"search": {
+		"defaultEngine": "google",
+		"engines": {
+			"google": "https://www.google.com/search?q=",
+			"duckduckgo": "https://duckduckgo.com/?q=",
+			"youtube": "https://www.youtube.com/results?search_query=",
+			"github": "https://github.com/search?q=",
+			"reddit": "https://www.reddit.com/search/?q="
+		}
+	}
+}

@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>varoserver — Exploración de Branding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="design-canvas.jsx" type="text/babel"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+/* ─── DIRECTION 1: TERMINAL / MATRIX ─── */
+function TerminalCard() {
+  const [blink, setBlink] = React.useState(true);
+  React.useEffect(() => {
+    const t = setInterval(() => setBlink(b => !b), 530);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div style={{width:'100%',height:'100%',background:'#080d08',display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",padding:32,gap:28,position:'relative',overflow:'hidden'}}>
+      {/* scanlines overlay */}
+      <div style={{position:'absolute',inset:0,background:'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.025) 2px,rgba(0,255,65,0.025) 4px)',pointerEvents:'none',zIndex:10}}/>
+      
+      {/* logo */}
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:14,paddingTop:8}}>
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+          <rect x="1" y="1" width="70" height="70" rx="4" stroke="#00ff41" strokeWidth="1.5" strokeDasharray="8 4"/>
+          <text x="36" y="48" textAnchor="middle" fill="#00ff41" fontSize="38" fontWeight="700" fontFamily="'JetBrains Mono',monospace">V</text>
+          <circle cx="36" cy="36" r="33" stroke="#00ff41" strokeWidth="0.4" opacity="0.3"/>
+        </svg>
+        <div style={{textAlign:'center'}}>
+          <div style={{color:'#00ff41',fontSize:22,fontWeight:700,letterSpacing:4,textTransform:'uppercase'}}>varoserver</div>
+          <div style={{color:'rgba(0,255,65,0.4)',fontSize:10,letterSpacing:6,marginTop:3}}>INFRASTRUCTURE v22.8</div>
+        </div>
+      </div>
+
+      {/* palette */}
+      <div style={{display:'flex',gap:6}}>
+        {[['#00ff41','--green'],['#003d10','--dark'],['#0aff7a','--bright'],['#080d08','--void'],['#c8ffd8','--mist']].map(([c,n])=>(
+          <div key={c} style={{flex:1,display:'flex',flexDirection:'column',gap:4,alignItems:'center'}}>
+            <div style={{width:'100%',height:28,background:c,borderRadius:2,border:'1px solid rgba(0,255,65,0.2)'}}/>
+            <div style={{color:'rgba(0,255,65,0.5)',fontSize:8,letterSpacing:1}}>{n}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* type sample */}
+      <div style={{border:'1px solid rgba(0,255,65,0.2)',borderRadius:3,padding:14,background:'rgba(0,255,65,0.03)'}}>
+        <div style={{color:'rgba(0,255,65,0.4)',fontSize:9,letterSpacing:3,marginBottom:8}}>TIPOGRAFÍA</div>
+        <div style={{color:'#00ff41',fontSize:16,fontWeight:700,letterSpacing:2}}>VAROSERVER</div>
+        <div style={{color:'rgba(0,255,65,0.6)',fontSize:11,marginTop:4,letterSpacing:1}}>JetBrains Mono — Sistema</div>
+        <div style={{color:'rgba(0,255,65,0.5)',fontSize:10,marginTop:6,lineHeight:1.6}}>
+          <span style={{color:'rgba(0,255,65,0.3)'}}>$ </span>uptime 22d 14h — nominal<br/>
+          <span style={{color:'rgba(0,255,65,0.3)'}}>$ </span>services: 42 running{blink?'▋':' '}
+        </div>
+      </div>
+
+      {/* UI sample */}
+      <div style={{border:'1px solid rgba(0,255,65,0.2)',borderRadius:3,padding:14,background:'rgba(0,255,65,0.02)',flex:1}}>
+        <div style={{color:'rgba(0,255,65,0.4)',fontSize:9,letterSpacing:3,marginBottom:10}}>COMPONENTE — STATUS BADGE</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+          {[['🟢 NOMINAL','#00ff41'],['🔒 BLOQUEADO','#0aff7a'],['⚡ ALERTA','#ffcc00'],['💀 OFFLINE','#ff4444']].map(([t,c])=>(
+            <div key={t} style={{border:`1px solid ${c}40`,borderRadius:2,padding:'3px 8px',color:c,fontSize:9,letterSpacing:1,fontWeight:600}}>{t}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* diane sub-brand */}
+      <div style={{borderTop:'1px solid rgba(0,255,65,0.15)',paddingTop:16}}>
+        <div style={{color:'rgba(0,255,65,0.3)',fontSize:9,letterSpacing:3,marginBottom:8}}>SUB-MARCA — DIANE</div>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:32,height:32,borderRadius:'50%',border:'1.5px solid #7df9ff',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6" stroke="#7df9ff" strokeWidth="1.5"/>
+              <circle cx="8" cy="8" r="2" fill="#7df9ff"/>
+              <line x1="8" y1="2" x2="8" y2="0" stroke="#7df9ff" strokeWidth="1.5"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{color:'#7df9ff',fontSize:12,fontWeight:600,letterSpacing:2}}>DIANE</div>
+            <div style={{color:'rgba(125,249,255,0.5)',fontSize:9,letterSpacing:1}}>Engineering Partner · OpenClaw</div>
+          </div>
+          <div style={{marginLeft:'auto',background:'rgba(125,249,255,0.1)',border:'1px solid rgba(125,249,255,0.3)',borderRadius:2,padding:'2px 7px',color:'#7df9ff',fontSize:8,letterSpacing:1}}>ELITE</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── DIRECTION 2: CYBERPUNK NEON ─── */
+function CyberpunkCard() {
+  return (
+    <div style={{width:'100%',height:'100%',background:'#07000f',display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",padding:32,gap:26,position:'relative',overflow:'hidden'}}>
+      {/* bg grid */}
+      <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(155,48,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(155,48,255,0.06) 1px,transparent 1px)',backgroundSize:'24px 24px',pointerEvents:'none'}}/>
+      {/* corner accents */}
+      <div style={{position:'absolute',top:0,left:0,width:40,height:40,borderTop:'2px solid #9B30FF',borderLeft:'2px solid #9B30FF',pointerEvents:'none'}}/>
+      <div style={{position:'absolute',bottom:0,right:0,width:40,height:40,borderBottom:'2px solid #00D4FF',borderRight:'2px solid #00D4FF',pointerEvents:'none'}}/>
+
+      {/* logo */}
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12,paddingTop:4}}>
+        <svg width="76" height="76" viewBox="0 0 76 76" fill="none">
+          {/* shield shape */}
+          <path d="M38 4L8 16v24c0 16 13 28 30 32 17-4 30-16 30-32V16L38 4z" stroke="#9B30FF" strokeWidth="1.5" fill="rgba(155,48,255,0.08)"/>
+          <path d="M38 4L8 16v24c0 16 13 28 30 32 17-4 30-16 30-32V16L38 4z" stroke="#9B30FF" strokeWidth="6" fill="none" opacity="0.15"/>
+          <text x="38" y="46" textAnchor="middle" fill="url(#vgrad)" fontSize="30" fontWeight="800" fontFamily="'Orbitron',sans-serif">V</text>
+          <defs>
+            <linearGradient id="vgrad" x1="38" y1="20" x2="38" y2="55" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#9B30FF"/>
+              <stop offset="1" stopColor="#00D4FF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div style={{textAlign:'center'}}>
+          <div style={{fontFamily:"'Orbitron',sans-serif",color:'#fff',fontSize:18,fontWeight:700,letterSpacing:5,textTransform:'uppercase',textShadow:'0 0 20px rgba(155,48,255,0.8)'}}>VAROSERVER</div>
+          <div style={{color:'rgba(0,212,255,0.6)',fontSize:9,letterSpacing:4,marginTop:4,fontFamily:"'JetBrains Mono',monospace"}}>NEURAL GRID · v22.8</div>
+        </div>
+      </div>
+
+      {/* palette */}
+      <div style={{display:'flex',gap:6}}>
+        {[['#9B30FF','--violet'],['#00D4FF','--cyan'],['#FF2D78','--pink'],['#1a0035','--deep'],['#e8d5ff','--ghost']].map(([c,n])=>(
+          <div key={c} style={{flex:1,display:'flex',flexDirection:'column',gap:4,alignItems:'center'}}>
+            <div style={{width:'100%',height:28,background:c,borderRadius:2,boxShadow:`0 0 10px ${c}60`}}/>
+            <div style={{color:'rgba(155,48,255,0.6)',fontSize:8,letterSpacing:1}}>{n}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* type sample */}
+      <div style={{border:'1px solid rgba(155,48,255,0.3)',borderRadius:2,padding:14,background:'rgba(155,48,255,0.04)',clipPath:'polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%)'}}>
+        <div style={{color:'rgba(0,212,255,0.5)',fontSize:9,letterSpacing:3,marginBottom:8,fontFamily:"'JetBrains Mono',monospace"}}>TIPOGRAFÍA</div>
+        <div style={{fontFamily:"'Orbitron',sans-serif",color:'#9B30FF',fontSize:15,fontWeight:700,letterSpacing:3,textShadow:'0 0 12px rgba(155,48,255,0.6)'}}>DISPLAY — ORBITRON</div>
+        <div style={{color:'rgba(255,255,255,0.5)',fontSize:10,marginTop:6,fontFamily:"'JetBrains Mono',monospace",letterSpacing:1}}>Mono — JetBrains Mono</div>
+      </div>
+
+      {/* ui sample */}
+      <div style={{border:'1px solid rgba(0,212,255,0.2)',borderRadius:2,padding:14,background:'rgba(0,212,255,0.02)',flex:1}}>
+        <div style={{color:'rgba(0,212,255,0.5)',fontSize:9,letterSpacing:3,marginBottom:10,fontFamily:"'JetBrains Mono',monospace"}}>COMPONENTE — NAV CHIP</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+          {[['JELLYFIN','#9B30FF'],['IMMICH','#00D4FF'],['HOMELAB','#FF2D78'],['DIANE','#9B30FF']].map(([t,c])=>(
+            <div key={t} style={{border:`1px solid ${c}`,borderRadius:1,padding:'4px 10px',color:c,fontSize:9,letterSpacing:2,fontFamily:"'Orbitron',sans-serif",background:`${c}15`,boxShadow:`0 0 8px ${c}30`}}>{t}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* diane */}
+      <div style={{borderTop:'1px solid rgba(155,48,255,0.2)',paddingTop:16}}>
+        <div style={{color:'rgba(155,48,255,0.4)',fontSize:9,letterSpacing:3,marginBottom:8,fontFamily:"'JetBrains Mono',monospace"}}>SUB-MARCA — DIANE</div>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:34,height:34,background:'rgba(155,48,255,0.15)',border:'1.5px solid #9B30FF',clipPath:'polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <div style={{width:10,height:10,background:'#9B30FF',clipPath:'polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',boxShadow:'0 0 8px #9B30FF'}}/>
+          </div>
+          <div>
+            <div style={{fontFamily:"'Orbitron',sans-serif",color:'#9B30FF',fontSize:11,fontWeight:600,letterSpacing:3,textShadow:'0 0 8px rgba(155,48,255,0.7)'}}>DIANE</div>
+            <div style={{color:'rgba(0,212,255,0.5)',fontSize:9,letterSpacing:1,fontFamily:"'JetBrains Mono',monospace"}}>Engineering Partner · OpenClaw</div>
+          </div>
+          <div style={{marginLeft:'auto',background:'linear-gradient(135deg,#9B30FF,#00D4FF)',borderRadius:1,padding:'2px 8px',color:'#fff',fontSize:8,letterSpacing:2,fontFamily:"'Orbitron',sans-serif"}}>ELITE</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── DIRECTION 3: LINUX RICE ─── */
+function RiceCard() {
+  return (
+    <div style={{width:'100%',height:'100%',background:'#1e1e2e',display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",padding:32,gap:24,position:'relative',overflow:'hidden'}}>
+      {/* subtle texture */}
+      <div style={{position:'absolute',top:0,right:0,width:200,height:200,background:'radial-gradient(circle at top right,rgba(203,166,247,0.07),transparent 60%)',pointerEvents:'none'}}/>
+
+      {/* logo */}
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12,paddingTop:4}}>
+        <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
+          {/* constellation nodes */}
+          <circle cx="34" cy="12" r="3" fill="#cba6f7"/>
+          <circle cx="12" cy="48" r="3" fill="#89b4fa"/>
+          <circle cx="56" cy="48" r="3" fill="#a6e3a1"/>
+          <circle cx="34" cy="34" r="5" fill="#cba6f7" opacity="0.9"/>
+          <line x1="34" y1="12" x2="34" y2="29" stroke="#cba6f7" strokeWidth="1" opacity="0.6"/>
+          <line x1="12" y1="48" x2="29" y2="37" stroke="#89b4fa" strokeWidth="1" opacity="0.6"/>
+          <line x1="56" y1="48" x2="39" y2="37" stroke="#a6e3a1" strokeWidth="1" opacity="0.6"/>
+          {/* outer ring */}
+          <circle cx="34" cy="34" r="30" stroke="rgba(203,166,247,0.2)" strokeWidth="1" strokeDasharray="3 5"/>
+        </svg>
+        <div style={{textAlign:'center'}}>
+          <div style={{color:'#cba6f7',fontSize:20,fontWeight:600,letterSpacing:2}}>varoserver</div>
+          <div style={{color:'rgba(203,166,247,0.4)',fontSize:10,letterSpacing:2,marginTop:3}}>home infrastructure</div>
+        </div>
+      </div>
+
+      {/* palette */}
+      <div style={{display:'flex',gap:5}}>
+        {[['#cba6f7','mauve'],['#89b4fa','blue'],['#a6e3a1','green'],['#fab387','peach'],['#313244','surface']].map(([c,n])=>(
+          <div key={c} style={{flex:1,display:'flex',flexDirection:'column',gap:4,alignItems:'center'}}>
+            <div style={{width:'100%',height:26,background:c,borderRadius:12}}/>
+            <div style={{color:'rgba(203,166,247,0.45)',fontSize:8}}>{n}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* type sample */}
+      <div style={{background:'#181825',borderRadius:8,padding:14}}>
+        <div style={{color:'rgba(203,166,247,0.4)',fontSize:9,letterSpacing:2,marginBottom:8}}>typeface</div>
+        <div style={{color:'#cba6f7',fontSize:15,fontWeight:600,letterSpacing:1}}>varoserver</div>
+        <div style={{color:'rgba(137,180,250,0.7)',fontSize:10,marginTop:5,lineHeight:1.7}}>
+          JetBrains Mono · 400/600<br/>
+          <span style={{color:'rgba(166,227,161,0.6)'}}>minimal · intentional · clean</span>
+        </div>
+      </div>
+
+      {/* ui sample */}
+      <div style={{background:'#181825',borderRadius:8,padding:14,flex:1}}>
+        <div style={{color:'rgba(203,166,247,0.4)',fontSize:9,letterSpacing:2,marginBottom:10}}>service tile</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+          {[['jellyfin','#cba6f7','🎬'],['immich','#89b4fa','📷'],['nextcloud','#a6e3a1','☁️'],['n8n','#fab387','⚡']].map(([s,c,e])=>(
+            <div key={s} style={{background:'#1e1e2e',borderRadius:6,padding:'8px 10px',border:`1px solid ${c}25`}}>
+              <div style={{fontSize:14,marginBottom:3}}>{e}</div>
+              <div style={{color:c,fontSize:10,fontWeight:600}}>{s}</div>
+              <div style={{color:'rgba(255,255,255,0.2)',fontSize:8,marginTop:1}}>running</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* diane */}
+      <div style={{borderTop:'1px solid rgba(203,166,247,0.12)',paddingTop:14}}>
+        <div style={{color:'rgba(203,166,247,0.3)',fontSize:9,letterSpacing:2,marginBottom:8}}>sub-marca · diane</div>
+        <div style={{display:'flex',alignItems:'center',gap:10,background:'rgba(137,180,250,0.06)',borderRadius:8,padding:'8px 12px',border:'1px solid rgba(137,180,250,0.15)'}}>
+          <div style={{width:30,height:30,borderRadius:'50%',background:'rgba(137,180,250,0.15)',border:'1.5px solid #89b4fa',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <circle cx="7" cy="5" r="2.5" stroke="#89b4fa" strokeWidth="1.2"/>
+              <path d="M2 13c0-3 2-5 5-5s5 2 5 5" stroke="#89b4fa" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{color:'#89b4fa',fontSize:12,fontWeight:600,letterSpacing:1}}>diane</div>
+            <div style={{color:'rgba(137,180,250,0.4)',fontSize:9}}>engineering partner</div>
+          </div>
+          <div style={{marginLeft:'auto',background:'rgba(137,180,250,0.1)',borderRadius:20,padding:'1px 8px',color:'#89b4fa',fontSize:8,border:'1px solid rgba(137,180,250,0.2)'}}>elite</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── DIRECTION 4: SYNTHWAVE ─── */
+function SynthwaveCard() {
+  return (
+    <div style={{width:'100%',height:'100%',background:'linear-gradient(180deg,#0d0019 0%,#1a0035 60%,#2d0050 100%)',display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",padding:32,gap:24,position:'relative',overflow:'hidden'}}>
+      {/* retrowave grid floor */}
+      <svg style={{position:'absolute',bottom:0,left:0,right:0,width:'100%',height:'220px',opacity:0.25}} viewBox="0 0 540 220" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="gridFade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#b026ff" stopOpacity="0.8"/>
+            <stop offset="100%" stopColor="#b026ff" stopOpacity="0.1"/>
+          </linearGradient>
+        </defs>
+        {/* horizontal lines */}
+        {[0.15,0.3,0.45,0.6,0.75,0.9,1].map((t,i)=>(
+          <line key={i} x1="0" y1={220*t} x2="540" y2={220*t} stroke="url(#gridFade)" strokeWidth="0.8"/>
+        ))}
+        {/* vertical lines converging */}
+        {[-4,-3,-2,-1,0,1,2,3,4].map((v,i)=>(
+          <line key={i} x1={270+v*80} y1="0" x2={270+v*1200} y2="220" stroke="url(#gridFade)" strokeWidth="0.8"/>
+        ))}
+      </svg>
+      {/* glow orbs */}
+      <div style={{position:'absolute',top:'15%',left:'50%',transform:'translateX(-50%)',width:200,height:80,background:'radial-gradient(ellipse,rgba(176,38,255,0.3),transparent 70%)',filter:'blur(20px)',pointerEvents:'none'}}/>
+      <div style={{position:'absolute',top:'10%',left:'20%',width:80,height:80,background:'radial-gradient(circle,rgba(1,205,254,0.2),transparent 70%)',filter:'blur(15px)',pointerEvents:'none'}}/>
+
+      {/* logo */}
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12,paddingTop:4,zIndex:1}}>
+        <svg width="76" height="76" viewBox="0 0 76 76" fill="none">
+          <defs>
+            <linearGradient id="swGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop stopColor="#01cdfe"/>
+              <stop offset="0.5" stopColor="#b026ff"/>
+              <stop offset="1" stopColor="#ff2079"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          {/* chrome V */}
+          <text x="38" y="54" textAnchor="middle" fill="url(#swGrad)" fontSize="52" fontWeight="900" fontFamily="'Orbitron',sans-serif" filter="url(#glow)">V</text>
+          {/* ring */}
+          <circle cx="38" cy="38" r="35" stroke="url(#swGrad)" strokeWidth="1" opacity="0.5" strokeDasharray="4 6"/>
+        </svg>
+        <div style={{textAlign:'center'}}>
+          <div style={{fontFamily:"'Orbitron',sans-serif",fontSize:16,fontWeight:800,letterSpacing:6,background:'linear-gradient(90deg,#01cdfe,#b026ff,#ff2079)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>VAROSERVER</div>
+          <div style={{color:'rgba(176,38,255,0.5)',fontSize:9,letterSpacing:4,marginTop:4}}>SYNTHWAVE EDITION</div>
+        </div>
+      </div>
+
+      {/* palette */}
+      <div style={{display:'flex',gap:5,zIndex:1}}>
+        {[['#b026ff','--violet'],['#01cdfe','--teal'],['#ff2079','--hot'],['#ffe74c','--sun'],['#0d0019','--void']].map(([c,n])=>(
+          <div key={c} style={{flex:1,display:'flex',flexDirection:'column',gap:4,alignItems:'center'}}>
+            <div style={{width:'100%',height:26,background:c,borderRadius:2,boxShadow:`0 0 12px ${c}70`}}/>
+            <div style={{color:'rgba(176,38,255,0.5)',fontSize:8,letterSpacing:1}}>{n}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* type */}
+      <div style={{border:'1px solid rgba(176,38,255,0.25)',borderRadius:4,padding:14,background:'rgba(176,38,255,0.06)',zIndex:1}}>
+        <div style={{color:'rgba(1,205,254,0.4)',fontSize:9,letterSpacing:3,marginBottom:8}}>TIPOGRAFÍA</div>
+        <div style={{fontFamily:"'Orbitron',sans-serif",fontSize:13,fontWeight:700,letterSpacing:2,background:'linear-gradient(90deg,#b026ff,#01cdfe)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>ORBITRON DISPLAY</div>
+        <div style={{color:'rgba(255,255,255,0.3)',fontSize:10,marginTop:5,letterSpacing:1}}>JetBrains Mono — cuerpo</div>
+      </div>
+
+      {/* ui sample */}
+      <div style={{border:'1px solid rgba(1,205,254,0.15)',borderRadius:4,padding:14,background:'rgba(1,205,254,0.03)',flex:1,zIndex:1}}>
+        <div style={{color:'rgba(1,205,254,0.4)',fontSize:9,letterSpacing:3,marginBottom:10}}>COMPONENTE — PROGRESS</div>
+        {[['CPU','72%','#b026ff'],['RAM','58%','#01cdfe'],['NAS','41%','#ff2079']].map(([l,v,c])=>(
+          <div key={l} style={{marginBottom:8}}>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:3}}>
+              <span style={{color:c,fontSize:9,letterSpacing:1}}>{l}</span>
+              <span style={{color:'rgba(255,255,255,0.3)',fontSize:9}}>{v}</span>
+            </div>
+            <div style={{height:3,background:'rgba(255,255,255,0.08)',borderRadius:2}}>
+              <div style={{height:'100%',width:v,background:`linear-gradient(90deg,${c},${c}99)`,borderRadius:2,boxShadow:`0 0 6px ${c}`}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* diane */}
+      <div style={{borderTop:'1px solid rgba(176,38,255,0.2)',paddingTop:14,zIndex:1}}>
+        <div style={{color:'rgba(176,38,255,0.4)',fontSize:9,letterSpacing:3,marginBottom:8}}>SUB-MARCA — DIANE</div>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:32,height:32,background:'rgba(1,205,254,0.1)',border:'1.5px solid #01cdfe',borderRadius:4,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 10px rgba(1,205,254,0.3)'}}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <polygon points="8,1 15,5 15,11 8,15 1,11 1,5" stroke="#01cdfe" strokeWidth="1.2" fill="none"/>
+              <circle cx="8" cy="8" r="2" fill="#01cdfe"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{fontFamily:"'Orbitron',sans-serif",fontSize:10,fontWeight:700,letterSpacing:2,background:'linear-gradient(90deg,#01cdfe,#b026ff)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>DIANE</div>
+            <div style={{color:'rgba(1,205,254,0.4)',fontSize:9,letterSpacing:1}}>Engineering Partner · OpenClaw</div>
+          </div>
+          <div style={{marginLeft:'auto',border:'1px solid rgba(1,205,254,0.4)',borderRadius:2,padding:'2px 7px',color:'#01cdfe',fontSize:8,letterSpacing:2,boxShadow:'0 0 6px rgba(1,205,254,0.2)'}}>ELITE</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── BRAND SYSTEM GUIDE ─── */
+function BrandSystemCard() {
+  const C = CAT;
+  const VLogo = ({size=40, color=C.mauve, accentL=C.blue, accentR=C.green}) => {
+    const nodes = [{x:6,y:8,r:3.5,c:color},{x:17,y:26,r:2.5,c:color,o:0.75},{x:28,y:48,r:4,c:accentL},{x:39,y:26,r:2.5,c:color,o:0.75},{x:50,y:8,r:3.5,c:accentR},{x:11,y:17,r:1.5,c:color,o:0.45},{x:23,y:37,r:1.5,c:accentL,o:0.45},{x:33,y:37,r:1.5,c:accentL,o:0.45},{x:45,y:17,r:1.5,c:accentR,o:0.45}];
+    const edges = [[0,5],[5,1],[1,6],[6,2],[4,8],[8,3],[3,7],[7,2]];
+    return (
+      <svg width={size} height={size} viewBox="-8 0 72 64" fill="none">
+        {edges.map(([a,b],i)=>(<line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={nodes[a].c} strokeWidth="1" opacity="0.55"/>))}
+        {nodes.map((n,i)=>(<circle key={i} cx={n.x} cy={n.y} r={n.r} fill={n.c} opacity={n.o??1}/>))}
+      </svg>
+    );
+  };
+
+  return (
+    <div style={{width:'100%',height:'100%',background:C.bg,display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",overflow:'hidden',position:'relative'}}>
+      {/* header */}
+      <div style={{background:C.crust,borderBottom:`1px solid ${C.surface0}`,padding:'14px 24px',display:'flex',alignItems:'center',gap:12}}>
+        <VLogo size={28}/>
+        <div style={{color:C.text,fontSize:13,fontWeight:600,letterSpacing:2}}>varoserver</div>
+        <div style={{color:C.overlay,fontSize:9,letterSpacing:3,marginLeft:4}}>BRAND SYSTEM · v1.0</div>
+        <div style={{marginLeft:'auto',background:`${C.mauve}18`,borderRadius:20,padding:'2px 12px',color:C.mauve,fontSize:8,letterSpacing:2,border:`1px solid ${C.mauve}30`}}>CATPPUCCIN MOCHA</div>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'200px 1fr 1fr',gap:0,flex:1,overflow:'hidden'}}>
+        
+        {/* COL 1: Logo variations */}
+        <div style={{padding:20,borderRight:`1px solid ${C.surface0}`,display:'flex',flexDirection:'column',gap:16,overflow:'auto'}}>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:4}}>LOGO VARS</div>
+          
+          {[
+            {label:'full · dark',bg:C.bg,col:C.mauve,aL:C.blue,aR:C.green,txt:C.text},
+            {label:'full · mantle',bg:C.mantle,col:C.mauve,aL:C.blue,aR:C.green,txt:C.text},
+            {label:'full · crust',bg:C.crust,col:C.mauve,aL:C.blue,aR:C.green,txt:C.text},
+            {label:'mono · mauve',bg:C.bg,col:C.mauve,aL:C.mauve,aR:C.mauve,txt:C.mauve},
+            {label:'mono · blue',bg:C.bg,col:C.blue,aL:C.blue,aR:C.blue,txt:C.blue},
+            {label:'inverse · light',bg:'#eff1f5',col:'#7287fd',aL:'#1e66f5',aR:'#40a02b',txt:'#4c4f69'},
+          ].map(({label,bg,col,aL,aR,txt})=>(
+            <div key={label} style={{background:bg,borderRadius:6,padding:'10px 12px',border:`1px solid ${C.surface0}`,display:'flex',alignItems:'center',gap:8}}>
+              <VLogo size={26} color={col} accentL={aL} accentR={aR}/>
+              <div style={{color:txt,fontSize:9,letterSpacing:0.5,fontWeight:500}}>varoserver</div>
+              <div style={{marginLeft:'auto',color:C.overlay,fontSize:7,opacity:0.7}}>{label}</div>
+            </div>
+          ))}
+
+          <div style={{borderTop:`1px solid ${C.surface0}`,paddingTop:14}}>
+            <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:10}}>CLEAR SPACE</div>
+            <div style={{border:`1px dashed ${C.surface1}`,borderRadius:4,padding:10,display:'inline-flex',position:'relative'}}>
+              <VLogo size={36}/>
+              <div style={{position:'absolute',inset:4,border:`1px dashed ${C.mauve}40`,borderRadius:2,pointerEvents:'none'}}/>
+            </div>
+            <div style={{color:C.overlay,fontSize:8,marginTop:6,lineHeight:1.6,opacity:0.7}}>Mín. ½ altura símbolo<br/>en todos los lados</div>
+          </div>
+        </div>
+
+        {/* COL 2: Colors + Type */}
+        <div style={{padding:20,borderRight:`1px solid ${C.surface0}`,display:'flex',flexDirection:'column',gap:18,overflow:'auto'}}>
+          <div>
+            <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:10}}>COLOR TOKENS</div>
+            <div style={{display:'flex',flexDirection:'column',gap:5}}>
+              {[
+                ['--vs-primary',C.mauve,'cba6f7','Mauve · identidad'],
+                ['--vs-accent',C.blue,'89b4fa','Blue · Diane · links'],
+                ['--vs-ok',C.green,'a6e3a1','Green · uptime · ok'],
+                ['--vs-warn',C.peach,'fab387','Peach · alertas'],
+                ['--vs-error',C.red,'f38ba8','Red · critical'],
+                ['--vs-bg','#1e1e2e','1e1e2e','Base · fondo principal'],
+                ['--vs-surface',C.surface0,'313244','Surface · cards'],
+                ['--vs-text',C.text,'cdd6f4','Text · cuerpo'],
+                ['--vs-muted',C.overlay,'6c7086','Overlay · labels'],
+              ].map(([token,color,hex,desc])=>(
+                <div key={token} style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{width:22,height:22,background:color,borderRadius:4,flexShrink:0,border:`1px solid rgba(255,255,255,0.06)`,boxShadow:`0 0 6px ${color}30`}}/>
+                  <code style={{color:C.mauve,fontSize:8,width:110,flexShrink:0,letterSpacing:0.3}}>{token}</code>
+                  <span style={{color:C.overlay,fontSize:8,fontFamily:'monospace'}}>#{hex}</span>
+                  <span style={{color:C.overlay,fontSize:8,opacity:0.6,marginLeft:'auto',textAlign:'right'}}>{desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{borderTop:`1px solid ${C.surface0}`,paddingTop:16}}>
+            <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:10}}>TYPOGRAPHY</div>
+            {[
+              {label:'H1 · 24/600',text:'varoserver',size:24,weight:600,color:C.text,ls:1},
+              {label:'H2 · 16/600',text:'Home Infrastructure',size:16,weight:600,color:C.text,ls:0.5},
+              {label:'LABEL · 9/500',text:'SERVICE · STATUS',size:9,weight:500,color:C.overlay,ls:3},
+              {label:'BODY · 11/400',text:'Sistema nominal. 42 servicios activos.',size:11,weight:400,color:C.subtext,ls:0.3},
+              {label:'CODE · 10/400',text:'$ docker ps | grep running',size:10,weight:400,color:C.green,ls:0.3},
+            ].map(({label,text,size,weight,color,ls})=>(
+              <div key={label} style={{marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${C.surface0}`}}>
+                <div style={{color:C.overlay,fontSize:7,letterSpacing:2,marginBottom:4,opacity:0.7}}>{label}</div>
+                <div style={{color,fontSize:size,fontWeight:weight,letterSpacing:ls,lineHeight:1.2}}>{text}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* COL 3: Components */}
+        <div style={{padding:20,display:'flex',flexDirection:'column',gap:14,overflow:'auto'}}>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:4}}>COMPONENTS</div>
+
+          {/* status badges */}
+          <div style={{background:C.mantle,borderRadius:8,padding:12,border:`1px solid ${C.surface0}`}}>
+            <div style={{color:C.overlay,fontSize:8,letterSpacing:2,marginBottom:8}}>STATUS BADGE</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+              {[['● NOMINAL',C.green],['↑ RUNNING',C.blue],['⚡ WARN',C.peach],['✕ DOWN',C.red],['◌ PAUSED',C.overlay]].map(([t,c])=>(
+                <div key={t} style={{borderRadius:20,padding:'3px 9px',border:`1px solid ${c}35`,color:c,fontSize:8,background:`${c}10`,letterSpacing:0.5}}>{t}</div>
+              ))}
+            </div>
+          </div>
+
+          {/* service card */}
+          <div style={{background:C.mantle,borderRadius:8,padding:12,border:`1px solid ${C.surface0}`}}>
+            <div style={{color:C.overlay,fontSize:8,letterSpacing:2,marginBottom:8}}>SERVICE CARD</div>
+            <div style={{background:C.surface0,borderRadius:8,padding:12,border:`1px solid ${C.mauve}20`,display:'flex',alignItems:'center',gap:10}}>
+              <div style={{width:36,height:36,borderRadius:8,background:`${C.mauve}15`,border:`1px solid ${C.mauve}30`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <div style={{width:16,height:16,background:`${C.mauve}60`,borderRadius:3}}/>
+              </div>
+              <div>
+                <div style={{color:C.text,fontSize:11,fontWeight:600,letterSpacing:0.5}}>Jellyfin</div>
+                <div style={{color:C.overlay,fontSize:8,marginTop:2}}>:8096 · media server</div>
+              </div>
+              <div style={{marginLeft:'auto',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:3}}>
+                <div style={{width:6,height:6,borderRadius:'50%',background:C.green,boxShadow:`0 0 6px ${C.green}`}}/>
+                <div style={{color:C.overlay,fontSize:7}}>~220MB</div>
+              </div>
+            </div>
+          </div>
+
+          {/* nav item */}
+          <div style={{background:C.mantle,borderRadius:8,padding:12,border:`1px solid ${C.surface0}`}}>
+            <div style={{color:C.overlay,fontSize:8,letterSpacing:2,marginBottom:8}}>NAV ITEM</div>
+            <div style={{display:'flex',flexDirection:'column',gap:2}}>
+              {[['Media','active'],['Infra',''],['Smart Home',''],['Gaming','']].map(([t,s])=>(
+                <div key={t} style={{padding:'6px 10px',borderRadius:6,background:s?`${C.mauve}15`:'transparent',border:s?`1px solid ${C.mauve}25`:'1px solid transparent',color:s?C.mauve:C.overlay,fontSize:10,display:'flex',alignItems:'center',gap:6}}>
+                  <div style={{width:4,height:4,borderRadius:'50%',background:s?C.mauve:C.surface1}}/>
+                  {t}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* diane card compact */}
+          <div style={{background:`linear-gradient(135deg,${C.mantle},rgba(137,180,250,0.05))`,borderRadius:8,padding:12,border:`1px solid rgba(137,180,250,0.2)`}}>
+            <div style={{color:C.overlay,fontSize:8,letterSpacing:2,marginBottom:8}}>DIANE CARD</div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <VLogo size={24} color={C.blue} accentL={C.blue} accentR={C.sapphire}/>
+              <div>
+                <div style={{color:C.blue,fontSize:11,fontWeight:600,letterSpacing:1}}>diane</div>
+                <div style={{color:C.overlay,fontSize:8}}>online · gemma 4 · 26b</div>
+              </div>
+              <div style={{marginLeft:'auto',width:6,height:6,borderRadius:'50%',background:C.green,boxShadow:`0 0 6px ${C.green}`}}/>
+            </div>
+          </div>
+
+          {/* progress bar */}
+          <div style={{background:C.mantle,borderRadius:8,padding:12,border:`1px solid ${C.surface0}`}}>
+            <div style={{color:C.overlay,fontSize:8,letterSpacing:2,marginBottom:8}}>RESOURCE BAR</div>
+            {[['CPU',62,C.mauve],['RAM',51,C.blue],['NAS',38,C.green]].map(([l,v,c])=>(
+              <div key={l} style={{marginBottom:7}}>
+                <div style={{display:'flex',justifyContent:'space-between',marginBottom:3}}>
+                  <span style={{color:C.subtext,fontSize:8,letterSpacing:1}}>{l}</span>
+                  <span style={{color:c,fontSize:8}}>{v}%</span>
+                </div>
+                <div style={{height:3,background:C.surface0,borderRadius:2}}>
+                  <div style={{height:'100%',width:`${v}%`,background:`linear-gradient(90deg,${c}aa,${c})`,borderRadius:2}}/>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── LOGO EXPLORATIONS ─── */
+const CAT = { bg:'#1e1e2e', mantle:'#181825', crust:'#11111b', surface0:'#313244', surface1:'#45475a', overlay:'#6c7086', subtext:'#a6adc8', text:'#cdd6f4', mauve:'#cba6f7', blue:'#89b4fa', sapphire:'#74c7ec', sky:'#89dceb', teal:'#94e2d5', green:'#a6e3a1', yellow:'#f9e2af', peach:'#fab387', red:'#f38ba8', pink:'#f5c2e7' };
+
+function LogoVCard() {
+  // V shape: 5 primary nodes + 2 mid nodes
+  // top-left (6,8), mid-left-inner (17,26), apex (28,48), mid-right-inner (39,26), top-right (50,8)
+  const nodes = [
+    { x:6,  y:8,  r:3.5, color:CAT.mauve, label:'01' },
+    { x:17, y:26, r:2.5, color:CAT.mauve, label:'02', opacity:0.75 },
+    { x:28, y:48, r:4,   color:CAT.blue,  label:'03' },
+    { x:39, y:26, r:2.5, color:CAT.mauve, label:'04', opacity:0.75 },
+    { x:50, y:8,  r:3.5, color:CAT.green, label:'05' },
+    // small satellites
+    { x:11, y:17, r:1.5, color:CAT.mauve, opacity:0.45 },
+    { x:23, y:37, r:1.5, color:CAT.blue,  opacity:0.45 },
+    { x:33, y:37, r:1.5, color:CAT.blue,  opacity:0.45 },
+    { x:45, y:17, r:1.5, color:CAT.green, opacity:0.45 },
+  ];
+  const edges = [
+    [0,5],[5,1],[1,6],[6,2], // left arm
+    [4,8],[8,3],[3,7],[7,2], // right arm
+  ];
+
+  return (
+    <div style={{width:'100%',height:'100%',background:CAT.bg,display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",padding:36,gap:0,position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 30%,rgba(203,166,247,0.07),transparent 65%)',pointerEvents:'none'}}/>
+
+      {/* big logo centered */}
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:20,flex:1,justifyContent:'center'}}>
+        <svg width="220" height="220" viewBox="-8 0 72 64" fill="none">
+          <defs>
+            <radialGradient id="vglow" cx="50%" cy="80%" r="60%">
+              <stop offset="0%" stopColor={CAT.blue} stopOpacity="0.25"/>
+              <stop offset="100%" stopColor={CAT.mauve} stopOpacity="0"/>
+            </radialGradient>
+            <filter id="vfglow">
+              <feGaussianBlur stdDeviation="1.8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          {/* glow bg */}
+          <ellipse cx="28" cy="48" rx="30" ry="20" fill="url(#vglow)"/>
+          {/* orbit ring faint */}
+          <ellipse cx="28" cy="28" rx="30" ry="28" stroke="rgba(203,166,247,0.1)" strokeWidth="0.6" strokeDasharray="2 5"/>
+          {/* edges */}
+          {edges.map(([a,b],i)=>(
+            <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y}
+              stroke={nodes[a].color} strokeWidth="0.9" opacity="0.5"/>
+          ))}
+          {/* nodes */}
+          {nodes.map((n,i)=>(
+            <circle key={i} cx={n.x} cy={n.y} r={n.r} fill={n.color} opacity={n.opacity??1}
+              filter={n.r>=3?'url(#vfglow)':undefined}/>
+          ))}
+        </svg>
+
+        {/* wordmark */}
+        <div style={{textAlign:'center'}}>
+          <div style={{color:CAT.text,fontSize:28,fontWeight:600,letterSpacing:3}}>varoserver</div>
+          <div style={{background:`linear-gradient(90deg,${CAT.mauve},${CAT.blue})`,WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',fontSize:10,letterSpacing:5,marginTop:5,fontWeight:500}}>HOME INFRASTRUCTURE</div>
+        </div>
+
+        {/* small size samples */}
+        <div style={{display:'flex',gap:20,alignItems:'center',marginTop:8}}>
+          {[48,32,20].map(sz=>(
+            <div key={sz} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
+              <svg width={sz} height={sz} viewBox="-8 0 72 64" fill="none">
+                {edges.map(([a,b],i)=>(
+                  <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={nodes[a].color} strokeWidth="1.2" opacity="0.5"/>
+                ))}
+                {nodes.slice(0,5).map((n,i)=>(
+                  <circle key={i} cx={n.x} cy={n.y} r={n.r*1.2} fill={n.color} opacity={n.opacity??1}/>
+                ))}
+              </svg>
+              <div style={{color:CAT.overlay,fontSize:8}}>{sz}px</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* bottom: mono + di */}
+      <div style={{borderTop:`1px solid ${CAT.surface0}`,paddingTop:16,display:'flex',gap:12}}>
+        {/* solo símbolo */}
+        <div style={{flex:1,background:CAT.mantle,borderRadius:8,padding:12,display:'flex',alignItems:'center',gap:10,border:`1px solid ${CAT.surface0}`}}>
+          <svg width="28" height="28" viewBox="-8 0 72 64" fill="none">
+            {edges.map(([a,b],i)=>(<line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={nodes[a].color} strokeWidth="1.5" opacity="0.6"/>))}
+            {nodes.slice(0,5).map((n,i)=>(<circle key={i} cx={n.x} cy={n.y} r={n.r*1.1} fill={n.color}/>))}
+          </svg>
+          <div style={{color:CAT.subtext,fontSize:9,letterSpacing:1}}>símbolo solo</div>
+        </div>
+        {/* diane */}
+        <div style={{flex:1,background:CAT.mantle,borderRadius:8,padding:12,display:'flex',alignItems:'center',gap:8,border:`1px solid rgba(137,180,250,0.2)`}}>
+          <svg width="20" height="20" viewBox="-8 0 72 64" fill="none">
+            {edges.map(([a,b],i)=>(<line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={CAT.blue} strokeWidth="2" opacity="0.5"/>))}
+            {nodes.slice(0,5).map((n,i)=>(<circle key={i} cx={n.x} cy={n.y} r={n.r} fill={CAT.blue}/>))}
+          </svg>
+          <div>
+            <div style={{color:CAT.blue,fontSize:10,fontWeight:600,letterSpacing:1}}>diane</div>
+            <div style={{color:CAT.overlay,fontSize:8}}>blue variant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LogoACard() {
+  // A shape: apex top-center, two legs going down, crossbar in middle
+  const nodes = [
+    { x:28, y:5,  r:4,   color:CAT.mauve, label:'apex' },       // apex
+    { x:18, y:23, r:2.5, color:CAT.mauve, opacity:0.75 },        // left mid
+    { x:38, y:23, r:2.5, color:CAT.mauve, opacity:0.75 },        // right mid
+    { x:8,  y:51, r:3.5, color:CAT.blue,  label:'bl' },          // bottom left
+    { x:48, y:51, r:3.5, color:CAT.green, label:'br' },          // bottom right
+    // crossbar nodes
+    { x:21, y:32, r:2,   color:CAT.sapphire },                   // crossbar left
+    { x:35, y:32, r:2,   color:CAT.sapphire },                   // crossbar right
+    // satellites
+    { x:13, y:37, r:1.5, color:CAT.blue,  opacity:0.4 },
+    { x:43, y:37, r:1.5, color:CAT.green, opacity:0.4 },
+    { x:28, y:14, r:1.5, color:CAT.mauve, opacity:0.4 },
+  ];
+  const edges = [
+    [0,9],[9,1],[1,5],[5,7],[7,3],  // left leg
+    [0,9],[9,2],[2,6],[6,8],[8,4],  // right leg
+    [5,6],                           // crossbar
+  ];
+
+  return (
+    <div style={{width:'100%',height:'100%',background:CAT.bg,display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",padding:36,gap:0,position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 20%,rgba(203,166,247,0.08),transparent 60%)',pointerEvents:'none'}}/>
+
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:20,flex:1,justifyContent:'center'}}>
+        <svg width="220" height="220" viewBox="-4 0 64 64" fill="none">
+          <defs>
+            <radialGradient id="aglow" cx="50%" cy="10%" r="60%">
+              <stop offset="0%" stopColor={CAT.mauve} stopOpacity="0.3"/>
+              <stop offset="100%" stopColor={CAT.mauve} stopOpacity="0"/>
+            </radialGradient>
+            <filter id="afglow">
+              <feGaussianBlur stdDeviation="1.8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <ellipse cx="28" cy="8" rx="26" ry="18" fill="url(#aglow)"/>
+          <ellipse cx="28" cy="28" rx="29" ry="27" stroke="rgba(203,166,247,0.08)" strokeWidth="0.6" strokeDasharray="2 5"/>
+          {edges.map(([a,b],i)=>(
+            <line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y}
+              stroke={nodes[a].color} strokeWidth="0.9" opacity="0.55"/>
+          ))}
+          {nodes.map((n,i)=>(
+            <circle key={i} cx={n.x} cy={n.y} r={n.r} fill={n.color} opacity={n.opacity??1}
+              filter={n.r>=3?'url(#afglow)':undefined}/>
+          ))}
+        </svg>
+
+        <div style={{textAlign:'center'}}>
+          <div style={{color:CAT.text,fontSize:28,fontWeight:600,letterSpacing:3}}>varoserver</div>
+          <div style={{background:`linear-gradient(90deg,${CAT.mauve},${CAT.blue})`,WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',fontSize:10,letterSpacing:5,marginTop:5,fontWeight:500}}>HOME INFRASTRUCTURE</div>
+        </div>
+
+        <div style={{display:'flex',gap:20,alignItems:'center',marginTop:8}}>
+          {[48,32,20].map(sz=>(
+            <div key={sz} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
+              <svg width={sz} height={sz} viewBox="-4 0 64 64" fill="none">
+                {edges.map(([a,b],i)=>(<line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={nodes[a].color} strokeWidth="1.2" opacity="0.55"/>))}
+                {nodes.slice(0,7).map((n,i)=>(<circle key={i} cx={n.x} cy={n.y} r={n.r} fill={n.color} opacity={n.opacity??1}/>))}
+              </svg>
+              <div style={{color:CAT.overlay,fontSize:8}}>{sz}px</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{borderTop:`1px solid ${CAT.surface0}`,paddingTop:16,display:'flex',gap:12}}>
+        <div style={{flex:1,background:CAT.mantle,borderRadius:8,padding:12,display:'flex',alignItems:'center',gap:10,border:`1px solid ${CAT.surface0}`}}>
+          <svg width="28" height="28" viewBox="-4 0 64 64" fill="none">
+            {edges.map(([a,b],i)=>(<line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={nodes[a].color} strokeWidth="1.5" opacity="0.6"/>))}
+            {nodes.slice(0,7).map((n,i)=>(<circle key={i} cx={n.x} cy={n.y} r={n.r} fill={n.color}/>))}
+          </svg>
+          <div style={{color:CAT.subtext,fontSize:9,letterSpacing:1}}>símbolo solo</div>
+        </div>
+        <div style={{flex:1,background:CAT.mantle,borderRadius:8,padding:12,display:'flex',alignItems:'center',gap:8,border:`1px solid rgba(137,180,250,0.2)`}}>
+          <svg width="20" height="20" viewBox="-4 0 64 64" fill="none">
+            {edges.map(([a,b],i)=>(<line key={i} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke={CAT.blue} strokeWidth="2" opacity="0.5"/>))}
+            {nodes.slice(0,7).map((n,i)=>(<circle key={i} cx={n.x} cy={n.y} r={n.r} fill={CAT.blue}/>))}
+          </svg>
+          <div>
+            <div style={{color:CAT.blue,fontSize:10,fontWeight:600,letterSpacing:1}}>diane</div>
+            <div style={{color:CAT.overlay,fontSize:8}}>blue variant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ROUND 2: 03-A RICE REFINADO ─── */
+function RiceRefinedCard() {
+  const C = { bg:'#1e1e2e', mantle:'#181825', crust:'#11111b', surface0:'#313244', surface1:'#45475a', overlay:'#6c7086', subtext:'#a6adc8', text:'#cdd6f4', mauve:'#cba6f7', blue:'#89b4fa', sapphire:'#74c7ec', sky:'#89dceb', teal:'#94e2d5', green:'#a6e3a1', yellow:'#f9e2af', peach:'#fab387', maroon:'#eba0ac', red:'#f38ba8', pink:'#f5c2e7', flamingo:'#f2cdcd', rosewater:'#f5e0dc' };
+
+  return (
+    <div style={{width:'100%',height:'100%',background:C.bg,display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",overflow:'hidden',position:'relative'}}>
+      {/* top bar mockup */}
+      <div style={{background:C.crust,padding:'8px 16px',display:'flex',alignItems:'center',gap:8,borderBottom:`1px solid ${C.surface0}`}}>
+        {['#f38ba8','#f9e2af','#a6e3a1'].map(c=><div key={c} style={{width:10,height:10,borderRadius:'50%',background:c}}/>)}
+        <div style={{flex:1,textAlign:'center',color:C.overlay,fontSize:9,letterSpacing:2}}>varoserver · dashboard</div>
+      </div>
+
+      <div style={{padding:28,display:'flex',flexDirection:'column',gap:22,flex:1}}>
+        {/* logo refinado */}
+        <div style={{display:'flex',alignItems:'center',gap:16}}>
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <defs>
+              <radialGradient id="riceGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor={C.mauve} stopOpacity="0.4"/>
+                <stop offset="100%" stopColor={C.mauve} stopOpacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="26" cy="26" r="25" fill="url(#riceGlow)"/>
+            <circle cx="26" cy="26" r="24" stroke={C.mauve} strokeWidth="1" opacity="0.4"/>
+            {/* constellation V */}
+            <circle cx="26" cy="10" r="2.5" fill={C.mauve}/>
+            <circle cx="14" cy="38" r="2" fill={C.blue}/>
+            <circle cx="38" cy="38" r="2" fill={C.green}/>
+            <circle cx="20" cy="24" r="1.5" fill={C.mauve} opacity="0.6"/>
+            <circle cx="32" cy="24" r="1.5" fill={C.mauve} opacity="0.6"/>
+            <line x1="26" y1="10" x2="20" y2="24" stroke={C.mauve} strokeWidth="1" opacity="0.5"/>
+            <line x1="20" y1="24" x2="14" y2="38" stroke={C.blue} strokeWidth="1" opacity="0.5"/>
+            <line x1="26" y1="10" x2="32" y2="24" stroke={C.mauve} strokeWidth="1" opacity="0.5"/>
+            <line x1="32" y1="24" x2="38" y2="38" stroke={C.green} strokeWidth="1" opacity="0.5"/>
+          </svg>
+          <div>
+            <div style={{color:C.text,fontSize:20,fontWeight:600,letterSpacing:1.5}}>varoserver</div>
+            <div style={{color:C.overlay,fontSize:9,letterSpacing:3,marginTop:2}}>home infrastructure</div>
+          </div>
+        </div>
+
+        {/* paleta completa catppuccin */}
+        <div>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:8}}>paleta · catppuccin mocha</div>
+          <div style={{display:'flex',gap:4,marginBottom:5}}>
+            {[C.mauve,C.blue,C.sapphire,C.sky,C.teal,C.green,C.yellow,C.peach,C.red,C.pink].map((c,i)=>(
+              <div key={i} style={{flex:1,height:18,background:c,borderRadius:2}}/>
+            ))}
+          </div>
+          <div style={{display:'flex',gap:4}}>
+            {[C.crust,C.mantle,C.bg,C.surface0,C.surface1,C.overlay,C.subtext,C.text].map((c,i)=>(
+              <div key={i} style={{flex:1,height:12,background:c,borderRadius:2,border:'1px solid rgba(255,255,255,0.06)'}}/>
+            ))}
+          </div>
+        </div>
+
+        {/* homepage mockup */}
+        <div style={{background:C.mantle,borderRadius:10,padding:14,flex:1,border:`1px solid ${C.surface0}`}}>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:10}}>homepage · service grid</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:7}}>
+            {[['jellyfin',C.mauve,'▶'],['immich',C.blue,'◉'],['n8n',C.peach,'⚡'],['nextcloud',C.green,'☁'],['paperless',C.yellow,'📄'],['ha',C.red,'🏠']].map(([s,c,e])=>(
+              <div key={s} style={{background:C.surface0,borderRadius:7,padding:'10px 8px',display:'flex',flexDirection:'column',alignItems:'center',gap:4,border:`1px solid ${c}20`,cursor:'default'}}>
+                <div style={{fontSize:16}}>{e}</div>
+                <div style={{color:c,fontSize:8,fontWeight:600,letterSpacing:1}}>{s}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* diane sub-brand refinada */}
+        <div style={{background:C.mantle,borderRadius:10,padding:12,border:`1px solid ${C.blue}25`}}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div style={{width:34,height:34,borderRadius:8,background:`${C.blue}15`,border:`1.5px solid ${C.blue}60`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="5.5" r="2.5" stroke={C.blue} strokeWidth="1.3"/>
+                <path d="M3 14c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke={C.blue} strokeWidth="1.3" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <div style={{color:C.blue,fontSize:12,fontWeight:600,letterSpacing:1}}>diane</div>
+              <div style={{color:C.overlay,fontSize:9,marginTop:1}}>engineering partner · openclaw · gemma 4 26b</div>
+            </div>
+            <div style={{marginLeft:'auto',background:`${C.blue}15`,borderRadius:20,padding:'2px 10px',color:C.blue,fontSize:8,border:`1px solid ${C.blue}30`,letterSpacing:1}}>elite</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ROUND 2: 04-A SYNTHWAVE REFINADO ─── */
+function SynthwaveRefinedCard() {
+  const [tick, setTick] = React.useState(0);
+  React.useEffect(() => {
+    const t = setInterval(() => setTick(n => n+1), 80);
+    return () => clearInterval(t);
+  }, []);
+
+  const services = [
+    {name:'jellyfin',status:'up',cpu:18,color:'#b026ff'},
+    {name:'immich',status:'up',cpu:34,color:'#01cdfe'},
+    {name:'ollama',status:'up',cpu:72,color:'#ff2079'},
+    {name:'n8n',status:'up',cpu:12,color:'#ffe74c'},
+  ];
+
+  // animated bar: each bar wiggles slightly
+  const bar = (pct, color, seed) => {
+    const animated = pct + Math.sin((tick + seed) * 0.15) * 4;
+    return Math.max(5, Math.min(95, animated));
+  };
+
+  return (
+    <div style={{width:'100%',height:'100%',background:'#060010',display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",overflow:'hidden',position:'relative'}}>
+      {/* animated grid */}
+      <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(176,38,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(176,38,255,0.07) 1px,transparent 1px)',backgroundSize:'32px 32px',pointerEvents:'none'}}/>
+      {/* top glow */}
+      <div style={{position:'absolute',top:-40,left:'50%',transform:'translateX(-50%)',width:300,height:120,background:'radial-gradient(ellipse,rgba(176,38,255,0.25),transparent 70%)',filter:'blur(20px)',pointerEvents:'none'}}/>
+
+      <div style={{padding:28,display:'flex',flexDirection:'column',gap:20,flex:1,zIndex:1}}>
+        {/* logo refinado */}
+        <div style={{display:'flex',alignItems:'center',gap:14}}>
+          <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+            <defs>
+              <linearGradient id="sw2grad" x1="0" y1="0" x2="0" y2="1">
+                <stop stopColor="#01cdfe"/>
+                <stop offset="0.5" stopColor="#b026ff"/>
+                <stop offset="1" stopColor="#ff2079"/>
+              </linearGradient>
+              <filter id="sw2glow">
+                <feGaussianBlur stdDeviation="2.5" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            {/* hexagon frame */}
+            <polygon points="27,3 50,15 50,39 27,51 4,39 4,15" stroke="url(#sw2grad)" strokeWidth="1.2" fill="rgba(176,38,255,0.06)" filter="url(#sw2glow)"/>
+            <polygon points="27,10 44,19.5 44,34.5 27,44 10,34.5 10,19.5" stroke="rgba(176,38,255,0.25)" strokeWidth="0.8" fill="none"/>
+            <text x="27" y="34" textAnchor="middle" fill="url(#sw2grad)" fontSize="22" fontWeight="900" fontFamily="'Orbitron',sans-serif" filter="url(#sw2glow)">V</text>
+          </svg>
+          <div>
+            <div style={{fontFamily:"'Orbitron',sans-serif",fontSize:15,fontWeight:800,letterSpacing:4,background:'linear-gradient(90deg,#01cdfe,#b026ff)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>VAROSERVER</div>
+            <div style={{color:'rgba(176,38,255,0.5)',fontSize:8,letterSpacing:3,marginTop:3}}>NEURAL GRID · v22.8</div>
+          </div>
+        </div>
+
+        {/* live services */}
+        <div style={{background:'rgba(176,38,255,0.05)',border:'1px solid rgba(176,38,255,0.2)',borderRadius:6,padding:14}}>
+          <div style={{color:'rgba(1,205,254,0.5)',fontSize:9,letterSpacing:3,marginBottom:12}}>SERVICES · LIVE</div>
+          {services.map(({name,cpu,color,seed},i) => (
+            <div key={name} style={{marginBottom:10}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <div style={{width:5,height:5,borderRadius:'50%',background:color,boxShadow:`0 0 6px ${color}`}}/>
+                  <span style={{color:'rgba(255,255,255,0.7)',fontSize:9,letterSpacing:1}}>{name}</span>
+                </div>
+                <span style={{color:color,fontSize:9}}>{Math.round(bar(cpu,color,i*20))}%</span>
+              </div>
+              <div style={{height:2,background:'rgba(255,255,255,0.06)',borderRadius:1}}>
+                <div style={{height:'100%',width:`${bar(cpu,color,i*20)}%`,background:`linear-gradient(90deg,${color}aa,${color})`,borderRadius:1,boxShadow:`0 0 4px ${color}`,transition:'width 0.08s linear'}}/>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* typography */}
+        <div style={{background:'rgba(1,205,254,0.04)',border:'1px solid rgba(1,205,254,0.15)',borderRadius:6,padding:14}}>
+          <div style={{color:'rgba(1,205,254,0.4)',fontSize:9,letterSpacing:3,marginBottom:8}}>SYSTEM · TYPOGRAPHY</div>
+          <div style={{fontFamily:"'Orbitron',sans-serif",fontSize:13,fontWeight:700,letterSpacing:3,background:'linear-gradient(90deg,#01cdfe 0%,#b026ff 50%,#ff2079 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',marginBottom:4}}>DISPLAY — ORBITRON 800</div>
+          <div style={{color:'rgba(255,255,255,0.35)',fontSize:10,letterSpacing:1}}>body — JetBrains Mono 400</div>
+          <div style={{color:'rgba(255,255,255,0.5)',fontSize:10,letterSpacing:1,marginTop:3,fontWeight:600}}>label — JetBrains Mono 600</div>
+        </div>
+
+        {/* diane */}
+        <div style={{background:'rgba(1,205,254,0.04)',border:'1px solid rgba(1,205,254,0.2)',borderRadius:6,padding:12,marginTop:'auto'}}>
+          <div style={{color:'rgba(1,205,254,0.35)',fontSize:9,letterSpacing:3,marginBottom:8}}>SUB-MARCA · DIANE</div>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div style={{width:34,height:34,flexShrink:0}}>
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <polygon points="17,2 32,10 32,24 17,32 2,24 2,10" stroke="#01cdfe" strokeWidth="1.2" fill="rgba(1,205,254,0.08)"/>
+                <circle cx="17" cy="17" r="4" fill="none" stroke="#01cdfe" strokeWidth="1.2"/>
+                <circle cx="17" cy="17" r="1.5" fill="#01cdfe"/>
+                <line x1="17" y1="5" x2="17" y2="11" stroke="#01cdfe" strokeWidth="1" opacity="0.6"/>
+                <line x1="17" y1="23" x2="17" y2="29" stroke="#01cdfe" strokeWidth="1" opacity="0.6"/>
+              </svg>
+            </div>
+            <div>
+              <div style={{fontFamily:"'Orbitron',sans-serif",color:'#01cdfe',fontSize:10,fontWeight:700,letterSpacing:3,textShadow:'0 0 8px rgba(1,205,254,0.6)'}}>DIANE</div>
+              <div style={{color:'rgba(1,205,254,0.4)',fontSize:8,letterSpacing:1,marginTop:1}}>Engineering Partner · Gemma 4 26B · 192.168.1.136</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ROUND 2: HYBRID ─── */
+function HybridCard() {
+  const C = { bg:'#13101e', surface:'#1c1830', border:'rgba(203,166,247,0.15)', mauve:'#cba6f7', blue:'#89b4fa', green:'#a6e3a1', overlay:'#6c7086', text:'#cdd6f4', subtext:'#a6adc8' };
+
+  return (
+    <div style={{width:'100%',height:'100%',background:C.bg,display:'flex',flexDirection:'column',fontFamily:"'JetBrains Mono',monospace",overflow:'hidden',position:'relative'}}>
+      {/* synthwave grid — subtle */}
+      <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(203,166,247,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(203,166,247,0.04) 1px,transparent 1px)',backgroundSize:'28px 28px',pointerEvents:'none'}}/>
+      {/* top glow — mauve */}
+      <div style={{position:'absolute',top:-60,left:'50%',transform:'translateX(-50%)',width:280,height:140,background:'radial-gradient(ellipse,rgba(203,166,247,0.12),transparent 70%)',filter:'blur(24px)',pointerEvents:'none'}}/>
+      {/* bottom horizon glow */}
+      <div style={{position:'absolute',bottom:0,left:0,right:0,height:100,background:'linear-gradient(0deg,rgba(137,180,250,0.06),transparent)',pointerEvents:'none'}}/>
+
+      <div style={{padding:28,display:'flex',flexDirection:'column',gap:20,flex:1,zIndex:1}}>
+        {/* logo híbrido: constelación + glow suave */}
+        <div style={{display:'flex',alignItems:'center',gap:14}}>
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <defs>
+              <radialGradient id="hybGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#cba6f7" stopOpacity="0.3"/>
+                <stop offset="100%" stopColor="#cba6f7" stopOpacity="0"/>
+              </radialGradient>
+              <linearGradient id="hybLine" x1="0" y1="0" x2="0" y2="1">
+                <stop stopColor="#cba6f7"/>
+                <stop offset="1" stopColor="#89b4fa"/>
+              </linearGradient>
+            </defs>
+            <circle cx="28" cy="28" r="27" fill="url(#hybGlow)"/>
+            <circle cx="28" cy="28" r="26" stroke="rgba(203,166,247,0.2)" strokeWidth="0.8" strokeDasharray="3 6"/>
+            {/* V constellation with glow */}
+            <circle cx="28" cy="9" r="3" fill="#cba6f7" style={{filter:'drop-shadow(0 0 5px #cba6f7)'}}/>
+            <circle cx="15" cy="42" r="2.5" fill="#89b4fa" style={{filter:'drop-shadow(0 0 4px #89b4fa)'}}/>
+            <circle cx="41" cy="42" r="2.5" fill="#a6e3a1" style={{filter:'drop-shadow(0 0 4px #a6e3a1)'}}/>
+            <circle cx="21" cy="26" r="1.8" fill="#cba6f7" opacity="0.7"/>
+            <circle cx="35" cy="26" r="1.8" fill="#cba6f7" opacity="0.7"/>
+            <line x1="28" y1="9" x2="21" y2="26" stroke="url(#hybLine)" strokeWidth="1.2" opacity="0.7"/>
+            <line x1="21" y1="26" x2="15" y2="42" stroke="#89b4fa" strokeWidth="1.2" opacity="0.6"/>
+            <line x1="28" y1="9" x2="35" y2="26" stroke="url(#hybLine)" strokeWidth="1.2" opacity="0.7"/>
+            <line x1="35" y1="26" x2="41" y2="42" stroke="#a6e3a1" strokeWidth="1.2" opacity="0.6"/>
+          </svg>
+          <div>
+            <div style={{color:C.text,fontSize:18,fontWeight:600,letterSpacing:2,textShadow:'0 0 20px rgba(203,166,247,0.3)'}}>varoserver</div>
+            <div style={{background:'linear-gradient(90deg,#cba6f7,#89b4fa)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',fontSize:9,letterSpacing:3,marginTop:3,fontWeight:500}}>home · infrastructure · v22.8</div>
+          </div>
+        </div>
+
+        {/* palette tokens */}
+        <div style={{background:C.surface,borderRadius:8,padding:14,border:C.border}}>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:10}}>design tokens</div>
+          <div style={{display:'flex',flexDirection:'column',gap:6}}>
+            {[['--primary','#cba6f7','mauve · identidad principal'],['--accent','#89b4fa','blue · diane · links'],['--positive','#a6e3a1','green · estado OK'],['--warn','#fab387','peach · alertas'],['--surface','#1c1830','surface · cards']].map(([k,v,d])=>(
+              <div key={k} style={{display:'flex',alignItems:'center',gap:8}}>
+                <div style={{width:20,height:20,borderRadius:4,background:v,flexShrink:0,boxShadow:`0 0 8px ${v}40`}}/>
+                <code style={{color:C.mauve,fontSize:9,letterSpacing:0.5,width:80,flexShrink:0}}>{k}</code>
+                <span style={{color:C.overlay,fontSize:9}}>{d}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* status bar component */}
+        <div style={{background:C.surface,borderRadius:8,padding:14,border:C.border}}>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:10}}>status bar · system</div>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+            {[['● NOMINAL','#a6e3a1'],['⚡ 2.1GHz','#cba6f7'],['◉ 8.2GB / 16GB','#89b4fa'],['↑ 22d uptime','#fab387']].map(([t,c])=>(
+              <div key={t} style={{borderRadius:20,padding:'3px 10px',border:`1px solid ${c}35`,color:c,fontSize:9,background:`${c}0d`,letterSpacing:0.5,boxShadow:`0 0 8px ${c}20`}}>{t}</div>
+            ))}
+          </div>
+        </div>
+
+        {/* diane hybrid */}
+        <div style={{background:`linear-gradient(135deg,rgba(137,180,250,0.06),rgba(203,166,247,0.06))`,borderRadius:8,padding:12,border:`1px solid rgba(137,180,250,0.2)`,marginTop:'auto'}}>
+          <div style={{color:C.overlay,fontSize:9,letterSpacing:2,marginBottom:8}}>diane · sub-brand</div>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div style={{width:36,height:36,borderRadius:10,background:'rgba(137,180,250,0.1)',border:'1.5px solid rgba(137,180,250,0.4)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 14px rgba(137,180,250,0.2)'}}>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="7" r="3" stroke="#89b4fa" strokeWidth="1.3"/>
+                <path d="M3 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#89b4fa" strokeWidth="1.3" strokeLinecap="round"/>
+                <circle cx="9" cy="7" r="1" fill="#89b4fa"/>
+              </svg>
+            </div>
+            <div>
+              <div style={{background:'linear-gradient(90deg,#89b4fa,#cba6f7)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',fontSize:13,fontWeight:600,letterSpacing:1.5}}>diane</div>
+              <div style={{color:C.overlay,fontSize:9,marginTop:1}}>engineering partner · openclaw · elite</div>
+            </div>
+            <div style={{marginLeft:'auto',padding:'3px 10px',borderRadius:20,background:'linear-gradient(90deg,rgba(137,180,250,0.15),rgba(203,166,247,0.15))',border:'1px solid rgba(137,180,250,0.25)',fontSize:8,letterSpacing:1,color:C.subtext}}>v22.8</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── MAIN APP ─── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "showDianeSection": true,
+  "artboardHeight": 740
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaks, setTweaks] = React.useState(() => {
+    try { return {...TWEAK_DEFAULTS, ...JSON.parse(localStorage.getItem('vsb-tweaks')||'{}')}; } catch { return TWEAK_DEFAULTS; }
+  });
+  const [tweakOpen, setTweakOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    localStorage.setItem('vsb-tweaks', JSON.stringify(tweaks));
+  }, [tweaks]);
+
+  // Tweaks bridge
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweakOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweakOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const h = tweaks.artboardHeight;
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="brandsystem" title="Brand System Guide" subtitle="Tokens · Logo vars · Tipografía · Componentes">
+          <DCArtboard id="guide" label="Brand Guide · v1.0" width={920} height={h}>
+            <BrandSystemCard/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="logoexplore" title="Logo Explorations — Constelación" subtitle="V · A · mismo lenguaje de nodos · Catppuccin Mocha">
+          <DCArtboard id="logoV" label="Logo · V constellation" width={380} height={h}>
+            <LogoVCard/>
+          </DCArtboard>
+          <DCArtboard id="logoA" label="Logo · A constellation" width={380} height={h}>
+            <LogoACard/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="logos" title="varoserver — Exploración de Identidad Visual" subtitle="4 direcciones · símbolo + wordmark · paleta · tipografía · Diane sub-brand">
+          <DCArtboard id="terminal" label="01 · Terminal / Matrix" width={360} height={h}>
+            <TerminalCard/>
+          </DCArtboard>
+          <DCArtboard id="cyberpunk" label="02 · Cyberpunk Neon" width={360} height={h}>
+            <CyberpunkCard/>
+          </DCArtboard>
+          <DCArtboard id="rice" label="03 · Linux Rice (Catppuccin)" width={360} height={h}>
+            <RiceCard/>
+          </DCArtboard>
+          <DCArtboard id="synthwave" label="04 · Synthwave / Retrowave" width={360} height={h}>
+            <SynthwaveCard/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="round2" title="Ronda 2 — Refinadas" subtitle="03-A Rice · 04-A Synthwave · Hybrid fusión">
+          <DCArtboard id="rice2" label="03-A · Linux Rice Refinado" width={380} height={h}>
+            <RiceRefinedCard/>
+          </DCArtboard>
+          <DCArtboard id="synth2" label="04-A · Synthwave Refinado" width={380} height={h}>
+            <SynthwaveRefinedCard/>
+          </DCArtboard>
+          <DCArtboard id="hybrid" label="★ HYBRID · Rice × Synthwave" width={380} height={h}>
+            <HybridCard/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      {/* TWEAKS PANEL */}
+      {tweakOpen && (
+        <div style={{position:'fixed',bottom:24,right:24,background:'#1a1a2e',border:'1px solid rgba(155,48,255,0.4)',borderRadius:10,padding:20,zIndex:9999,width:260,fontFamily:"'JetBrains Mono',monospace",boxShadow:'0 8px 40px rgba(0,0,0,0.6)'}}>
+          <div style={{color:'#cba6f7',fontSize:12,fontWeight:600,letterSpacing:2,marginBottom:16}}>TWEAKS</div>
+          
+          <div style={{marginBottom:14}}>
+            <label style={{color:'rgba(255,255,255,0.5)',fontSize:10,letterSpacing:1,display:'block',marginBottom:6}}>ALTURA ARTBOARD</label>
+            <input type="range" min={580} max={900} step={20} value={h}
+              onChange={e => { const v = {...tweaks, artboardHeight: +e.target.value}; setTweaks(v); window.parent.postMessage({type:'__edit_mode_set_keys',edits:v},'*'); }}
+              style={{width:'100%',accentColor:'#9B30FF'}}/>
+            <div style={{color:'rgba(255,255,255,0.3)',fontSize:9,marginTop:3}}>{h}px</div>
+          </div>
+
+          <div style={{marginBottom:14}}>
+            <label style={{color:'rgba(255,255,255,0.5)',fontSize:10,letterSpacing:1,display:'block',marginBottom:6}}>DIANE SUB-BRAND</label>
+            <div style={{display:'flex',gap:8}}>
+              {[true,false].map(v=>(
+                <button key={String(v)} onClick={() => { const u = {...tweaks,showDianeSection:v}; setTweaks(u); window.parent.postMessage({type:'__edit_mode_set_keys',edits:u},'*'); }}
+                  style={{flex:1,padding:'5px 0',borderRadius:4,border:`1px solid ${tweaks.showDianeSection===v?'#9B30FF':'rgba(255,255,255,0.15)'}`,background:tweaks.showDianeSection===v?'rgba(155,48,255,0.2)':'transparent',color:tweaks.showDianeSection===v?'#cba6f7':'rgba(255,255,255,0.4)',fontSize:9,cursor:'pointer',letterSpacing:1}}>
+                  {v?'VISIBLE':'OCULTO'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{borderTop:'1px solid rgba(255,255,255,0.08)',paddingTop:12,color:'rgba(255,255,255,0.25)',fontSize:9,lineHeight:1.6}}>
+            Haz zoom/pan en el canvas<br/>Click en etiqueta = focus mode
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

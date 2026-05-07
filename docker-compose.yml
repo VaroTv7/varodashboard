@@ -1,0 +1,22 @@
+services:
+  varodashboard:
+    build: .
+    container_name: varodashboard
+    ports:
+      - "3456:3000"
+    volumes:
+      - ./config:/app/config
+      - ./scripts:/app/scripts
+      # Uncomment for Docker container status integration:
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M

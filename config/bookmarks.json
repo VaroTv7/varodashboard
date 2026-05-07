@@ -1,0 +1,22 @@
+{
+	"groups": [
+		{
+			"name": "Social",
+			"icon": "globe",
+			"bookmarks": [
+				{ "name": "GitHub", "url": "https://github.com", "icon": "github" },
+				{ "name": "Reddit", "url": "https://reddit.com", "icon": "message-circle" },
+				{ "name": "YouTube", "url": "https://youtube.com", "icon": "youtube" }
+			]
+		},
+		{
+			"name": "Dev",
+			"icon": "code",
+			"bookmarks": [
+				{ "name": "Stack Overflow", "url": "https://stackoverflow.com", "icon": "layers" },
+				{ "name": "MDN Docs", "url": "https://developer.mozilla.org", "icon": "book-open" },
+				{ "name": "Svelte Docs", "url": "https://svelte.dev", "icon": "zap" }
+			]
+		}
+	]
+}

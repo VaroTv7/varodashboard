@@ -1,0 +1,481 @@
+/* ============================================
+   VARODASHBOARD — Design System
+   A premium, glassmorphism-based design system
+   with full CSS Custom Properties theming
+   ============================================ */
+
+/* ── Reset ─────────────────────────────── */
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	scroll-behavior: smooth;
+	font-size: 16px;
+}
+
+body {
+	min-height: 100vh;
+	background: var(--color-bg);
+	color: var(--color-text);
+	overflow-x: hidden;
+	transition: background-color var(--transition-theme), color var(--transition-theme);
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+button {
+	font-family: inherit;
+	cursor: pointer;
+	border: none;
+	background: none;
+	color: inherit;
+}
+
+input, textarea, select {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+}
+
+ul, ol {
+	list-style: none;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+/* ── Theme: Dark (Default) ─────────────── */
+:root,
+[data-theme="dark"] {
+	/* Primitives */
+	--hue-primary: 235;
+	--sat-primary: 70%;
+	--hue-accent: 270;
+	--sat-accent: 80%;
+
+	/* Backgrounds */
+	--color-bg: hsl(230, 25%, 6%);
+	--color-bg-pattern: radial-gradient(ellipse at 20% 50%, hsla(235, 70%, 30%, 0.15) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 20%, hsla(270, 80%, 30%, 0.1) 0%, transparent 50%),
+		radial-gradient(ellipse at 50% 100%, hsla(200, 60%, 20%, 0.08) 0%, transparent 40%);
+	
+	/* Surfaces */
+	--color-surface: hsla(230, 20%, 12%, 0.8);
+	--color-surface-solid: hsl(230, 20%, 12%);
+	--color-surface-hover: hsla(230, 20%, 16%, 0.9);
+	--color-surface-active: hsla(230, 20%, 20%, 0.9);
+	--color-surface-raised: hsla(230, 20%, 15%, 0.85);
+
+	/* Glass */
+	--glass-bg: hsla(230, 20%, 13%, 0.55);
+	--glass-bg-hover: hsla(230, 20%, 16%, 0.65);
+	--glass-border: hsla(0, 0%, 100%, 0.07);
+	--glass-border-hover: hsla(0, 0%, 100%, 0.12);
+	--glass-blur: 24px;
+	--glass-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.4), 0 2px 8px hsla(0, 0%, 0%, 0.2);
+
+	/* Primary Color */
+	--color-primary: hsl(var(--hue-primary), var(--sat-primary), 65%);
+	--color-primary-hover: hsl(var(--hue-primary), var(--sat-primary), 72%);
+	--color-primary-glow: hsla(var(--hue-primary), var(--sat-primary), 60%, 0.3);
+	--color-primary-subtle: hsla(var(--hue-primary), var(--sat-primary), 60%, 0.1);
+
+	/* Accent */
+	--color-accent: hsl(var(--hue-accent), var(--sat-accent), 65%);
+	--color-accent-glow: hsla(var(--hue-accent), var(--sat-accent), 60%, 0.25);
+
+	/* Text */
+	--color-text: hsl(220, 20%, 93%);
+	--color-text-secondary: hsl(220, 10%, 60%);
+	--color-text-muted: hsl(220, 10%, 40%);
+	--color-text-inverse: hsl(230, 25%, 8%);
+
+	/* Status */
+	--color-success: hsl(145, 65%, 48%);
+	--color-success-glow: hsla(145, 65%, 48%, 0.4);
+	--color-warning: hsl(38, 92%, 55%);
+	--color-warning-glow: hsla(38, 92%, 55%, 0.3);
+	--color-error: hsl(0, 75%, 58%);
+	--color-error-glow: hsla(0, 75%, 58%, 0.3);
+	--color-info: hsl(210, 80%, 58%);
+
+	/* Borders */
+	--color-border: hsla(0, 0%, 100%, 0.06);
+	--color-border-hover: hsla(0, 0%, 100%, 0.12);
+	--color-border-focus: var(--color-primary);
+
+	/* Gradients */
+	--gradient-primary: linear-gradient(135deg, hsl(var(--hue-primary), var(--sat-primary), 55%), hsl(var(--hue-accent), var(--sat-accent), 55%));
+	--gradient-surface: linear-gradient(180deg, hsla(0, 0%, 100%, 0.03) 0%, hsla(0, 0%, 100%, 0) 100%);
+	--gradient-glow: radial-gradient(circle at center, var(--color-primary-glow), transparent 70%);
+
+	/* Spacing */
+	--space-xs: 4px;
+	--space-sm: 8px;
+	--space-md: 16px;
+	--space-lg: 24px;
+	--space-xl: 32px;
+	--space-2xl: 48px;
+	--space-3xl: 64px;
+
+	/* Radius */
+	--radius-xs: 6px;
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+	--radius-xl: 20px;
+	--radius-2xl: 24px;
+	--radius-full: 9999px;
+
+	/* Shadows */
+	--shadow-sm: 0 1px 3px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.15);
+	--shadow-md: 0 4px 16px hsla(0, 0%, 0%, 0.25), 0 2px 4px hsla(0, 0%, 0%, 0.15);
+	--shadow-lg: 0 8px 32px hsla(0, 0%, 0%, 0.35), 0 4px 8px hsla(0, 0%, 0%, 0.2);
+	--shadow-xl: 0 16px 48px hsla(0, 0%, 0%, 0.4), 0 8px 16px hsla(0, 0%, 0%, 0.25);
+	--shadow-glow: 0 0 20px var(--color-primary-glow), 0 0 40px hsla(var(--hue-primary), var(--sat-primary), 50%, 0.1);
+	--shadow-glow-accent: 0 0 20px var(--color-accent-glow);
+
+	/* Transitions */
+	--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+	--transition-theme: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+
+	/* Typography */
+	--font-xs: 0.7rem;
+	--font-sm: 0.8rem;
+	--font-base: 0.9rem;
+	--font-md: 1rem;
+	--font-lg: 1.15rem;
+	--font-xl: 1.35rem;
+	--font-2xl: 1.6rem;
+	--font-3xl: 2rem;
+	--font-4xl: 2.5rem;
+
+	/* Z-index */
+	--z-base: 1;
+	--z-dropdown: 100;
+	--z-sticky: 200;
+	--z-modal-backdrop: 300;
+	--z-modal: 400;
+	--z-toast: 500;
+	--z-tooltip: 600;
+
+	/* Layout */
+	--sidebar-width: 280px;
+	--header-height: 64px;
+	--content-max-width: 1600px;
+	--tile-min-width: 280px;
+	--tile-gap: var(--space-md);
+}
+
+/* ── Theme: Light ──────────────────────── */
+[data-theme="light"] {
+	--color-bg: hsl(225, 25%, 96%);
+	--color-bg-pattern: radial-gradient(ellipse at 20% 50%, hsla(235, 70%, 70%, 0.08) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 20%, hsla(270, 80%, 70%, 0.06) 0%, transparent 50%);
+
+	--color-surface: hsla(0, 0%, 100%, 0.75);
+	--color-surface-solid: hsl(0, 0%, 100%);
+	--color-surface-hover: hsla(0, 0%, 100%, 0.9);
+	--color-surface-active: hsla(225, 20%, 95%, 0.9);
+	--color-surface-raised: hsla(0, 0%, 100%, 0.85);
+
+	--glass-bg: hsla(0, 0%, 100%, 0.6);
+	--glass-bg-hover: hsla(0, 0%, 100%, 0.75);
+	--glass-border: hsla(0, 0%, 0%, 0.06);
+	--glass-border-hover: hsla(0, 0%, 0%, 0.1);
+	--glass-shadow: 0 8px 32px hsla(225, 25%, 50%, 0.1), 0 2px 8px hsla(225, 25%, 50%, 0.06);
+
+	--color-primary: hsl(var(--hue-primary), var(--sat-primary), 50%);
+	--color-primary-hover: hsl(var(--hue-primary), var(--sat-primary), 42%);
+	--color-primary-glow: hsla(var(--hue-primary), var(--sat-primary), 50%, 0.15);
+	--color-primary-subtle: hsla(var(--hue-primary), var(--sat-primary), 50%, 0.08);
+
+	--color-text: hsl(225, 25%, 12%);
+	--color-text-secondary: hsl(225, 10%, 45%);
+	--color-text-muted: hsl(225, 10%, 65%);
+
+	--color-border: hsla(0, 0%, 0%, 0.06);
+	--color-border-hover: hsla(0, 0%, 0%, 0.1);
+
+	--shadow-sm: 0 1px 3px hsla(225, 20%, 50%, 0.08), 0 1px 2px hsla(225, 20%, 50%, 0.04);
+	--shadow-md: 0 4px 16px hsla(225, 20%, 50%, 0.1), 0 2px 4px hsla(225, 20%, 50%, 0.06);
+	--shadow-lg: 0 8px 32px hsla(225, 20%, 50%, 0.12), 0 4px 8px hsla(225, 20%, 50%, 0.06);
+	--shadow-xl: 0 16px 48px hsla(225, 20%, 50%, 0.15), 0 8px 16px hsla(225, 20%, 50%, 0.08);
+	--shadow-glow: 0 0 20px var(--color-primary-glow);
+}
+
+/* ── Theme: Midnight ───────────────────── */
+[data-theme="midnight"] {
+	--hue-primary: 220;
+	--sat-primary: 75%;
+	--hue-accent: 200;
+	--sat-accent: 85%;
+
+	--color-bg: hsl(222, 40%, 5%);
+	--color-bg-pattern: radial-gradient(ellipse at 30% 60%, hsla(220, 75%, 25%, 0.2) 0%, transparent 50%),
+		radial-gradient(ellipse at 70% 30%, hsla(200, 85%, 25%, 0.12) 0%, transparent 50%);
+
+	--color-surface: hsla(222, 30%, 10%, 0.8);
+	--color-surface-solid: hsl(222, 30%, 10%);
+	--color-surface-hover: hsla(222, 30%, 14%, 0.9);
+
+	--glass-bg: hsla(222, 30%, 11%, 0.6);
+	--glass-border: hsla(200, 50%, 50%, 0.08);
+	--glass-border-hover: hsla(200, 50%, 60%, 0.14);
+}
+
+/* ── Theme: Cyberpunk ──────────────────── */
+[data-theme="cyberpunk"] {
+	--hue-primary: 320;
+	--sat-primary: 100%;
+	--hue-accent: 170;
+	--sat-accent: 100%;
+
+	--color-bg: hsl(280, 30%, 4%);
+	--color-bg-pattern: radial-gradient(ellipse at 20% 80%, hsla(320, 100%, 30%, 0.15) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 20%, hsla(170, 100%, 30%, 0.1) 0%, transparent 50%),
+		radial-gradient(ellipse at 50% 50%, hsla(280, 80%, 20%, 0.08) 0%, transparent 60%);
+
+	--color-surface: hsla(280, 25%, 10%, 0.8);
+	--color-surface-solid: hsl(280, 25%, 10%);
+	--color-surface-hover: hsla(280, 25%, 14%, 0.9);
+
+	--glass-bg: hsla(280, 25%, 10%, 0.55);
+	--glass-border: hsla(320, 100%, 60%, 0.1);
+	--glass-border-hover: hsla(320, 100%, 60%, 0.2);
+	--glass-shadow: 0 8px 32px hsla(320, 100%, 30%, 0.15), 0 2px 8px hsla(0, 0%, 0%, 0.3);
+
+	--color-primary: hsl(320, 100%, 60%);
+	--color-primary-hover: hsl(320, 100%, 70%);
+	--color-primary-glow: hsla(320, 100%, 50%, 0.35);
+
+	--color-accent: hsl(170, 100%, 50%);
+	--color-accent-glow: hsla(170, 100%, 50%, 0.3);
+
+	--shadow-glow: 0 0 20px hsla(320, 100%, 50%, 0.3), 0 0 60px hsla(320, 100%, 50%, 0.1);
+}
+
+/* ── Theme: Nord ───────────────────────── */
+[data-theme="nord"] {
+	--hue-primary: 213;
+	--sat-primary: 32%;
+	--hue-accent: 193;
+	--sat-accent: 43%;
+
+	--color-bg: hsl(220, 16%, 14%);
+	--color-bg-pattern: radial-gradient(ellipse at 30% 50%, hsla(213, 32%, 30%, 0.1) 0%, transparent 50%);
+
+	--color-surface: hsla(220, 16%, 18%, 0.85);
+	--color-surface-solid: hsl(220, 16%, 18%);
+	--color-surface-hover: hsla(220, 16%, 22%, 0.9);
+
+	--glass-bg: hsla(220, 16%, 18%, 0.6);
+	--glass-border: hsla(220, 16%, 40%, 0.12);
+
+	--color-primary: hsl(213, 32%, 52%);
+	--color-primary-hover: hsl(213, 32%, 60%);
+	--color-primary-glow: hsla(213, 32%, 52%, 0.2);
+
+	--color-accent: hsl(193, 43%, 60%);
+	--color-accent-glow: hsla(193, 43%, 60%, 0.2);
+
+	--color-success: hsl(92, 28%, 55%);
+	--color-warning: hsl(40, 71%, 64%);
+	--color-error: hsl(354, 42%, 56%);
+
+	--color-text: hsl(219, 28%, 88%);
+	--color-text-secondary: hsl(219, 15%, 58%);
+}
+
+/* ── Theme: Emerald ────────────────────── */
+[data-theme="emerald"] {
+	--hue-primary: 155;
+	--sat-primary: 70%;
+	--hue-accent: 185;
+	--sat-accent: 65%;
+
+	--color-bg: hsl(160, 25%, 5%);
+	--color-bg-pattern: radial-gradient(ellipse at 30% 70%, hsla(155, 70%, 25%, 0.15) 0%, transparent 50%),
+		radial-gradient(ellipse at 70% 30%, hsla(185, 65%, 25%, 0.1) 0%, transparent 50%);
+
+	--color-surface: hsla(160, 20%, 10%, 0.8);
+	--color-surface-solid: hsl(160, 20%, 10%);
+	--color-surface-hover: hsla(160, 20%, 14%, 0.9);
+
+	--glass-bg: hsla(160, 20%, 10%, 0.55);
+	--glass-border: hsla(155, 70%, 50%, 0.08);
+	--glass-border-hover: hsla(155, 70%, 50%, 0.14);
+
+	--color-primary: hsl(155, 70%, 50%);
+	--color-primary-hover: hsl(155, 70%, 58%);
+	--color-primary-glow: hsla(155, 70%, 45%, 0.3);
+}
+
+/* ── Theme: VaroServer — Catppuccin Mocha ── */
+[data-theme="varoserver"] {
+	--hue-primary: 271;
+	--sat-primary: 87%;
+	--hue-accent: 217;
+	--sat-accent: 92%;
+
+	/* Catppuccin Mocha backgrounds */
+	--color-bg: #1e1e2e;
+	--color-bg-pattern: radial-gradient(ellipse at 20% 50%, rgba(203, 166, 247, 0.08) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 30%, rgba(137, 180, 250, 0.06) 0%, transparent 50%),
+		radial-gradient(ellipse at 50% 90%, rgba(166, 227, 161, 0.04) 0%, transparent 40%);
+
+	/* Catppuccin surfaces */
+	--color-surface: rgba(24, 24, 37, 0.85);
+	--color-surface-solid: #181825;
+	--color-surface-hover: rgba(49, 50, 68, 0.9);
+	--color-surface-active: rgba(69, 71, 90, 0.9);
+	--color-surface-raised: rgba(49, 50, 68, 0.85);
+
+	/* Glass with Catppuccin feel */
+	--glass-bg: rgba(24, 24, 37, 0.6);
+	--glass-bg-hover: rgba(49, 50, 68, 0.65);
+	--glass-border: rgba(203, 166, 247, 0.08);
+	--glass-border-hover: rgba(203, 166, 247, 0.18);
+	--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(203, 166, 247, 0.06);
+
+	/* Mauve primary */
+	--color-primary: #cba6f7;
+	--color-primary-hover: #d4b8f9;
+	--color-primary-glow: rgba(203, 166, 247, 0.3);
+	--color-primary-subtle: rgba(203, 166, 247, 0.1);
+
+	/* Blue accent */
+	--color-accent: #89b4fa;
+	--color-accent-glow: rgba(137, 180, 250, 0.25);
+
+	/* Catppuccin text */
+	--color-text: #cdd6f4;
+	--color-text-secondary: #a6adc8;
+	--color-text-muted: #6c7086;
+
+	/* Catppuccin status */
+	--color-success: #a6e3a1;
+	--color-success-glow: rgba(166, 227, 161, 0.4);
+	--color-warning: #fab387;
+	--color-warning-glow: rgba(250, 179, 135, 0.3);
+	--color-error: #f38ba8;
+	--color-error-glow: rgba(243, 139, 168, 0.3);
+	--color-info: #89b4fa;
+
+	/* Catppuccin borders */
+	--color-border: rgba(49, 50, 68, 0.8);
+	--color-border-hover: rgba(203, 166, 247, 0.2);
+
+	/* Gradient with mauve → blue */
+	--gradient-primary: linear-gradient(135deg, #cba6f7, #89b4fa);
+
+	/* VaroServer glow */
+	--shadow-glow: 0 0 8px rgba(203, 166, 247, 0.3), 0 0 24px rgba(203, 166, 247, 0.1);
+	--shadow-glow-accent: 0 0 8px rgba(137, 180, 250, 0.3);
+}
+
+/* ── Background Pattern Layer ──────────── */
+#app {
+	min-height: 100vh;
+	background-image: var(--color-bg-pattern);
+	background-attachment: fixed;
+}
+
+/* ── Scrollbar ─────────────────────────── */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: hsla(0, 0%, 100%, 0.12);
+	border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: hsla(0, 0%, 100%, 0.2);
+}
+
+/* ── Utility Classes ───────────────────── */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+/* ── Animations ────────────────────────── */
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(8px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+	from { opacity: 0; transform: scale(0.95); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInUp {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+@keyframes glow-pulse {
+	0%, 100% { box-shadow: 0 0 4px var(--color-success-glow); }
+	50% { box-shadow: 0 0 12px var(--color-success-glow), 0 0 24px var(--color-success-glow); }
+}
+
+@keyframes shimmer {
+	0% { background-position: -200% 0; }
+	100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+	0%, 100% { transform: translateY(0px); }
+	50% { transform: translateY(-6px); }
+}
+
+@keyframes toast-in {
+	from { opacity: 0; transform: translateX(100%) scale(0.9); }
+	to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toast-out {
+	from { opacity: 1; transform: translateX(0) scale(1); }
+	to { opacity: 0; transform: translateX(100%) scale(0.9); }
+}

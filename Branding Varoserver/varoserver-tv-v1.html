@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>varoserver · TV Launcher</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#000; }
+  #root { width:100%; height:100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+/* ─── TOKENS ─── */
+const C = {
+  bg:'#1e1e2e', mantle:'#181825', crust:'#11111b',
+  surface0:'#313244', surface1:'#45475a', overlay:'#6c7086',
+  subtext:'#a6adc8', text:'#cdd6f4',
+  mauve:'#cba6f7', blue:'#89b4fa', sapphire:'#74c7ec',
+  teal:'#94e2d5', green:'#a6e3a1', yellow:'#f9e2af',
+  peach:'#fab387', red:'#f38ba8', pink:'#f5c2e7',
+};
+
+/* ─── ICONS ─── */
+const I = {
+  jellyfin: (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M8 5l9 7-9 7V5z" fill={c+'40'} stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
+  immich:   (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke={c} strokeWidth="1.5"/><circle cx="9" cy="11" r="2" stroke={c} strokeWidth="1.3"/><path d="M3 17l4-4 3 3 4-5 5 6" stroke={c} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  komga:    (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="11" height="14" rx="1" stroke={c} strokeWidth="1.5"/><rect x="7" y="6" width="11" height="14" rx="1" stroke={c} strokeWidth="1.5" fill={c+'20'}/></svg>,
+  romm:     (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="10" rx="2" stroke={c} strokeWidth="1.5"/><line x1="12" y1="8" x2="12" y2="5" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><circle cx="12" cy="4" r="1" fill={c}/><line x1="8" y1="13" x2="16" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  minecraft:(c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="7" height="7" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="13" y="4" width="7" height="7" stroke={c} strokeWidth="1.5"/><rect x="4" y="13" width="7" height="7" stroke={c} strokeWidth="1.5"/><rect x="13" y="13" width="7" height="7" stroke={c} strokeWidth="1.5" fill={c+'20'}/></svg>,
+  foundry:  (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><polygon points="12,3 20,8 20,16 12,21 4,16 4,8" stroke={c} strokeWidth="1.5" fill={c+'12'}/><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.2"/></svg>,
+  gamevault:(c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="13" rx="2" stroke={c} strokeWidth="1.5"/><path d="M8 3h8M12 3v4" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><line x1="8" y1="13.5" x2="16" y2="13.5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="12" y1="9.5" x2="12" y2="17.5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  ha:       (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M3 12L12 3l9 9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><path d="M5 10v9h5v-5h4v5h5v-9" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  nextcloud:(c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M12 6C9 6 6.5 8 6 11c-1.5.2-3 1.5-3 3.5C3 17 4.8 18 7 18h10c2.2 0 4-1 4-3.5 0-2-1.5-3.3-3-3.5C17.5 8 15 6 12 6z" stroke={c} strokeWidth="1.5"/></svg>,
+  affine:   (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5"/></svg>,
+  diane:    (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" stroke={c} strokeWidth="1.5" fill={c+'15'}/><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.2"/><circle cx="12" cy="12" r="1" fill={c}/></svg>,
+  youtube:  (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="14" rx="3" stroke={c} strokeWidth="1.5" fill={c+'12'}/><path d="M10 9l6 3.5-6 3.5V9z" fill={c} stroke={c} strokeWidth="1" strokeLinejoin="round"/></svg>,
+  spotify:  (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke={c} strokeWidth="1.5"/><path d="M8 10c2.5-1 5.5-1 8 0M8 13c2-0.8 4.5-0.8 7 0M9 16c1.5-0.6 3.5-0.6 5 0" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  settings: (c,s)=><svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+};
+
+/* ─── DATA ─── */
+const ROWS = [
+  {
+    id:'media', label:'Media', color:C.peach,
+    apps:[
+      {id:'jellyfin', name:'Jellyfin',   sub:'Media Server',    ico:'jellyfin',  color:C.peach},
+      {id:'immich',   name:'Immich',     sub:'Fotos',           ico:'immich',    color:C.blue},
+      {id:'komga',    name:'Komga',      sub:'Cómics',          ico:'komga',     color:C.sapphire},
+      {id:'youtube',  name:'YouTube',    sub:'Streaming',       ico:'youtube',   color:C.red},
+      {id:'spotify',  name:'Spotify',    sub:'Música',          ico:'spotify',   color:C.green},
+      {id:'romm',     name:'RomM',       sub:'ROMs',            ico:'romm',      color:C.yellow},
+    ]
+  },
+  {
+    id:'gaming', label:'Gaming', color:C.yellow,
+    apps:[
+      {id:'mcs',      name:'MC Survival',sub:'Paper 1.21',      ico:'minecraft', color:C.green},
+      {id:'mcc',      name:'MC Cobblemon',sub:'Cobblemon mod',  ico:'minecraft', color:C.blue},
+      {id:'foundry',  name:'Foundry VTT',sub:'TTRPG',          ico:'foundry',   color:C.yellow},
+      {id:'gamevault',name:'GameVault',  sub:'Biblioteca',      ico:'gamevault', color:C.peach},
+    ]
+  },
+  {
+    id:'home', label:'Hogar', color:C.green,
+    apps:[
+      {id:'ha',       name:'Home Assistant',sub:'Domótica',     ico:'ha',        color:C.green},
+      {id:'diane',    name:'Diane',      sub:'IA · OpenClaw',   ico:'diane',     color:C.blue},
+      {id:'nextcloud',name:'Nextcloud',  sub:'Archivos',        ico:'nextcloud', color:C.sapphire},
+      {id:'affine',   name:'Affine',     sub:'Notas',           ico:'affine',    color:C.mauve},
+      {id:'settings', name:'Ajustes',    sub:'varoserver',      ico:'settings',  color:C.overlay},
+    ]
+  },
+];
+
+/* ─── V LOGO ─── */
+function VLogo({size=36, color=C.mauve, aL=C.blue, aR=C.green}) {
+  const n = [
+    {x:6,y:8,r:3.5,c:color},{x:17,y:26,r:2.5,c:color,o:0.75},{x:28,y:48,r:4,c:aL},
+    {x:39,y:26,r:2.5,c:color,o:0.75},{x:50,y:8,r:3.5,c:aR},
+    {x:11,y:17,r:1.5,c:color,o:0.45},{x:23,y:37,r:1.5,c:aL,o:0.45},
+    {x:33,y:37,r:1.5,c:aL,o:0.45},{x:45,y:17,r:1.5,c:aR,o:0.45},
+  ];
+  const e = [[0,5],[5,1],[1,6],[6,2],[4,8],[8,3],[3,7],[7,2]];
+  return (
+    <svg width={size} height={size} viewBox="-8 0 72 64" fill="none">
+      {e.map(([a,b],i)=>(
+        <line key={i} x1={n[a].x} y1={n[a].y} x2={n[b].x} y2={n[b].y}
+          stroke={n[a].c} strokeWidth="1.4" opacity="0.65"/>
+      ))}
+      {n.map((nd,i)=>(
+        <circle key={i} cx={nd.x} cy={nd.y} r={nd.r} fill={nd.c} opacity={nd.o??1}/>
+      ))}
+    </svg>
+  );
+}
+
+/* ─── CLOCK ─── */
+function Clock() {
+  const [t, setT] = React.useState(new Date());
+  React.useEffect(()=>{
+    const id = setInterval(()=>setT(new Date()),1000);
+    return ()=>clearInterval(id);
+  },[]);
+  const hm = t.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  const date = t.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  return (
+    <div style={{textAlign:'right'}}>
+      <div style={{color:C.text,fontSize:52,fontWeight:300,letterSpacing:-2,lineHeight:1}}>{hm}</div>
+      <div style={{color:C.overlay,fontSize:16,letterSpacing:1,marginTop:4,textTransform:'capitalize'}}>{date}</div>
+    </div>
+  );
+}
+
+/* ─── AMBIENT BG ─── */
+function AmbientBg({focusColor}) {
+  return (
+    <div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none'}}>
+      {/* base */}
+      <div style={{position:'absolute',inset:0,background:C.crust}}/>
+      {/* grid */}
+      <div style={{position:'absolute',inset:0,backgroundImage:`linear-gradient(rgba(203,166,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(203,166,247,0.03) 1px,transparent 1px)`,backgroundSize:'48px 48px'}}/>
+      {/* top-left constellation glow */}
+      <div style={{position:'absolute',top:-120,left:-80,width:500,height:400,background:`radial-gradient(ellipse,rgba(203,166,247,0.08),transparent 65%)`,filter:'blur(40px)',transition:'background 0.8s ease'}}/>
+      {/* focus color bloom — bottom right */}
+      <div style={{position:'absolute',bottom:-100,right:-80,width:600,height:400,background:`radial-gradient(ellipse,${focusColor}18,transparent 65%)`,filter:'blur(50px)',transition:'background 0.8s ease'}}/>
+      {/* subtle vignette */}
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.5) 100%)'}}/>
+    </div>
+  );
+}
+
+/* ─── APP CARD ─── */
+function AppCard({app, focused, rowFocused}) {
+  const iconFn = I[app.ico];
+  const scale = focused ? 1.08 : 1;
+  const glowColor = app.color;
+
+  return (
+    <div style={{
+      width: 160,
+      flexShrink: 0,
+      display:'flex',
+      flexDirection:'column',
+      alignItems:'center',
+      gap: 12,
+      transition:'transform 0.2s cubic-bezier(.2,.8,.3,1)',
+      transform: `scale(${scale})`,
+      transformOrigin: 'bottom center',
+    }}>
+      {/* tile */}
+      <div style={{
+        width: 160,
+        height: 160,
+        borderRadius: 20,
+        background: focused
+          ? `linear-gradient(145deg,${C.surface0},${C.mantle})`
+          : C.mantle,
+        border: focused
+          ? `2px solid ${glowColor}`
+          : `1px solid ${C.surface0}`,
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
+        position:'relative',
+        overflow:'hidden',
+        transition:'all 0.2s ease',
+        boxShadow: focused
+          ? `0 0 0 4px ${glowColor}20, 0 20px 60px rgba(0,0,0,0.6), 0 0 40px ${glowColor}30`
+          : rowFocused
+            ? '0 8px 30px rgba(0,0,0,0.4)'
+            : '0 4px 16px rgba(0,0,0,0.3)',
+      }}>
+        {/* bg glow inside card when focused */}
+        {focused && (
+          <div style={{position:'absolute',inset:0,background:`radial-gradient(circle at 30% 30%,${glowColor}15,transparent 60%)`,pointerEvents:'none'}}/>
+        )}
+        {/* corner accent when focused */}
+        {focused && (
+          <>
+            <div style={{position:'absolute',top:0,left:0,width:28,height:28,borderTop:`2px solid ${glowColor}`,borderLeft:`2px solid ${glowColor}`,borderTopLeftRadius:18,pointerEvents:'none'}}/>
+            <div style={{position:'absolute',bottom:0,right:0,width:28,height:28,borderBottom:`2px solid ${glowColor}`,borderRight:`2px solid ${glowColor}`,borderBottomRightRadius:18,pointerEvents:'none'}}/>
+          </>
+        )}
+        {iconFn
+          ? iconFn(focused ? glowColor : C.subtext, 56)
+          : <div style={{color:focused?glowColor:C.overlay,fontSize:24,fontWeight:700}}>{app.name.slice(0,2)}</div>
+        }
+      </div>
+
+      {/* label */}
+      <div style={{textAlign:'center',transition:'opacity 0.2s'}}>
+        <div style={{
+          color: focused ? C.text : rowFocused ? C.subtext : C.overlay,
+          fontSize: 16,
+          fontWeight: focused ? 600 : 400,
+          letterSpacing: 0.3,
+          transition:'color 0.2s',
+        }}>{app.name}</div>
+        <div style={{
+          color: focused ? app.color : C.surface1,
+          fontSize: 11,
+          marginTop: 2,
+          letterSpacing: 1,
+          transition:'color 0.2s',
+          opacity: rowFocused ? 1 : 0.5,
+        }}>{app.sub}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ROW ─── */
+function AppRow({row, focusedRow, focusedCol, onFocusCol}) {
+  const rowRef = React.useRef(null);
+  const isActive = focusedRow;
+
+  // scroll focused card into view
+  React.useEffect(()=>{
+    if (!isActive || !rowRef.current) return;
+    const cards = rowRef.current.querySelectorAll('[data-card]');
+    const card = cards[focusedCol];
+    if (card) {
+      card.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    }
+  },[focusedCol, isActive]);
+
+  return (
+    <div style={{opacity: isActive ? 1 : 0.45, transition:'opacity 0.3s'}}>
+      {/* row label */}
+      <div style={{
+        display:'flex',alignItems:'center',gap:10,marginBottom:14,paddingLeft:4,
+      }}>
+        <div style={{width:3,height:18,background:row.color,borderRadius:2,flexShrink:0}}/>
+        <span style={{
+          color: isActive ? row.color : C.overlay,
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: 3,
+          textTransform:'uppercase',
+          transition:'color 0.3s',
+        }}>{row.label}</span>
+      </div>
+
+      {/* cards */}
+      <div ref={rowRef} style={{display:'flex',gap:20,overflow:'hidden',paddingBottom:4,paddingLeft:4}}>
+        {row.apps.map((app,ci)=>(
+          <div key={app.id} data-card="" onMouseEnter={()=>onFocusCol(ci)} style={{cursor:'pointer'}}>
+            <AppCard
+              app={app}
+              focused={isActive && focusedCol===ci}
+              rowFocused={isActive}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── FOCUS DETAIL PANEL ─── */
+function FocusDetail({app}) {
+  if (!app) return null;
+  const iconFn = I[app.ico];
+  return (
+    <div style={{
+      display:'flex',alignItems:'center',gap:20,
+      padding:'16px 0',
+      borderTop:`1px solid ${C.surface0}`,
+      marginTop:4,
+      transition:'all 0.3s',
+    }}>
+      <div style={{width:44,height:44,borderRadius:10,background:`${app.color}15`,border:`1px solid ${app.color}30`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+        {iconFn ? iconFn(app.color,22) : null}
+      </div>
+      <div>
+        <div style={{color:C.text,fontSize:18,fontWeight:600,letterSpacing:0.3}}>{app.name}</div>
+        <div style={{color:app.color,fontSize:13,marginTop:2,letterSpacing:1}}>{app.sub}</div>
+      </div>
+      <div style={{marginLeft:'auto',display:'flex',gap:20}}>
+        <KeyHint label="←→" action="navegar"/>
+        <KeyHint label="↑↓" action="fila"/>
+        <KeyHint label="OK" action="abrir"/>
+      </div>
+    </div>
+  );
+}
+
+function KeyHint({label, action}) {
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:6}}>
+      <div style={{background:C.surface0,borderRadius:6,padding:'2px 8px',color:C.subtext,fontSize:12,fontWeight:600,letterSpacing:0.5,border:`1px solid ${C.surface1}`}}>{label}</div>
+      <span style={{color:C.overlay,fontSize:12}}>{action}</span>
+    </div>
+  );
+}
+
+/* ─── DIANE WIDGET ─── */
+function DianeWidget() {
+  const [blink, setBlink] = React.useState(true);
+  React.useEffect(()=>{
+    const t = setInterval(()=>setBlink(b=>!b),700);
+    return ()=>clearInterval(t);
+  },[]);
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:10}}>
+      <VLogo size={20} color={C.blue} aL={C.blue} aR={C.sapphire}/>
+      <div>
+        <div style={{color:C.blue,fontSize:13,fontWeight:600,letterSpacing:1}}>diane</div>
+        <div style={{color:C.overlay,fontSize:10,letterSpacing:0.5}}>online{blink?' ▌':' '}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── MAIN APP ─── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentRow": 0,
+  "showClock": true,
+  "cardSize": 200
+}/*EDITMODE-END*/;
+
+function App() {
+  const [pos, setPos] = React.useState({row:0, col:0});
+  const [tweakOpen, setTweakOpen] = React.useState(false);
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+
+  const focusedApp = ROWS[pos.row]?.apps[pos.col];
+  const focusedColor = focusedApp?.color ?? C.mauve;
+
+  // D-pad keyboard navigation
+  React.useEffect(()=>{
+    const onKey = e => {
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+      }
+      setPos(p => {
+        const row = ROWS[p.row];
+        if (e.key==='ArrowRight') return {row:p.row, col:Math.min(p.col+1, row.apps.length-1)};
+        if (e.key==='ArrowLeft')  return {row:p.row, col:Math.max(p.col-1, 0)};
+        if (e.key==='ArrowDown')  {
+          const nr = Math.min(p.row+1, ROWS.length-1);
+          return {row:nr, col:Math.min(p.col, ROWS[nr].apps.length-1)};
+        }
+        if (e.key==='ArrowUp')    {
+          const nr = Math.max(p.row-1, 0);
+          return {row:nr, col:Math.min(p.col, ROWS[nr].apps.length-1)};
+        }
+        return p;
+      });
+    };
+    window.addEventListener('keydown', onKey);
+    return ()=>window.removeEventListener('keydown', onKey);
+  },[]);
+
+  // tweaks bridge
+  React.useEffect(()=>{
+    const h = e => {
+      if (e.data?.type==='__activate_edit_mode') setTweakOpen(true);
+      if (e.data?.type==='__deactivate_edit_mode') setTweakOpen(false);
+    };
+    window.addEventListener('message',h);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return ()=>window.removeEventListener('message',h);
+  },[]);
+
+  // Scale to fill viewport (1920×1080 reference)
+  const W=1920, H=1080;
+  const [scale, setScale] = React.useState(1);
+  React.useEffect(()=>{
+    const compute = () => setScale(Math.min(window.innerWidth/W, window.innerHeight/H));
+    compute();
+    window.addEventListener('resize', compute);
+    return ()=>window.removeEventListener('resize', compute);
+  },[]);
+
+  return (
+    <div style={{
+      width:'100vw', height:'100vh',
+      display:'flex', alignItems:'center', justifyContent:'center',
+      background:'#000',
+      fontFamily:"'JetBrains Mono',monospace",
+    }}>
+      <div style={{
+        width:W, height:H,
+        transform:`scale(${scale})`,
+        transformOrigin:'center center',
+        position:'relative',
+        overflow:'hidden',
+      }}>
+        <AmbientBg focusColor={focusedColor}/>
+
+        <div style={{position:'relative',zIndex:1,height:'100%',display:'flex',flexDirection:'column',padding:'32px 72px 24px'}}>
+
+          {/* TOP BAR */}
+          <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:28}}>
+            {/* left: logo + system info */}
+            <div style={{display:'flex',flexDirection:'column',gap:16}}>
+              <div style={{display:'flex',alignItems:'center',gap:16}}>
+                <VLogo size={36}/>
+                <div>
+                  <div style={{color:C.text,fontSize:22,fontWeight:600,letterSpacing:3}}>varoserver</div>
+                  <div style={{color:C.overlay,fontSize:11,letterSpacing:3,marginTop:2}}>HOME INFRASTRUCTURE</div>
+                </div>
+              </div>
+              <div style={{display:'flex',gap:16,alignItems:'center',paddingLeft:4,marginTop:10}}>
+                {[['CPU','62%',C.mauve],['RAM','51%',C.blue],['NAS','38%',C.green]].map(([l,v,c])=>(
+                  <div key={l} style={{display:'flex',alignItems:'center',gap:6}}>
+                    <span style={{color:C.overlay,fontSize:11,letterSpacing:1,width:28}}>{l}</span>
+                    <div style={{width:44,height:3,background:C.surface0,borderRadius:2}}>
+                      <div style={{height:'100%',width:v,background:c,borderRadius:2}}/>
+                    </div>
+                    <span style={{color:c,fontSize:11}}>{v}</span>
+                  </div>
+                ))}
+                <div style={{width:1,height:14,background:C.surface0}}/>
+                <div style={{borderRadius:20,padding:'2px 10px',border:`1px solid ${C.green}30`,color:C.green,fontSize:11,background:`${C.green}0d`,letterSpacing:0.5}}>● 22d uptime</div>
+                <DianeWidget/>
+              </div>
+            </div>
+
+            {/* right: clock */}
+            {tweaks.showClock && <Clock/>}
+          </div>
+
+          {/* ROWS */}
+          <div style={{display:'flex',flexDirection:'column',gap:24,flex:1,justifyContent:'center'}}>
+            {ROWS.map((row,ri)=>(
+              <AppRow
+                key={row.id}
+                row={row}
+                focusedRow={pos.row===ri}
+                focusedCol={pos.col}
+                onFocusCol={ci=>setPos({row:ri,col:ci})}
+              />
+            ))}
+          </div>
+
+          {/* BOTTOM — focus detail */}
+          <FocusDetail app={focusedApp}/>
+        </div>
+      </div>
+
+      {/* TWEAKS PANEL — outside scaled container */}
+      {tweakOpen && (
+        <div style={{
+          position:'fixed',bottom:20,right:20,zIndex:9999,
+          background:C.crust,border:`1px solid ${C.mauve}40`,
+          borderRadius:10,padding:20,width:240,
+          fontFamily:"'JetBrains Mono',monospace",
+          boxShadow:'0 8px 40px rgba(0,0,0,0.7)',
+        }}>
+          <div style={{color:C.mauve,fontSize:11,fontWeight:600,letterSpacing:2,marginBottom:16}}>TWEAKS · TV LAUNCHER</div>
+
+          <div style={{marginBottom:14}}>
+            <div style={{color:C.overlay,fontSize:9,letterSpacing:1,marginBottom:6}}>RELOJ</div>
+            <div style={{display:'flex',gap:6}}>
+              {[['Visible',true],['Oculto',false]].map(([l,v])=>(
+                <button key={l} onClick={()=>{const u={...tweaks,showClock:v};setTweaks(u);window.parent.postMessage({type:'__edit_mode_set_keys',edits:u},'*');}}
+                  style={{flex:1,padding:'5px 0',borderRadius:4,border:`1px solid ${tweaks.showClock===v?C.mauve:'rgba(255,255,255,0.1)'}`,background:tweaks.showClock===v?`${C.mauve}20`:'transparent',color:tweaks.showClock===v?C.mauve:C.overlay,fontSize:9,cursor:'pointer'}}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{borderTop:`1px solid ${C.surface0}`,paddingTop:12,color:C.overlay,fontSize:9,lineHeight:1.8}}>
+            ← → ↑ ↓ navegar<br/>
+            Hover con ratón también funciona
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

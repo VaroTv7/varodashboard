@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>varoserver — Homepage · PDF</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background: #1e1e2e;
+    font-family: 'JetBrains Mono', monospace;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0.6cm; }
+    body { background: #1e1e2e !important; }
+    .page { break-after: page; break-inside: avoid; }
+    .page:last-child { break-after: auto; }
+  }
+
+  .page {
+    width: 277mm;
+    min-height: 190mm;
+    background: #1e1e2e;
+    padding: 14mm 12mm;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10mm;
+  }
+
+  /* topbar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #11111b;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    padding: 8px 16px;
+    flex-shrink: 0;
+  }
+  .topbar-logo { display:flex; align-items:center; gap:8px; padding-right:14px; border-right:1px solid #313244; }
+  .topbar-name { color:#cdd6f4; font-size:11px; font-weight:600; letter-spacing:2px; }
+  .topbar-stat { display:flex; align-items:center; gap:5px; }
+  .topbar-stat-label { color:#6c7086; font-size:7px; letter-spacing:1px; width:24px; }
+  .topbar-stat-bar { width:40px; height:2px; background:#313244; border-radius:1px; overflow:hidden; }
+  .topbar-stat-fill { height:100%; border-radius:1px; }
+  .topbar-stat-val { font-size:7px; width:24px; }
+  .topbar-badge { border-radius:20px; padding:2px 9px; font-size:7px; letter-spacing:.5px; border-width:1px; border-style:solid; }
+  .topbar-spacer { flex:1; }
+  .topbar-time { text-align:right; }
+  .topbar-time-main { color:#a6adc8; font-size:10px; font-weight:600; letter-spacing:1px; }
+  .topbar-time-sub { color:#6c7086; font-size:7px; letter-spacing:1px; }
+  .topbar-ip { border-left:1px solid #313244; padding-left:12px; }
+  .topbar-ip div { color:#6c7086; font-size:7px; letter-spacing:1px; }
+
+  /* content area */
+  .content { display:flex; gap:10mm; flex:1; }
+
+  /* sidebar */
+  .sidebar {
+    width: 44mm;
+    background: #181825;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .sidebar-item {
+    display:flex; align-items:center; gap:7px;
+    padding: 5px 8px; border-radius:6px;
+    border: 1px solid transparent;
+  }
+  .sidebar-item.active { background:rgba(203,166,247,0.1); border-color:rgba(203,166,247,0.25); }
+  .sidebar-icon { font-size:10px; width:14px; text-align:center; }
+  .sidebar-label { font-size:8px; flex:1; letter-spacing:.3px; }
+  .sidebar-count { font-size:7px; background:#313244; border-radius:10px; padding:1px 5px; color:#45475a; }
+  .sidebar-divider { height:1px; background:#313244; margin:4px 0; }
+  .sidebar-diane {
+    margin-top:auto;
+    background:rgba(137,180,250,0.06);
+    border:1px solid rgba(137,180,250,0.2);
+    border-radius:7px;
+    padding:8px 10px;
+  }
+  .sidebar-diane-row { display:flex; align-items:center; gap:7px; margin-bottom:3px; }
+  .sidebar-diane-name { color:#89b4fa; font-size:9px; font-weight:600; letter-spacing:1px; }
+  .sidebar-diane-dot { width:5px; height:5px; border-radius:50%; background:#a6e3a1; margin-left:auto; }
+  .sidebar-diane-info { color:#6c7086; font-size:7px; line-height:1.5; }
+
+  /* main grid */
+  .main { flex:1; display:flex; flex-direction:column; gap:8mm; }
+  .section-header { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+  .section-icon { font-size:12px; }
+  .section-title { font-size:10px; font-weight:600; letter-spacing:1px; color:#cdd6f4; }
+  .section-line { flex:1; height:1px; background:#313244; margin-left:6px; }
+  .section-count { font-size:7px; letter-spacing:1px; color:#6c7086; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(54mm,1fr)); gap:5px; }
+
+  /* card */
+  .card {
+    background: #181825;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    padding: 9px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    break-inside: avoid;
+  }
+  .card-top { display:flex; align-items:center; gap:8px; }
+  .card-icon-badge {
+    width:28px; height:28px; border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .card-name { font-size:9px; font-weight:600; color:#cdd6f4; letter-spacing:.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-desc { font-size:7px; color:#6c7086; margin-top:1px; letter-spacing:.3px; }
+  .card-bot { display:flex; align-items:center; justify-content:space-between; }
+  .card-port { border-radius:20px; padding:1px 7px; font-size:7px; letter-spacing:.4px; border-width:1px; border-style:solid; }
+  .card-mem { font-size:7px; color:#45475a; }
+  .dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .dot-up { background:#a6e3a1; }
+  .dot-paused { background:#6c7086; }
+  .dot-down { background:#f38ba8; }
+
+  /* page number */
+  .page-num { position:absolute; bottom:6mm; right:12mm; color:#45475a; font-size:7px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const C = {
+  bg:'#1e1e2e', mantle:'#181825', crust:'#11111b',
+  surface0:'#313244', surface1:'#45475a', overlay:'#6c7086',
+  subtext:'#a6adc8', text:'#cdd6f4',
+  mauve:'#cba6f7', blue:'#89b4fa', sapphire:'#74c7ec',
+  teal:'#94e2d5', green:'#a6e3a1', yellow:'#f9e2af',
+  peach:'#fab387', red:'#f38ba8', pink:'#f5c2e7',
+};
+
+const ICONS = {
+  adguard: (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7L12 3z" stroke={c} strokeWidth="1.5" fill={c+'20'}/><path d="M9 12l2 2 4-4" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  npm:     (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="3" y="6" width="18" height="12" rx="2" stroke={c} strokeWidth="1.5"/><path d="M3 12h18M12 6v12" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  portainer:(c,s=16)=> <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="4" y="4" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5"/><rect x="14" y="4" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5"/><rect x="4" y="14" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5"/><rect x="14" y="14" width="6" height="6" rx="1" stroke={c} strokeWidth="1.5" fill={c+'20'}/></svg>,
+  uptime:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><circle cx="12" cy="12" r="8" stroke={c} strokeWidth="1.5"/><path d="M12 7v5l3 3" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  beszel:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><polyline points="2,14 6,10 10,14 14,8 18,12 22,6" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  wireguard:(c,s=16)=> <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M12 2L4 6v6c0 4 3.6 8 8 9 4.4-1 8-5 8-9V6L12 2z" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="12" r="2.5" fill={c}/></svg>,
+  diane:   (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" stroke={c} strokeWidth="1.5" fill={c+'15'}/><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.2"/><circle cx="12" cy="12" r="1" fill={c}/></svg>,
+  ollama:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><circle cx="9" cy="10" r="3" stroke={c} strokeWidth="1.5"/><circle cx="15" cy="10" r="3" stroke={c} strokeWidth="1.5"/><path d="M6 17c0-2 1.8-3 6-3s6 1 6 3" stroke={c} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  n8n:     (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><circle cx="5" cy="12" r="2.5" stroke={c} strokeWidth="1.3"/><circle cx="19" cy="12" r="2.5" stroke={c} strokeWidth="1.3"/><circle cx="12" cy="6" r="2.5" stroke={c} strokeWidth="1.3"/><circle cx="12" cy="18" r="2.5" stroke={c} strokeWidth="1.3"/><line x1="7.5" y1="12" x2="16.5" y2="12" stroke={c} strokeWidth="1.3"/><line x1="12" y1="8.5" x2="12" y2="15.5" stroke={c} strokeWidth="1.3"/></svg>,
+  telegram:(c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M21 5L2 12.5l7 1M21 5l-5 14-4.5-6L21 5zM9 13.5L14 9" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  ha:      (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M3 12L12 3l9 9" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><path d="M5 10v9h5v-5h4v5h5v-9" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  matter:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="4" r="1.5" fill={c}/><circle cx="12" cy="20" r="1.5" fill={c}/><circle cx="4" cy="12" r="1.5" fill={c}/><circle cx="20" cy="12" r="1.5" fill={c}/><line x1="12" y1="6" x2="12" y2="9" stroke={c} strokeWidth="1.2"/><line x1="12" y1="15" x2="12" y2="18" stroke={c} strokeWidth="1.2"/><line x1="6" y1="12" x2="9" y2="12" stroke={c} strokeWidth="1.2"/><line x1="15" y1="12" x2="18" y2="12" stroke={c} strokeWidth="1.2"/></svg>,
+  nextcloud:(c,s=16)=> <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M12 6C9 6 6.5 8 6 11c-1.5.2-3 1.5-3 3.5C3 17 4.8 18 7 18h10c2.2 0 4-1 4-3.5 0-2-1.5-3.3-3-3.5C17.5 8 15 6 12 6z" stroke={c} strokeWidth="1.5"/></svg>,
+  paperless:(c,s=16)=> <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M6 4h9l4 4v12H6V4z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><path d="M15 4v4h4" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/><line x1="9" y1="13" x2="16" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="9" y1="16" x2="13" y2="16" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  affine:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="3" y="3" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5" fill={c+'20'}/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke={c} strokeWidth="1.5"/></svg>,
+  outline: (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="3" y="4" width="18" height="16" rx="2" stroke={c} strokeWidth="1.5"/><line x1="7" y1="9" x2="17" y2="9" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="7" y1="13" x2="14" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  siftly:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M5 3h14l-5 8v7l-4-2v-5L5 3z" stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
+  jellyfin:(c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M8 5l9 7-9 7V5z" fill={c+'30'} stroke={c} strokeWidth="1.5" strokeLinejoin="round"/></svg>,
+  immich:  (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="3" y="5" width="18" height="14" rx="2" stroke={c} strokeWidth="1.5"/><circle cx="9" cy="11" r="2" stroke={c} strokeWidth="1.3"/><path d="M3 17l4-4 3 3 4-5 5 6" stroke={c} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  komga:   (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="5" y="3" width="11" height="14" rx="1" stroke={c} strokeWidth="1.5"/><rect x="7" y="6" width="11" height="14" rx="1" stroke={c} strokeWidth="1.5" fill={c+'15'}/></svg>,
+  romm:    (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="4" y="8" width="16" height="10" rx="2" stroke={c} strokeWidth="1.5"/><line x1="12" y1="8" x2="12" y2="5" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><circle cx="12" cy="4" r="1" fill={c}/><line x1="8" y1="13" x2="16" y2="13" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  minecraft:(c,s=16)=> <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="4" y="4" width="7" height="7" stroke={c} strokeWidth="1.5" fill={c+'15'}/><rect x="13" y="4" width="7" height="7" stroke={c} strokeWidth="1.5"/><rect x="4" y="13" width="7" height="7" stroke={c} strokeWidth="1.5"/><rect x="13" y="13" width="7" height="7" stroke={c} strokeWidth="1.5" fill={c+'15'}/></svg>,
+  foundry: (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><polygon points="12,3 20,8 20,16 12,21 4,16 4,8" stroke={c} strokeWidth="1.5" fill={c+'10'}/><circle cx="12" cy="12" r="3" stroke={c} strokeWidth="1.2"/></svg>,
+  gamevault:(c,s=16)=> <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="2" y="7" width="20" height="13" rx="2" stroke={c} strokeWidth="1.5"/><path d="M8 3h8M12 3v4" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><line x1="8" y1="13.5" x2="16" y2="13.5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  promptvault:(c,s=16)=><svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="4" y="3" width="16" height="18" rx="2" stroke={c} strokeWidth="1.5"/><path d="M8 8h4M8 12h8M8 16h5" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  varologs:(c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><rect x="3" y="4" width="18" height="16" rx="2" stroke={c} strokeWidth="1.5"/><line x1="7" y1="9" x2="9" y2="9" stroke={c} strokeWidth="1.3" strokeLinecap="round"/><line x1="11" y1="9" x2="17" y2="9" stroke={c} strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  varodesign:(c,s=16)=><svg viewBox="0 0 24 24" fill="none" width={s} height={s}><circle cx="12" cy="12" r="4" stroke={c} strokeWidth="1.5"/><circle cx="12" cy="4" r="1.5" fill={c}/><circle cx="20" cy="12" r="1.5" fill={c}/><circle cx="12" cy="20" r="1.5" fill={c}/><circle cx="4" cy="12" r="1.5" fill={c}/></svg>,
+  cosas:   (c,s=16) => <svg viewBox="0 0 24 24" fill="none" width={s} height={s}><path d="M3 6h18M3 12h18M3 18h18" stroke={c} strokeWidth="1.5" strokeLinecap="round"/><circle cx="7" cy="6" r="1.5" fill={c}/><circle cx="7" cy="18" r="1.5" fill={c}/></svg>,
+};
+
+const SERVICES = [
+  { key:'infra',     label:'Infraestructura',     icon:'⬡', color:C.mauve,    items:[
+    {name:'AdGuard Home',   port:3000,  desc:'DNS · blocker',        mem:'~32MB',  status:'up',     ico:'adguard'},
+    {name:'NPM',            port:81,    desc:'Reverse proxy · SSL',  mem:'~85MB',  status:'up',     ico:'npm'},
+    {name:'Portainer',      port:9000,  desc:'Docker manager',       mem:'~60MB',  status:'up',     ico:'portainer'},
+    {name:'Uptime Kuma',    port:3001,  desc:'Monitorización',       mem:'~120MB', status:'up',     ico:'uptime'},
+    {name:'Beszel',         port:8090,  desc:'Métricas sistema',     mem:'~40MB',  status:'up',     ico:'beszel'},
+    {name:'WireGuard',      port:51821, desc:'VPN · WG-Easy',        mem:'~7MB',   status:'up',     ico:'wireguard'},
+  ]},
+  { key:'ai',        label:'IA & Automatización', icon:'◎', color:C.blue,     items:[
+    {name:'Diane',          port:18789, desc:'OpenClaw · Gemma 4',   mem:'~746MB', status:'up',     ico:'diane'},
+    {name:'Ollama Local',   port:11434, desc:'Modelos ligeros',      mem:'~113MB', status:'up',     ico:'ollama'},
+    {name:'n8n',            port:5678,  desc:'Automatizaciones',     mem:'~92MB',  status:'up',     ico:'n8n'},
+    {name:'Claude Bot',     port:null,  desc:'@varocualdecode_bot',   mem:'~50MB',  status:'up',     ico:'telegram'},
+  ]},
+  { key:'smarthome', label:'Smart Home',          icon:'⌂', color:C.green,    items:[
+    {name:'Home Assistant', port:8123,  desc:'Domótica · host mode', mem:'~400MB', status:'up',     ico:'ha'},
+    {name:'Matter Server',  port:null,  desc:'Thread · Avahi mDNS',  mem:'~30MB',  status:'paused', ico:'matter'},
+  ]},
+  { key:'prod',      label:'Productividad',       icon:'◫', color:C.sapphire, items:[
+    {name:'Nextcloud',      port:8088,  desc:'Cloud storage',        mem:'~200MB', status:'up',     ico:'nextcloud'},
+    {name:'Paperless-NGX',  port:8000,  desc:'Gestión documentos',   mem:'~382MB', status:'up',     ico:'paperless'},
+    {name:'Affine',         port:3010,  desc:'Notas colaborativas',  mem:'~171MB', status:'up',     ico:'affine'},
+    {name:'Outline',        port:3002,  desc:'Wiki homelab',         mem:'~80MB',  status:'up',     ico:'outline'},
+    {name:'Siftly',         port:3060,  desc:'Bookmarks · Claude',   mem:'~60MB',  status:'up',     ico:'siftly'},
+  ]},
+  { key:'media',     label:'Media',               icon:'▶', color:C.peach,    items:[
+    {name:'Jellyfin',       port:8096,  desc:'Media server · host',  mem:'~220MB', status:'up',     ico:'jellyfin'},
+    {name:'Immich',         port:2283,  desc:'Fotos · SSD local',    mem:'~300MB', status:'up',     ico:'immich'},
+    {name:'Komga',          port:25600, desc:'Cómics',               mem:'~90MB',  status:'up',     ico:'komga'},
+    {name:'RomM',           port:8980,  desc:'ROMs manager',         mem:'~111MB', status:'up',     ico:'romm'},
+  ]},
+  { key:'gaming',    label:'Gaming',              icon:'◈', color:C.yellow,   items:[
+    {name:'MC Survival',    port:25565, desc:'Paper · 1.21',         mem:'~2GB',   status:'up',     ico:'minecraft'},
+    {name:'MC Cobblemon',   port:25566, desc:'Cobblemon mod',         mem:'~2GB',   status:'up',     ico:'minecraft'},
+    {name:'Foundry VTT',    port:30000, desc:'TTRPG · tabletop',     mem:'~79MB',  status:'up',     ico:'foundry'},
+    {name:'GameVault',      port:8087,  desc:'Game library',         mem:'~86MB',  status:'up',     ico:'gamevault'},
+  ]},
+  { key:'apps',      label:'Varo Apps',           icon:'◇', color:C.pink,     items:[
+    {name:'VaroPromptVault',port:8091,  desc:'Prompt library',       mem:'~52MB',  status:'up',     ico:'promptvault'},
+    {name:'VaroLogs',       port:8400,  desc:'Log viewer',           mem:'~33MB',  status:'up',     ico:'varologs'},
+    {name:'VaroDesign',     port:8086,  desc:'Design renders',       mem:'~1MB',   status:'up',     ico:'varodesign'},
+    {name:'Cosas en Casa',  port:8110,  desc:'Lista del hogar',      mem:'~19MB',  status:'up',     ico:'cosas'},
+  ]},
+];
+
+const totalServices = SERVICES.reduce((a,c)=>a+c.items.length,0);
+const upServices    = SERVICES.reduce((a,c)=>a+c.items.filter(i=>i.status==='up').length,0);
+
+function VLogo({size=22, color=C.mauve, aL=C.blue, aR=C.green}) {
+  const n = [{x:6,y:8,r:3.5,c:color},{x:17,y:26,r:2.5,c:color,o:0.75},{x:28,y:48,r:4,c:aL},{x:39,y:26,r:2.5,c:color,o:0.75},{x:50,y:8,r:3.5,c:aR},{x:11,y:17,r:1.5,c:color,o:0.45},{x:23,y:37,r:1.5,c:aL,o:0.45},{x:33,y:37,r:1.5,c:aL,o:0.45},{x:45,y:17,r:1.5,c:aR,o:0.45}];
+  const e = [[0,5],[5,1],[1,6],[6,2],[4,8],[8,3],[3,7],[7,2]];
+  return (
+    <svg width={size} height={size} viewBox="-8 0 72 64" fill="none">
+      {e.map(([a,b],i)=>(<line key={i} x1={n[a].x} y1={n[a].y} x2={n[b].x} y2={n[b].y} stroke={n[a].c} strokeWidth="1.3" opacity="0.6"/>))}
+      {n.map((nd,i)=>(<circle key={i} cx={nd.x} cy={nd.y} r={nd.r} fill={nd.c} opacity={nd.o??1}/>))}
+    </svg>
+  );
+}
+
+function Topbar() {
+  return (
+    <div className="topbar">
+      <div className="topbar-logo">
+        <VLogo size={20}/>
+        <span className="topbar-name">varoserver</span>
+      </div>
+      {[['CPU',62,C.mauve],['RAM',51,C.blue],['NAS',38,C.green]].map(([l,v,c])=>(
+        <div key={l} className="topbar-stat">
+          <span className="topbar-stat-label">{l}</span>
+          <div className="topbar-stat-bar"><div className="topbar-stat-fill" style={{width:`${v}%`,background:c}}/></div>
+          <span className="topbar-stat-val" style={{color:c}}>{v}%</span>
+        </div>
+      ))}
+      <div style={{width:1,height:16,background:'#313244'}}/>
+      <span className="topbar-badge" style={{color:C.green,borderColor:C.green+'30',background:C.green+'0d'}}>● NOMINAL</span>
+      <span style={{color:C.overlay,fontSize:'7px'}}>{upServices}/{totalServices} servicios</span>
+      <span style={{color:'#45475a',fontSize:'7px'}}>⬆ 22d 14h</span>
+      <div className="topbar-spacer"/>
+      <div className="topbar-time">
+        <div className="topbar-time-main">varoserver · v22.8</div>
+        <div className="topbar-time-sub">27 abr 2026 · brand system</div>
+      </div>
+      <div className="topbar-ip">
+        <div>192.168.1.56</div>
+        <div>Intel N150 · 16GB</div>
+      </div>
+    </div>
+  );
+}
+
+function Sidebar({activePage}) {
+  return (
+    <div className="sidebar">
+      <div className="sidebar-item active" style={{background:'rgba(203,166,247,0.1)',borderColor:'rgba(203,166,247,0.25)'}}>
+        <span className="sidebar-icon" style={{color:C.mauve}}>◉</span>
+        <span className="sidebar-label" style={{color:C.mauve,fontWeight:600}}>Todos los servicios</span>
+        <span className="sidebar-count">{totalServices}</span>
+      </div>
+      <div className="sidebar-divider"/>
+      {SERVICES.map(cat=>(
+        <div key={cat.key} className="sidebar-item">
+          <span className="sidebar-icon" style={{color:cat.color}}>{cat.icon}</span>
+          <span className="sidebar-label" style={{color:C.overlay}}>{cat.label}</span>
+          <span className="sidebar-count">{cat.items.length}</span>
+        </div>
+      ))}
+      <div className="sidebar-diane">
+        <div className="sidebar-diane-row">
+          <VLogo size={16} color={C.blue} aL={C.blue} aR={C.sapphire}/>
+          <span className="sidebar-diane-name">diane</span>
+          <div className="sidebar-diane-dot"/>
+        </div>
+        <div className="sidebar-diane-info">Gemma 4 26B<br/>192.168.1.136</div>
+      </div>
+    </div>
+  );
+}
+
+function Card({item, color}) {
+  const iconFn = ICONS[item.ico];
+  const dotCls = item.status==='up'?'dot dot-up':item.status==='paused'?'dot dot-paused':'dot dot-down';
+  return (
+    <div className="card" style={{borderColor: color+'20'}}>
+      <div className="card-top">
+        <div className="card-icon-badge" style={{background:`${color}12`,border:`1px solid ${color}30`}}>
+          {iconFn ? iconFn(color+'cc', 14) : <span style={{color,fontSize:'9px',fontWeight:700}}>{item.name.slice(0,2)}</span>}
+        </div>
+        <div style={{flex:1,minWidth:0}}>
+          <div className="card-name">{item.name}</div>
+          <div className="card-desc">{item.desc}</div>
+        </div>
+        <div className={dotCls}/>
+      </div>
+      <div className="card-bot">
+        <span className="card-port" style={{color,borderColor:`${color}30`,background:`${color}12`}}>
+          {item.port ? `:${item.port}` : 'polling'}
+        </span>
+        <span className="card-mem">{item.mem}</span>
+      </div>
+    </div>
+  );
+}
+
+// Split services into pages — page 1: infra + ai + smarthome, page 2: prod + media, page 3: gaming + apps
+const PAGES = [
+  SERVICES.filter(s=>['infra','ai','smarthome'].includes(s.key)),
+  SERVICES.filter(s=>['prod','media'].includes(s.key)),
+  SERVICES.filter(s=>['gaming','apps'].includes(s.key)),
+];
+
+function Page({cats, pageNum, total}) {
+  return (
+    <div className="page">
+      <Topbar/>
+      <div className="content">
+        <Sidebar/>
+        <div className="main">
+          {cats.map(cat=>(
+            <div key={cat.key}>
+              <div className="section-header">
+                <span className="section-icon" style={{color:cat.color}}>{cat.icon}</span>
+                <span className="section-title">{cat.label}</span>
+                <div className="section-line"/>
+                <span className="section-count">{cat.items.filter(i=>i.status==='up').length}/{cat.items.length} up</span>
+              </div>
+              <div className="grid">
+                {cat.items.map(item=><Card key={item.name} item={item} color={cat.color}/>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="page-num">varoserver · {pageNum}/{total}</div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      {PAGES.map((cats,i)=>(
+        <Page key={i} cats={cats} pageNum={i+1} total={PAGES.length}/>
+      ))}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+
+// auto-print after fonts + babel settle
+document.fonts.ready.then(() => {
+  setTimeout(() => window.print(), 500);
+});
+</script>
+</body>
+</html>

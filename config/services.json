@@ -1,0 +1,106 @@
+{
+	"groups": [
+		{
+			"name": "Media",
+			"icon": "play-circle",
+			"collapsed": false,
+			"services": [
+				{
+					"name": "Jellyfin",
+					"url": "http://localhost:8096",
+					"icon": "tv",
+					"color": "#9b59b6",
+					"description": "Media Server",
+					"statusCheck": true,
+					"openInNewTab": true
+				},
+				{
+					"name": "Radarr",
+					"url": "http://localhost:7878",
+					"icon": "film",
+					"color": "#f39c12",
+					"description": "Movie Manager",
+					"statusCheck": true,
+					"openInNewTab": true
+				},
+				{
+					"name": "Sonarr",
+					"url": "http://localhost:8989",
+					"icon": "monitor",
+					"color": "#3498db",
+					"description": "TV Series Manager",
+					"statusCheck": true,
+					"openInNewTab": true
+				},
+				{
+					"name": "qBittorrent",
+					"url": "http://localhost:8080",
+					"icon": "download",
+					"color": "#2ecc71",
+					"description": "Torrent Client",
+					"statusCheck": true,
+					"openInNewTab": true
+				}
+			]
+		},
+		{
+			"name": "Infrastructure",
+			"icon": "server",
+			"collapsed": false,
+			"services": [
+				{
+					"name": "Portainer",
+					"url": "http://localhost:9000",
+					"icon": "container",
+					"color": "#13b5ea",
+					"description": "Docker Management",
+					"statusCheck": true,
+					"openInNewTab": true
+				},
+				{
+					"name": "Nginx Proxy",
+					"url": "http://localhost:81",
+					"icon": "shield",
+					"color": "#e74c3c",
+					"description": "Reverse Proxy Manager",
+					"statusCheck": true,
+					"openInNewTab": true
+				},
+				{
+					"name": "Grafana",
+					"url": "http://localhost:3001",
+					"icon": "activity",
+					"color": "#e6522c",
+					"description": "Monitoring Dashboard",
+					"statusCheck": true,
+					"openInNewTab": true
+				}
+			]
+		},
+		{
+			"name": "Tools",
+			"icon": "wrench",
+			"collapsed": false,
+			"services": [
+				{
+					"name": "Gitea",
+					"url": "http://localhost:3002",
+					"icon": "git-branch",
+					"color": "#609926",
+					"description": "Git Repository",
+					"statusCheck": true,
+					"openInNewTab": true
+				},
+				{
+					"name": "Vaultwarden",
+					"url": "http://localhost:8082",
+					"icon": "lock",
+					"color": "#1a8cff",
+					"description": "Password Manager",
+					"statusCheck": true,
+					"openInNewTab": true
+				}
+			]
+		}
+	]
+}
