@@ -337,23 +337,22 @@ img {
 
 	/* Catppuccin Mocha backgrounds */
 	--color-bg: #1e1e2e;
-	--color-bg-pattern: radial-gradient(ellipse at 20% 50%, rgba(203, 166, 247, 0.08) 0%, transparent 50%),
-		radial-gradient(ellipse at 80% 30%, rgba(137, 180, 250, 0.06) 0%, transparent 50%),
-		radial-gradient(ellipse at 50% 90%, rgba(166, 227, 161, 0.04) 0%, transparent 40%);
+	--color-bg-pattern: none;
 
-	/* Catppuccin surfaces */
-	--color-surface: rgba(24, 24, 37, 0.85);
+	/* Solid Catppuccin surfaces — NO glassmorphism */
+	--color-surface: #181825;
 	--color-surface-solid: #181825;
-	--color-surface-hover: rgba(49, 50, 68, 0.9);
-	--color-surface-active: rgba(69, 71, 90, 0.9);
-	--color-surface-raised: rgba(49, 50, 68, 0.85);
+	--color-surface-hover: #313244;
+	--color-surface-active: #45475a;
+	--color-surface-raised: #313244;
 
-	/* Glass with Catppuccin feel */
-	--glass-bg: rgba(24, 24, 37, 0.6);
-	--glass-bg-hover: rgba(49, 50, 68, 0.65);
-	--glass-border: rgba(203, 166, 247, 0.08);
-	--glass-border-hover: rgba(203, 166, 247, 0.18);
-	--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(203, 166, 247, 0.06);
+	/* Solid cards, not glass */
+	--glass-bg: #181825;
+	--glass-bg-hover: #313244;
+	--glass-border: #313244;
+	--glass-border-hover: rgba(203, 166, 247, 0.35);
+	--glass-blur: 0px;
+	--glass-shadow: none;
 
 	/* Mauve primary */
 	--color-primary: #cba6f7;
@@ -379,16 +378,273 @@ img {
 	--color-error-glow: rgba(243, 139, 168, 0.3);
 	--color-info: #89b4fa;
 
-	/* Catppuccin borders */
-	--color-border: rgba(49, 50, 68, 0.8);
-	--color-border-hover: rgba(203, 166, 247, 0.2);
+	/* Solid Catppuccin borders */
+	--color-border: #313244;
+	--color-border-hover: rgba(203, 166, 247, 0.35);
 
 	/* Gradient with mauve → blue */
 	--gradient-primary: linear-gradient(135deg, #cba6f7, #89b4fa);
 
-	/* VaroServer glow */
-	--shadow-glow: 0 0 8px rgba(203, 166, 247, 0.3), 0 0 24px rgba(203, 166, 247, 0.1);
+	/* Subtle shadows, not glass */
+	--shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(203, 166, 247, 0.1);
+	--shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.5);
+	--shadow-glow: 0 0 8px rgba(203, 166, 247, 0.3);
 	--shadow-glow-accent: 0 0 8px rgba(137, 180, 250, 0.3);
+
+	/* Compact spacing */
+	--space-xs: 4px;
+	--space-sm: 6px;
+	--space-md: 12px;
+	--space-lg: 16px;
+	--space-xl: 20px;
+	--space-2xl: 32px;
+	--space-3xl: 48px;
+
+	/* Tighter radii */
+	--radius-xs: 4px;
+	--radius-sm: 6px;
+	--radius-md: 8px;
+	--radius-lg: 10px;
+	--radius-xl: 12px;
+	--radius-2xl: 14px;
+
+	/* Smaller typography */
+	--font-xs: 0.5rem;
+	--font-sm: 0.65rem;
+	--font-base: 0.7rem;
+	--font-md: 0.8rem;
+	--font-lg: 0.9rem;
+	--font-xl: 1.1rem;
+	--font-2xl: 1.4rem;
+
+	/* Compact layout */
+	--header-height: 52px;
+	--tile-min-width: 200px;
+	--tile-gap: 10px;
+
+	/* Faster transitions */
+	--transition-fast: 120ms ease;
+	--transition-normal: 180ms ease;
+	--transition-slow: 250ms ease;
+}
+
+/* ── VaroServer: Font override → JetBrains Mono ── */
+html[data-theme="varoserver"],
+html[data-theme="varoserver"] *,
+html[data-theme="varoserver"] body,
+html[data-theme="varoserver"] button,
+html[data-theme="varoserver"] input,
+html[data-theme="varoserver"] textarea,
+html[data-theme="varoserver"] select {
+	font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace !important;
+}
+
+/* ── VaroServer: Header → Crust topbar ── */
+html[data-theme="varoserver"] .header {
+	background: #11111b !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border-bottom: 1px solid #313244 !important;
+}
+
+/* ── VaroServer: Service tiles → Solid cards ── */
+html[data-theme="varoserver"] .service-tile {
+	background: #181825 !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border: 1px solid #313244 !important;
+	padding: 14px 16px !important;
+	border-radius: 10px !important;
+}
+
+html[data-theme="varoserver"] .service-tile:hover {
+	background: #313244 !important;
+	transform: translateY(-1px) !important;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(203, 166, 247, 0.2) !important;
+}
+
+html[data-theme="varoserver"] .service-tile__glow {
+	display: none !important;
+}
+
+html[data-theme="varoserver"] .service-tile__icon-wrap {
+	width: 36px !important;
+	height: 36px !important;
+	border-radius: 8px !important;
+}
+
+html[data-theme="varoserver"] .service-tile__name {
+	font-size: 0.7rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.03em !important;
+}
+
+html[data-theme="varoserver"] .service-tile__desc {
+	font-size: 0.55rem !important;
+	color: #6c7086 !important;
+	letter-spacing: 0.03em !important;
+}
+
+/* ── VaroServer: Script tiles → Solid ── */
+html[data-theme="varoserver"] .script-tile {
+	background: #181825 !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border: 1px solid #313244 !important;
+	padding: 14px 16px !important;
+	border-radius: 10px !important;
+}
+
+html[data-theme="varoserver"] .script-tile:hover {
+	background: #313244 !important;
+	transform: translateY(-1px) !important;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(203, 166, 247, 0.2) !important;
+}
+
+html[data-theme="varoserver"] .script-tile__glow {
+	display: none !important;
+}
+
+html[data-theme="varoserver"] .script-tile__icon-wrap {
+	width: 36px !important;
+	height: 36px !important;
+	border-radius: 8px !important;
+}
+
+/* ── VaroServer: Bookmark tiles → Solid ── */
+html[data-theme="varoserver"] .bookmark-tile {
+	background: #181825 !important;
+	border: 1px solid #313244 !important;
+}
+
+html[data-theme="varoserver"] .bookmark-tile:hover {
+	background: #313244 !important;
+	border-color: rgba(203, 166, 247, 0.25) !important;
+}
+
+/* ── VaroServer: Search → Terminal-style ── */
+html[data-theme="varoserver"] .search {
+	background: #181825 !important;
+	border: 1px solid #313244 !important;
+	border-radius: 8px !important;
+	height: 36px !important;
+}
+
+html[data-theme="varoserver"] .search--focused {
+	border-color: #cba6f7 !important;
+	box-shadow: 0 0 0 2px rgba(203, 166, 247, 0.15) !important;
+	background: #181825 !important;
+}
+
+/* ── VaroServer: Section headers → Label style ── */
+html[data-theme="varoserver"] .dashboard__section-title {
+	font-size: 0.75rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.05em !important;
+	color: #cdd6f4 !important;
+}
+
+html[data-theme="varoserver"] .dashboard__section-count {
+	font-size: 0.5rem !important;
+	background: #313244 !important;
+	color: #6c7086 !important;
+	padding: 1px 6px !important;
+	letter-spacing: 0.05em !important;
+}
+
+html[data-theme="varoserver"] .dashboard__section-header {
+	padding: 6px 4px !important;
+	margin-bottom: 12px !important;
+}
+
+html[data-theme="varoserver"] .dashboard__section-header:hover {
+	background: rgba(49, 50, 68, 0.5) !important;
+}
+
+/* ── VaroServer: Greeting → Compact ── */
+html[data-theme="varoserver"] .dashboard__greeting-text {
+	font-size: 1.2rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.05em !important;
+}
+
+/* ── VaroServer: Clock → Monospace ── */
+html[data-theme="varoserver"] .clock__time {
+	font-size: 0.85rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.1em !important;
+	font-variant-numeric: tabular-nums !important;
+}
+
+html[data-theme="varoserver"] .clock__date {
+	font-size: 0.5rem !important;
+	color: #6c7086 !important;
+	letter-spacing: 0.1em !important;
+}
+
+/* ── VaroServer: Header branding → varoserver style ── */
+html[data-theme="varoserver"] .header__title {
+	font-size: 0.8rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.15em !important;
+	text-transform: lowercase !important;
+}
+
+html[data-theme="varoserver"] .header__subtitle {
+	font-size: 0.5rem !important;
+	color: #6c7086 !important;
+	letter-spacing: 0.1em !important;
+	text-transform: lowercase !important;
+}
+
+/* ── VaroServer: Toast → Solid ── */
+html[data-theme="varoserver"] .toast {
+	background: #181825 !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border: 1px solid #313244 !important;
+}
+
+/* ── VaroServer: Modal → Solid ── */
+html[data-theme="varoserver"] .modal {
+	background: #181825 !important;
+	border: 1px solid #313244 !important;
+}
+
+/* ── VaroServer: Theme dropdown → Solid crust ── */
+html[data-theme="varoserver"] .theme-switcher__dropdown {
+	background: #11111b !important;
+	border: 1px solid #313244 !important;
+}
+
+/* ── VaroServer: Footer → Minimal ── */
+html[data-theme="varoserver"] .dashboard__footer {
+	border-top: 1px solid #313244 !important;
+}
+
+html[data-theme="varoserver"] .dashboard__footer-text {
+	font-size: 0.5rem !important;
+	letter-spacing: 0.1em !important;
+}
+
+/* ── VaroServer: Bookmark group titles → uppercase labels ── */
+html[data-theme="varoserver"] .dashboard__bookmark-group-title {
+	font-size: 0.5rem !important;
+	letter-spacing: 0.2em !important;
+	color: #6c7086 !important;
+}
+
+/* ── VaroServer: Scrollbar → Thin ── */
+html[data-theme="varoserver"] ::-webkit-scrollbar {
+	width: 4px !important;
+	height: 4px !important;
+}
+
+html[data-theme="varoserver"] ::-webkit-scrollbar-thumb {
+	background: #45475a !important;
+	border-radius: 2px !important;
 }
 
 /* ── Background Pattern Layer ──────────── */
