@@ -20,6 +20,20 @@
 			}
 		}
 	});
+
+	// Apply custom theme vars if using a custom theme
+	$effect(() => {
+		const theme = (data.settings as Record<string, unknown>)?.theme as string;
+		const customThemes = (data.settings as Record<string, unknown>)?.customThemes as Array<{ id: string; vars: Record<string, string> }>;
+		if (theme && customThemes && Array.isArray(customThemes)) {
+			const custom = customThemes.find(t => t.id === theme);
+			if (custom) {
+				for (const [k, v] of Object.entries(custom.vars)) {
+					document.documentElement.style.setProperty(k, v);
+				}
+			}
+		}
+	});
 </script>
 
 <svelte:head>

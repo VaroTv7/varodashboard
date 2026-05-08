@@ -18,14 +18,5 @@
 	},
 	"theme": "dark",
 	"customTheme": {},
-	"search": {
-		"defaultEngine": "google",
-		"engines": {
-			"google": "https://www.google.com/search?q=",
-			"duckduckgo": "https://duckduckgo.com/?q=",
-			"youtube": "https://www.youtube.com/results?search_query=",
-			"github": "https://github.com/search?q=",
-			"reddit": "https://www.reddit.com/search/?q="
-		}
-	}
+	"customThemes": []
 }

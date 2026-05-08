@@ -1,38 +1,22 @@
 <script lang="ts">
 	let {
-		engines = {},
-		defaultEngine = 'google'
+		onSearch = (_q: string) => {}
 	}: {
-		engines: Record<string, string>;
-		defaultEngine: string;
+		onSearch: (query: string) => void;
 	} = $props();
 
 	let query = $state('');
-	let selectedEngine = $state(defaultEngine);
 	let inputEl: HTMLInputElement | undefined = $state();
 	let isFocused = $state(false);
 
-	const engineNames: Record<string, string> = {
-		google: 'Google',
-		duckduckgo: 'DuckDuckGo',
-		youtube: 'YouTube',
-		github: 'GitHub',
-		reddit: 'Reddit'
-	};
+	function handleInput() {
+		onSearch(query);
+	}
 
-	const engineIcons: Record<string, string> = {
-		google: '🔍',
-		duckduckgo: '🦆',
-		youtube: '▶️',
-		github: '🐙',
-		reddit: '💬'
-	};
-
-	function handleSearch() {
-		if (!query.trim()) return;
-		const baseUrl = engines[selectedEngine] || engines.google || 'https://www.google.com/search?q=';
-		window.open(baseUrl + encodeURIComponent(query.trim()), '_blank');
+	function clearSearch() {
 		query = '';
+		onSearch('');
+		inputEl?.focus();
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -42,59 +26,42 @@
 		}
 		if (e.key === 'Escape' && document.activeElement === inputEl) {
 			inputEl?.blur();
-			query = '';
-		}
-		// Tab to cycle engines
-		if (e.key === 'Tab' && isFocused && query === '') {
-			e.preventDefault();
-			const keys = Object.keys(engines);
-			const idx = keys.indexOf(selectedEngine);
-			selectedEngine = keys[(idx + 1) % keys.length];
+			clearSearch();
 		}
 	}
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
 
-<form class="search" class:search--focused={isFocused} onsubmit={(e) => { e.preventDefault(); handleSearch(); }} id="search-widget">
-	<button
-		type="button"
-		class="search__engine"
-		onclick={() => {
-			const keys = Object.keys(engines);
-			const idx = keys.indexOf(selectedEngine);
-			selectedEngine = keys[(idx + 1) % keys.length];
-		}}
-		title="Switch search engine (Tab)"
-	>
-		<span class="search__engine-icon">{engineIcons[selectedEngine] || '🔍'}</span>
-	</button>
+<div class="search" class:search--focused={isFocused} id="search-widget">
+	<svg class="search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+		<circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+	</svg>
 
 	<input
 		bind:this={inputEl}
 		bind:value={query}
+		oninput={handleInput}
 		onfocus={() => (isFocused = true)}
 		onblur={() => (isFocused = false)}
 		type="text"
 		class="search__input"
-		placeholder="Search {engineNames[selectedEngine] || selectedEngine}...  (/ or Ctrl+K)"
+		placeholder="Filter services... (/ or Ctrl+K)"
 		autocomplete="off"
 		spellcheck="false"
 		id="search-input"
 	/>
 
 	{#if query}
-		<button type="button" class="search__clear" onclick={() => { query = ''; inputEl?.focus(); }} aria-label="Clear search">
+		<button type="button" class="search__clear" onclick={clearSearch} aria-label="Clear search">
 			✕
 		</button>
+	{:else}
+		<span class="search__hint">
+			<kbd>/</kbd>
+		</span>
 	{/if}
-
-	<button type="submit" class="search__submit" aria-label="Search">
-		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-			<circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-		</svg>
-	</button>
-</form>
+</div>
 
 <style>
 	.search {
@@ -104,9 +71,10 @@
 		background: var(--glass-bg);
 		border: 1px solid var(--glass-border);
 		border-radius: var(--radius-full);
-		padding: 0 var(--space-xs);
+		padding: 0 var(--space-sm);
 		transition: all var(--transition-normal);
 		height: 40px;
+		gap: var(--space-xs);
 	}
 
 	.search--focused {
@@ -120,24 +88,9 @@
 		background: var(--glass-bg-hover);
 	}
 
-	.search__engine {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 32px;
-		height: 32px;
-		border-radius: var(--radius-full);
-		transition: all var(--transition-fast);
+	.search__icon {
+		color: var(--color-text-muted);
 		flex-shrink: 0;
-	}
-
-	.search__engine:hover {
-		background: var(--color-surface-hover);
-		transform: scale(1.1);
-	}
-
-	.search__engine-icon {
-		font-size: 14px;
 	}
 
 	.search__input {
@@ -145,7 +98,7 @@
 		background: none;
 		border: none;
 		outline: none;
-		padding: 0 var(--space-sm);
+		padding: 0 var(--space-xs);
 		font-size: var(--font-sm);
 		color: var(--color-text);
 		min-width: 0;
@@ -165,20 +118,17 @@
 
 	.search__clear:hover { color: var(--color-text); }
 
-	.search__submit {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 32px;
-		height: 32px;
-		border-radius: var(--radius-full);
-		color: var(--color-text-muted);
-		transition: all var(--transition-fast);
+	.search__hint {
 		flex-shrink: 0;
 	}
 
-	.search__submit:hover {
-		color: var(--color-primary);
-		background: var(--color-primary-subtle);
+	.search__hint kbd {
+		font-family: inherit;
+		font-size: 0.65rem;
+		color: var(--color-text-muted);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xs);
+		padding: 1px 6px;
 	}
 </style>

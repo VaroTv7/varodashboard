@@ -3,15 +3,68 @@
 	import ServiceTile from '$lib/components/tiles/ServiceTile.svelte';
 	import ScriptTile from '$lib/components/tiles/ScriptTile.svelte';
 	import BookmarkTile from '$lib/components/tiles/BookmarkTile.svelte';
+	import SettingsPanel from '$lib/components/editor/SettingsPanel.svelte';
 
 	let { data } = $props();
 
-	const settings = $derived(data.settings as Record<string, unknown>);
+	let settings = $state(data.settings as Record<string, unknown>);
 	const services = $derived(data.services as { groups: Array<{ name: string; icon: string; collapsed?: boolean; services: Array<Record<string, unknown>> }> });
 	const bookmarks = $derived(data.bookmarks as { groups: Array<{ name: string; icon: string; bookmarks: Array<{ name: string; url: string; icon?: string }> }> });
 	const scripts = $derived(data.scripts as { scripts: Array<Record<string, unknown>> });
 
-	// Service status tracking
+	// ── Search / filter ──
+	let searchQuery = $state('');
+	const queryLower = $derived(searchQuery.toLowerCase());
+
+	// Filter services in real-time
+	const filteredServiceGroups = $derived(
+		(services?.groups || []).map(group => ({
+			...group,
+			services: group.services.filter(svc => {
+				if (!queryLower) return true;
+				const name = ((svc.name as string) || '').toLowerCase();
+				const desc = ((svc.description as string) || '').toLowerCase();
+				return name.includes(queryLower) || desc.includes(queryLower);
+			})
+		})).filter(group => group.services.length > 0)
+	);
+
+	// Filter scripts in real-time
+	const filteredScripts = $derived(
+		(scripts?.scripts || []).filter(s => {
+			if (!queryLower) return true;
+			const name = ((s.name as string) || '').toLowerCase();
+			const desc = ((s.description as string) || '').toLowerCase();
+			return name.includes(queryLower) || desc.includes(queryLower);
+		})
+	);
+
+	// Filter bookmarks in real-time
+	const filteredBookmarkGroups = $derived(
+		(bookmarks?.groups || []).map(group => ({
+			...group,
+			bookmarks: group.bookmarks.filter(b => {
+				if (!queryLower) return true;
+				return b.name.toLowerCase().includes(queryLower) || b.url.toLowerCase().includes(queryLower);
+			})
+		})).filter(group => group.bookmarks.length > 0)
+	);
+
+	// ── Settings panel ──
+	let settingsOpen = $state(false);
+
+	async function handleSettingsChange(updated: Record<string, unknown>) {
+		settings = updated;
+		try {
+			await fetch('/api/config?name=settings', {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(updated)
+			});
+		} catch { /* silent */ }
+	}
+
+	// ── Service status tracking ──
 	let statuses = $state<Record<string, string>>({});
 	let collapsedGroups = $state<Record<string, boolean>>({});
 
@@ -76,23 +129,38 @@
 		if (hour < 18) return '🌤️ Good Afternoon';
 		return '🌆 Good Evening';
 	});
+
+	// Result count for search feedback
+	const totalResults = $derived(
+		filteredServiceGroups.reduce((sum, g) => sum + g.services.length, 0) +
+		filteredScripts.length +
+		filteredBookmarkGroups.reduce((sum, g) => sum + g.bookmarks.length, 0)
+	);
 </script>
 
 <div class="dashboard">
-	<Header {settings} />
+	<Header {settings} onSearch={(q) => searchQuery = q} onOpenSettings={() => settingsOpen = true} />
 
 	<main class="dashboard__main">
 		<div class="dashboard__content">
 			<!-- Greeting -->
-			{#if (settings.layout as Record<string, boolean>)?.showGreeting !== false}
+			{#if (settings.layout as Record<string, boolean>)?.showGreeting !== false && !searchQuery}
 				<div class="dashboard__greeting" style="animation: fadeIn 600ms ease both">
 					<h2 class="dashboard__greeting-text">{greeting()}</h2>
 				</div>
 			{/if}
 
+			<!-- Search result indicator -->
+			{#if searchQuery}
+				<div class="dashboard__search-info" style="animation: fadeIn 150ms ease both">
+					<span class="dashboard__search-count">{totalResults} result{totalResults !== 1 ? 's' : ''}</span>
+					<span class="dashboard__search-query">for "{searchQuery}"</span>
+				</div>
+			{/if}
+
 			<!-- Service Groups -->
-			{#if services?.groups?.length > 0}
-				{#each services.groups as group, groupIdx (group.name)}
+			{#if filteredServiceGroups.length > 0}
+				{#each filteredServiceGroups as group, groupIdx (group.name)}
 					<section
 						class="dashboard__section"
 						style="animation: slideInUp {400 + groupIdx * 100}ms cubic-bezier(0.34, 1.56, 0.64, 1) both"
@@ -135,10 +203,10 @@
 			{/if}
 
 			<!-- Scripts Section -->
-			{#if scripts?.scripts?.length > 0}
+			{#if filteredScripts.length > 0}
 				<section
 					class="dashboard__section"
-					style="animation: slideInUp {400 + (services?.groups?.length || 0) * 100}ms cubic-bezier(0.34, 1.56, 0.64, 1) both"
+					style="animation: slideInUp {400 + (filteredServiceGroups.length || 0) * 100}ms cubic-bezier(0.34, 1.56, 0.64, 1) both"
 				>
 					<button
 						class="dashboard__section-header"
@@ -148,7 +216,7 @@
 						<div class="dashboard__section-title-wrap">
 							<span class="dashboard__section-icon">⚡</span>
 							<h3 class="dashboard__section-title">Scripts</h3>
-							<span class="dashboard__section-count">{scripts.scripts.length}</span>
+							<span class="dashboard__section-count">{filteredScripts.length}</span>
 						</div>
 						<svg
 							class="dashboard__section-chevron"
@@ -161,7 +229,7 @@
 
 					{#if !collapsedGroups['__scripts']}
 						<div class="dashboard__grid">
-							{#each scripts.scripts as script (script.id)}
+							{#each filteredScripts as script (script.id)}
 								<ScriptTile script={script as { id: string; name: string; description: string; icon: string; color?: string; parameters: Array<{ name: string; label: string; type: string; required: boolean; placeholder?: string }>; confirm?: boolean }} />
 							{/each}
 						</div>
@@ -170,10 +238,10 @@
 			{/if}
 
 			<!-- Bookmarks Section -->
-			{#if bookmarks?.groups?.length > 0}
+			{#if filteredBookmarkGroups.length > 0}
 				<section
 					class="dashboard__section"
-					style="animation: slideInUp {500 + (services?.groups?.length || 0) * 100}ms cubic-bezier(0.34, 1.56, 0.64, 1) both"
+					style="animation: slideInUp {500 + (filteredServiceGroups.length || 0) * 100}ms cubic-bezier(0.34, 1.56, 0.64, 1) both"
 				>
 					<div class="dashboard__section-header dashboard__section-header--static">
 						<div class="dashboard__section-title-wrap">
@@ -183,7 +251,7 @@
 					</div>
 
 					<div class="dashboard__bookmarks-grid">
-						{#each bookmarks.groups as group (group.name)}
+						{#each filteredBookmarkGroups as group (group.name)}
 							<div class="dashboard__bookmark-group">
 								<h4 class="dashboard__bookmark-group-title">{group.name}</h4>
 								<div class="dashboard__bookmark-list">
@@ -196,6 +264,14 @@
 					</div>
 				</section>
 			{/if}
+
+			<!-- Empty search state -->
+			{#if searchQuery && totalResults === 0}
+				<div class="dashboard__empty">
+					<span class="dashboard__empty-icon">🔍</span>
+					<p class="dashboard__empty-text">No results for "{searchQuery}"</p>
+				</div>
+			{/if}
 		</div>
 	</main>
 
@@ -206,6 +282,14 @@
 		</span>
 	</footer>
 </div>
+
+<!-- Settings Panel -->
+<SettingsPanel
+	isOpen={settingsOpen}
+	{settings}
+	onClose={() => settingsOpen = false}
+	onSettingsChange={handleSettingsChange}
+/>
 
 <style>
 	.dashboard {
@@ -235,6 +319,26 @@
 		font-weight: 700;
 		color: var(--color-text);
 		letter-spacing: -0.03em;
+	}
+
+	/* Search results info */
+	.dashboard__search-info {
+		display: flex;
+		align-items: baseline;
+		gap: var(--space-sm);
+		margin-bottom: var(--space-lg);
+		padding: var(--space-sm) 0;
+	}
+
+	.dashboard__search-count {
+		font-size: var(--font-md);
+		font-weight: 600;
+		color: var(--color-primary);
+	}
+
+	.dashboard__search-query {
+		font-size: var(--font-sm);
+		color: var(--color-text-muted);
 	}
 
 	/* Sections */
@@ -334,6 +438,26 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-xs);
+	}
+
+	/* Empty state */
+	.dashboard__empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-3xl) var(--space-xl);
+		color: var(--color-text-muted);
+	}
+
+	.dashboard__empty-icon {
+		font-size: 2rem;
+		margin-bottom: var(--space-md);
+		opacity: 0.5;
+	}
+
+	.dashboard__empty-text {
+		font-size: var(--font-md);
 	}
 
 	/* Footer */

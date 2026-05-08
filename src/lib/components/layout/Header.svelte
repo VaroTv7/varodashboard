@@ -1,12 +1,15 @@
 <script lang="ts">
 	import SearchWidget from '$lib/components/widgets/SearchWidget.svelte';
 	import ClockWidget from '$lib/components/widgets/ClockWidget.svelte';
-	import ThemeSwitcher from '$lib/components/editor/ThemeSwitcher.svelte';
 
 	let {
-		settings
+		settings,
+		onSearch = (_q: string) => {},
+		onOpenSettings = () => {},
 	}: {
 		settings: Record<string, unknown>;
+		onSearch: (query: string) => void;
+		onOpenSettings: () => void;
 	} = $props();
 
 	const layout = $derived((settings.layout as Record<string, boolean>) || {});
@@ -39,7 +42,7 @@
 
 		<div class="header__center">
 			{#if layout.showSearch !== false}
-				<SearchWidget engines={((settings.search as Record<string, unknown>)?.engines || {}) as Record<string, string>} defaultEngine={((settings.search as Record<string, unknown>)?.defaultEngine as string) || 'google'} />
+				<SearchWidget onSearch={onSearch} />
 			{/if}
 		</div>
 
@@ -47,7 +50,18 @@
 			{#if layout.showClock !== false}
 				<ClockWidget />
 			{/if}
-			<ThemeSwitcher currentTheme={(settings.theme as string) || 'dark'} />
+			<button
+				class="header__settings-btn"
+				onclick={onOpenSettings}
+				aria-label="Open settings"
+				title="Settings"
+				id="settings-trigger"
+			>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<circle cx="12" cy="12" r="3" />
+					<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+				</svg>
+			</button>
 		</div>
 	</div>
 </header>
@@ -127,6 +141,23 @@
 		display: flex;
 		align-items: center;
 		gap: var(--space-md);
+	}
+
+	.header__settings-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: var(--radius-md);
+		color: var(--color-text-secondary);
+		transition: all var(--transition-fast);
+	}
+
+	.header__settings-btn:hover {
+		color: var(--color-primary);
+		background: var(--color-primary-subtle);
+		transform: rotate(30deg);
 	}
 
 	@media (max-width: 768px) {
