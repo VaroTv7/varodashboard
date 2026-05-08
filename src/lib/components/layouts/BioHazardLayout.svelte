@@ -119,6 +119,7 @@
 		background-size: 100px 100px;
 		background-position: 0 0, 0 50px, 50px 50px, 50px 0;
 		opacity: 0.2;
+		pointer-events: none;
 	}
 
 	.bio__siren {
@@ -249,6 +250,8 @@
 		justify-content: space-between;
 		align-items: center;
 		border-top: 4px solid var(--bio-black);
+		position: relative;
+		z-index: 100;
 	}
 
 	.bio__access-btn {

@@ -262,6 +262,8 @@
 		justify-content: space-between;
 		font-size: 0.7rem;
 		background: rgba(255,0,0,0.05);
+		position: relative;
+		z-index: 100;
 	}
 
 	.deck__menu-trigger {
