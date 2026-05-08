@@ -4,6 +4,11 @@
 	import ScriptTile from '$lib/components/tiles/ScriptTile.svelte';
 	import BookmarkTile from '$lib/components/tiles/BookmarkTile.svelte';
 	import SettingsPanel from '$lib/components/editor/SettingsPanel.svelte';
+	import AtalayaLayout from '$lib/components/layouts/AtalayaLayout.svelte';
+
+	// Active theme detection
+	const activeTheme = $derived((settings.theme as string) || 'dark');
+	const isAtalaya = $derived(activeTheme === 'atalaya');
 
 	let { data } = $props();
 
@@ -138,6 +143,18 @@
 	);
 </script>
 
+{#if isAtalaya}
+	<AtalayaLayout
+		{settings}
+		{services}
+		{scripts}
+		{bookmarks}
+		{statuses}
+		{searchQuery}
+		onOpenSettings={() => settingsOpen = true}
+		onSearch={(q) => searchQuery = q}
+	/>
+{:else}
 <div class="dashboard">
 	<Header {settings} onSearch={(q) => searchQuery = q} onOpenSettings={() => settingsOpen = true} />
 
@@ -282,6 +299,7 @@
 		</span>
 	</footer>
 </div>
+{/if}
 
 <!-- Settings Panel -->
 <SettingsPanel
