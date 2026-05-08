@@ -647,6 +647,380 @@ html[data-theme="varoserver"] ::-webkit-scrollbar-thumb {
 	border-radius: 2px !important;
 }
 
+/* ══════════════════════════════════════════
+   Theme: Atalaya — Command Center / Hacker
+   Inspired by cyberpunk surveillance UIs
+   ══════════════════════════════════════════ */
+[data-theme="atalaya"] {
+	--hue-primary: 170;
+	--sat-primary: 90%;
+	--hue-accent: 145;
+	--sat-accent: 100%;
+
+	/* Deep navy-black background */
+	--color-bg: #060d1a;
+	--color-bg-pattern:
+		radial-gradient(ellipse at 15% 50%, rgba(0, 230, 200, 0.04) 0%, transparent 50%),
+		radial-gradient(ellipse at 85% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 40%),
+		radial-gradient(ellipse at 50% 100%, rgba(0, 180, 255, 0.02) 0%, transparent 50%);
+
+	/* Solid dark surfaces */
+	--color-surface: #0a1520;
+	--color-surface-solid: #0a1520;
+	--color-surface-hover: #0f1e2d;
+	--color-surface-active: #142838;
+	--color-surface-raised: #0d1925;
+
+	/* No glass — solid panels */
+	--glass-bg: #0a1520;
+	--glass-bg-hover: #0f1e2d;
+	--glass-border: rgba(0, 230, 200, 0.12);
+	--glass-border-hover: rgba(0, 230, 200, 0.25);
+	--glass-blur: 0px;
+	--glass-shadow: none;
+
+	/* Cyan primary */
+	--color-primary: #00e5c8;
+	--color-primary-hover: #33edd6;
+	--color-primary-glow: rgba(0, 229, 200, 0.3);
+	--color-primary-subtle: rgba(0, 229, 200, 0.08);
+
+	/* Green accent */
+	--color-accent: #00ff88;
+	--color-accent-glow: rgba(0, 255, 136, 0.25);
+
+	/* Cyan-tinted text */
+	--color-text: #b8dce8;
+	--color-text-secondary: #6a98a8;
+	--color-text-muted: #2d5568;
+	--color-text-inverse: #060d1a;
+
+	/* Status: neon */
+	--color-success: #00ff88;
+	--color-success-glow: rgba(0, 255, 136, 0.5);
+	--color-warning: #ffaa00;
+	--color-warning-glow: rgba(255, 170, 0, 0.3);
+	--color-error: #ff3355;
+	--color-error-glow: rgba(255, 51, 85, 0.4);
+	--color-info: #00aaff;
+
+	/* Thin cyan borders */
+	--color-border: rgba(0, 230, 200, 0.1);
+	--color-border-hover: rgba(0, 230, 200, 0.3);
+
+	/* Gradient */
+	--gradient-primary: linear-gradient(135deg, #00e5c8, #00ff88);
+
+	/* Cyan glow shadows */
+	--shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
+	--shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+	--shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 230, 200, 0.08);
+	--shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.7);
+	--shadow-glow: 0 0 12px rgba(0, 230, 200, 0.25), 0 0 32px rgba(0, 230, 200, 0.08);
+	--shadow-glow-accent: 0 0 12px rgba(0, 255, 136, 0.25);
+
+	/* Compact spacing */
+	--space-xs: 3px;
+	--space-sm: 6px;
+	--space-md: 10px;
+	--space-lg: 14px;
+	--space-xl: 20px;
+	--space-2xl: 28px;
+	--space-3xl: 40px;
+
+	/* Sharp corners */
+	--radius-xs: 2px;
+	--radius-sm: 3px;
+	--radius-md: 4px;
+	--radius-lg: 5px;
+	--radius-xl: 6px;
+	--radius-2xl: 8px;
+	--radius-full: 3px;
+
+	/* Small terminal typography */
+	--font-xs: 0.55rem;
+	--font-sm: 0.65rem;
+	--font-base: 0.72rem;
+	--font-md: 0.8rem;
+	--font-lg: 0.9rem;
+	--font-xl: 1.05rem;
+	--font-2xl: 1.3rem;
+
+	/* Ultra-compact layout */
+	--header-height: 44px;
+	--tile-min-width: 180px;
+	--tile-gap: 8px;
+
+	/* Fast transitions */
+	--transition-fast: 100ms ease;
+	--transition-normal: 150ms ease;
+	--transition-slow: 200ms ease;
+}
+
+/* ── Atalaya: Monospace font ── */
+html[data-theme="atalaya"],
+html[data-theme="atalaya"] *,
+html[data-theme="atalaya"] body,
+html[data-theme="atalaya"] button,
+html[data-theme="atalaya"] input {
+	font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace !important;
+}
+
+/* ── Atalaya: Header → dark command bar ── */
+html[data-theme="atalaya"] .header {
+	background: #050b14 !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border-bottom: 1px solid rgba(0, 230, 200, 0.15) !important;
+	height: 44px !important;
+}
+
+html[data-theme="atalaya"] .header__title {
+	font-size: 0.75rem !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.2em !important;
+	text-transform: uppercase !important;
+	color: #00e5c8 !important;
+}
+
+html[data-theme="atalaya"] .header__subtitle {
+	font-size: 0.5rem !important;
+	color: #2d5568 !important;
+	letter-spacing: 0.15em !important;
+	text-transform: lowercase !important;
+}
+
+html[data-theme="atalaya"] .header__logo svg rect {
+	fill: transparent !important;
+}
+
+html[data-theme="atalaya"] .header__logo svg text {
+	fill: #00e5c8 !important;
+}
+
+/* ── Atalaya: Service tiles → hacker panels ── */
+html[data-theme="atalaya"] .service-tile {
+	background: #0a1520 !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border: 1px solid rgba(0, 230, 200, 0.1) !important;
+	border-radius: 3px !important;
+	padding: 10px 12px !important;
+	position: relative !important;
+}
+
+html[data-theme="atalaya"] .service-tile::before {
+	content: '' !important;
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	height: 1px !important;
+	background: linear-gradient(90deg, transparent, rgba(0, 230, 200, 0.3), transparent) !important;
+}
+
+html[data-theme="atalaya"] .service-tile:hover {
+	background: #0f1e2d !important;
+	border-color: rgba(0, 230, 200, 0.3) !important;
+	box-shadow: 0 0 20px rgba(0, 230, 200, 0.08), 0 0 0 1px rgba(0, 230, 200, 0.15) !important;
+	transform: none !important;
+}
+
+html[data-theme="atalaya"] .service-tile__glow {
+	display: none !important;
+}
+
+html[data-theme="atalaya"] .service-tile__icon-wrap {
+	width: 32px !important;
+	height: 32px !important;
+	border-radius: 3px !important;
+}
+
+html[data-theme="atalaya"] .service-tile__name {
+	font-size: 0.65rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.06em !important;
+	text-transform: uppercase !important;
+}
+
+html[data-theme="atalaya"] .service-tile__desc {
+	font-size: 0.5rem !important;
+	color: #2d5568 !important;
+	letter-spacing: 0.04em !important;
+}
+
+/* ── Atalaya: Script tiles → panels ── */
+html[data-theme="atalaya"] .script-tile {
+	background: #0a1520 !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	border: 1px solid rgba(0, 230, 200, 0.1) !important;
+	border-radius: 3px !important;
+	padding: 10px 12px !important;
+}
+
+html[data-theme="atalaya"] .script-tile:hover {
+	background: #0f1e2d !important;
+	border-color: rgba(0, 230, 200, 0.3) !important;
+	box-shadow: 0 0 20px rgba(0, 230, 200, 0.08) !important;
+	transform: none !important;
+}
+
+html[data-theme="atalaya"] .script-tile__glow {
+	display: none !important;
+}
+
+/* ── Atalaya: Search → terminal prompt ── */
+html[data-theme="atalaya"] .search {
+	background: #0a1520 !important;
+	border: 1px solid rgba(0, 230, 200, 0.12) !important;
+	border-radius: 3px !important;
+	height: 32px !important;
+}
+
+html[data-theme="atalaya"] .search--focused {
+	border-color: #00e5c8 !important;
+	box-shadow: 0 0 8px rgba(0, 230, 200, 0.15), 0 0 0 1px rgba(0, 230, 200, 0.1) !important;
+	background: #0a1520 !important;
+}
+
+html[data-theme="atalaya"] .search__input::placeholder {
+	font-size: 0.6rem !important;
+	letter-spacing: 0.05em !important;
+}
+
+/* ── Atalaya: Section headers → uppercase labels with dot separator ── */
+html[data-theme="atalaya"] .dashboard__section-title {
+	font-size: 0.6rem !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.15em !important;
+	text-transform: uppercase !important;
+	color: #00e5c8 !important;
+}
+
+html[data-theme="atalaya"] .dashboard__section-count {
+	font-size: 0.5rem !important;
+	background: rgba(0, 230, 200, 0.08) !important;
+	color: #6a98a8 !important;
+	border: 1px solid rgba(0, 230, 200, 0.12) !important;
+	padding: 0px 5px !important;
+	border-radius: 2px !important;
+	letter-spacing: 0.05em !important;
+}
+
+html[data-theme="atalaya"] .dashboard__section-header {
+	padding: 4px 2px !important;
+	margin-bottom: 8px !important;
+	border-bottom: 1px solid rgba(0, 230, 200, 0.06) !important;
+	border-radius: 0 !important;
+}
+
+html[data-theme="atalaya"] .dashboard__section-header:hover {
+	background: rgba(0, 230, 200, 0.03) !important;
+}
+
+/* ── Atalaya: Greeting → system status style ── */
+html[data-theme="atalaya"] .dashboard__greeting-text {
+	font-size: 1rem !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.08em !important;
+	color: #00e5c8 !important;
+}
+
+/* ── Atalaya: Clock → command center style ── */
+html[data-theme="atalaya"] .clock__time {
+	font-size: 0.75rem !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.15em !important;
+	font-variant-numeric: tabular-nums !important;
+	color: #00e5c8 !important;
+}
+
+html[data-theme="atalaya"] .clock__date {
+	font-size: 0.45rem !important;
+	color: #2d5568 !important;
+	letter-spacing: 0.1em !important;
+	text-transform: uppercase !important;
+}
+
+/* ── Atalaya: Bookmark groups ── */
+html[data-theme="atalaya"] .dashboard__bookmark-group-title {
+	font-size: 0.5rem !important;
+	letter-spacing: 0.25em !important;
+	text-transform: uppercase !important;
+	color: #00e5c8 !important;
+	border-bottom: 1px solid rgba(0, 230, 200, 0.08) !important;
+	padding-bottom: 4px !important;
+}
+
+html[data-theme="atalaya"] .bookmark-tile {
+	background: #0a1520 !important;
+	border: 1px solid rgba(0, 230, 200, 0.08) !important;
+	border-radius: 2px !important;
+}
+
+html[data-theme="atalaya"] .bookmark-tile:hover {
+	background: #0f1e2d !important;
+	border-color: rgba(0, 230, 200, 0.2) !important;
+}
+
+/* ── Atalaya: Footer ── */
+html[data-theme="atalaya"] .dashboard__footer {
+	border-top: 1px solid rgba(0, 230, 200, 0.08) !important;
+}
+
+html[data-theme="atalaya"] .dashboard__footer-text {
+	font-size: 0.45rem !important;
+	letter-spacing: 0.15em !important;
+	text-transform: uppercase !important;
+	color: #2d5568 !important;
+}
+
+/* ── Atalaya: Settings panel ── */
+html[data-theme="atalaya"] .sp {
+	background: #080f1a !important;
+	border-left: 1px solid rgba(0, 230, 200, 0.15) !important;
+}
+
+/* ── Atalaya: Status dots → neon glow ── */
+html[data-theme="atalaya"] .status-dot--online {
+	box-shadow: 0 0 6px rgba(0, 255, 136, 0.6), 0 0 12px rgba(0, 255, 136, 0.2) !important;
+}
+
+/* ── Atalaya: Scrollbar → thin cyan ── */
+html[data-theme="atalaya"] ::-webkit-scrollbar {
+	width: 3px !important;
+	height: 3px !important;
+}
+
+html[data-theme="atalaya"] ::-webkit-scrollbar-thumb {
+	background: rgba(0, 230, 200, 0.2) !important;
+	border-radius: 1px !important;
+}
+
+html[data-theme="atalaya"] ::-webkit-scrollbar-track {
+	background: transparent !important;
+}
+
+/* ── Atalaya: Scan-line effect on body ── */
+html[data-theme="atalaya"] body::after {
+	content: '' !important;
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background: repeating-linear-gradient(
+		0deg,
+		transparent,
+		transparent 2px,
+		rgba(0, 230, 200, 0.008) 2px,
+		rgba(0, 230, 200, 0.008) 4px
+	) !important;
+	pointer-events: none !important;
+	z-index: 9999 !important;
+}
+
 /* ── Background Pattern Layer ──────────── */
 #app {
 	min-height: 100vh;

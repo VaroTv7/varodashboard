@@ -19,6 +19,7 @@
 		{ id: 'nord', name: 'Nord', bg: '#2e3440', primary: '#6b88a3' },
 		{ id: 'emerald', name: 'Emerald', bg: '#0d1f17', primary: '#32b87a' },
 		{ id: 'varoserver', name: 'VaroServer', bg: '#1e1e2e', primary: '#cba6f7' },
+		{ id: 'atalaya', name: 'Atalaya', bg: '#060d1a', primary: '#00e5c8' },
 	];
 
 	let showNewForm = $state(false);
