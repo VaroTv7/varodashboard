@@ -5,10 +5,32 @@
 	import BookmarkTile from '$lib/components/tiles/BookmarkTile.svelte';
 	import SettingsPanel from '$lib/components/editor/SettingsPanel.svelte';
 	import AtalayaLayout from '$lib/components/layouts/AtalayaLayout.svelte';
+	import GlitchCoreLayout from '$lib/components/layouts/GlitchCoreLayout.svelte';
+	import QuantumLayout from '$lib/components/layouts/QuantumLayout.svelte';
+	import WarcraftLayout from '$lib/components/layouts/WarcraftLayout.svelte';
+	import CyberdeckLayout from '$lib/components/layouts/CyberdeckLayout.svelte';
+	import BioHazardLayout from '$lib/components/layouts/BioHazardLayout.svelte';
+	import NeonTokyoLayout from '$lib/components/layouts/NeonTokyoLayout.svelte';
+	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import { onMount, onDestroy } from 'svelte';
+
+	// Start telemetry
+	onMount(() => {
+		telemetry.start();
+	});
+	onDestroy(() => {
+		telemetry.stop();
+	});
 
 	// Active theme detection
 	const activeTheme = $derived((settings.theme as string) || 'dark');
 	const isAtalaya = $derived(activeTheme === 'atalaya');
+	const isGlitchCore = $derived(activeTheme === 'glitchcore');
+	const isQuantum = $derived(activeTheme === 'quantum');
+	const isWarcraft = $derived(activeTheme === 'warcraft');
+	const isCyberdeck = $derived(activeTheme === 'cyberdeck');
+	const isBioHazard = $derived(activeTheme === 'biohazard');
+	const isNeonTokyo = $derived(activeTheme === 'neontokyo');
 
 	let { data } = $props();
 
@@ -153,6 +175,60 @@
 		{searchQuery}
 		onOpenSettings={() => settingsOpen = true}
 		onSearch={(q) => searchQuery = q}
+	/>
+{:else if isGlitchCore}
+	<GlitchCoreLayout
+		{settings}
+		{services}
+		{scripts}
+		{bookmarks}
+		{statuses}
+		{searchQuery}
+		onOpenSettings={() => settingsOpen = true}
+		onSearch={(q) => searchQuery = q}
+	/>
+{:else if isQuantum}
+	<QuantumLayout
+		{settings}
+		{services}
+		{scripts}
+		{bookmarks}
+		{statuses}
+		{searchQuery}
+		onOpenSettings={() => settingsOpen = true}
+		onSearch={(q) => searchQuery = q}
+	/>
+{:else if isWarcraft}
+	<WarcraftLayout
+		{settings}
+		{services}
+		{scripts}
+		{statuses}
+		onOpenSettings={() => settingsOpen = true}
+	/>
+{:else if isCyberdeck}
+	<CyberdeckLayout
+		{settings}
+		{services}
+		{scripts}
+		{statuses}
+		onOpenSettings={() => settingsOpen = true}
+	/>
+{:else if isBioHazard}
+	<BioHazardLayout
+		{settings}
+		{services}
+		{scripts}
+		{statuses}
+		onOpenSettings={() => settingsOpen = true}
+	/>
+{:else if isNeonTokyo}
+	<NeonTokyoLayout
+		{settings}
+		{services}
+		{scripts}
+		{statuses}
+		onOpenSettings={() => settingsOpen = true}
 	/>
 {:else}
 <div class="dashboard">

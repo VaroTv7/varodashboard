@@ -20,6 +20,12 @@
 		{ id: 'emerald', name: 'Emerald', bg: '#0d1f17', primary: '#32b87a' },
 		{ id: 'varoserver', name: 'VaroServer', bg: '#1e1e2e', primary: '#cba6f7' },
 		{ id: 'atalaya', name: 'Atalaya', bg: '#060d1a', primary: '#00e5c8' },
+		{ id: 'glitchcore', name: 'Glitch-Core', bg: '#050014', primary: '#39ff14' },
+		{ id: 'quantum', name: 'Quantum', bg: '#000000', primary: '#dfbbff' },
+		{ id: 'warcraft', name: 'Warcraft III', bg: '#08080f', primary: '#fcd312' },
+		{ id: 'cyberdeck', name: 'Cyberdeck', bg: '#0d0202', primary: '#ff3e00' },
+		{ id: 'biohazard', name: 'Bio-Hazard', bg: '#0a0a05', primary: '#ffcc00' },
+		{ id: 'neontokyo', name: 'Neon-Tokyo', bg: '#050510', primary: '#ff00ff' },
 	];
 
 	let showNewForm = $state(false);
