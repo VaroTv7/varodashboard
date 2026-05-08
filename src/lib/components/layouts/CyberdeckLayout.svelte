@@ -24,10 +24,11 @@
 	onMount(() => {
 		const initialLogs = [
 			"> INICIALIZANDO CYBERDECK v4.0.2...",
-			"> CONECTANDO CON EL NÚCLEO VAROSERVER...",
-			"> ESTABLECIENDO TÚNEL SSH ENCRIPTADO...",
-			"> CARGANDO PROTOCOLOS DE SEGURIDAD...",
-			"> ACCESO CONCEDIDO."
+			"> CONECTANDO CON EL NÚCLEO VAROSERVER N150...",
+			"> ESCANEANDO INTERFACES DE RED...",
+			"> CARGANDO CONFIGURACIÓN DE SERVICIOS...",
+			"> ESTADO DEL SISTEMA: NOMINAL.",
+			"> BIENVENIDO, OPERADOR VARO."
 		];
 		let i = 0;
 		const interval = setInterval(() => {
@@ -45,13 +46,14 @@
 		if (!bootSequence) {
 			const id = setInterval(() => {
 				const randomEvent = [
-					`[TELEMETRÍA] CPU: ${telemetry.cpu.toFixed(2)}% | RAM: ${telemetry.mem.toFixed(2)}%`,
-					`[SISTEMA] UPTIME: ${telemetry.uptime}s`,
-					`[RED] PAQUETE RECIBIDO DESDE 192.168.1.${Math.floor(Math.random()*255)}`,
-					`[NÚCLEO] PROCESO ${Math.floor(Math.random()*9999)} FINALIZADO CON ÉXITO.`
+					`[TELEMETRÍA] CPU: ${telemetry.cpu.toFixed(1)}% | RAM: ${telemetry.mem.toFixed(1)}% | DISCO: ${telemetry.disk.toFixed(1)}%`,
+					`[SISTEMA] UPTIME: ${Math.floor(telemetry.uptime/3600)}H ${Math.floor((telemetry.uptime%3600)/60)}M`,
+					`[RED] ESCANEANDO TRÁFICO... RX: ${telemetry.netRX.toFixed(1)} Mb/s`,
+					`[NÚCLEO] PROCESOS ACTIVOS: ${telemetry.procs}`,
+					`[SEGURIDAD] SIN AMENAZAS DETECTADAS EN EL NODO.`
 				];
-				logs = [...logs.slice(-20), randomEvent[Math.floor(Math.random() * randomEvent.length)]];
-			}, 2000);
+				logs = [...logs.slice(-15), randomEvent[Math.floor(Math.random() * randomEvent.length)]];
+			}, 3000);
 			return () => clearInterval(id);
 		}
 	});

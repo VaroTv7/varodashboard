@@ -99,11 +99,14 @@
 		</div>
 
 		<div class="wc3__inventory">
-			<div class="wc3__inv-title">MARCADORES</div>
+			<div class="wc3__inv-title">ESTADO_DEL_REINO</div>
 			<div class="wc3__inv-grid">
-				{#each Array(6) as _}
-					<div class="wc3__inv-slot"></div>
-				{/each}
+				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="DISCO">{Math.floor(telemetry.disk)}% 🗄️</div></div>
+				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="RED">{Math.floor(telemetry.netRX)}M 📡</div></div>
+				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="PROCS">{telemetry.procs} 👥</div></div>
+				<div class="wc3__inv-slot"></div>
+				<div class="wc3__inv-slot"></div>
+				<div class="wc3__inv-slot"></div>
 			</div>
 		</div>
 
@@ -279,7 +282,8 @@
 		gap: 4px;
 		flex: 1;
 	}
-	.wc3__inv-slot { background: #000; border: 1px solid #222; }
+	.wc3__inv-slot { background: #000; border: 1px solid #222; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+	.wc3__inv-item { font-size: 0.6rem; color: var(--wc3-gold); text-align: center; }
 
 	.wc3__commands {
 		display: grid;

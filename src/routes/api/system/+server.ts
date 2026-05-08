@@ -1,12 +1,12 @@
 import { json } from '@sveltejs/kit';
 import * as os from 'os';
+import * as fs from 'fs';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
 	try {
 		const cpus = os.cpus();
-		const loadAvg = os.loadavg()[0]; // 1 minute load average
-		// Convert load average to a rough percentage based on number of cores
+		const loadAvg = os.loadavg()[0];
 		const cpuUsage = Math.min(100, Math.max(0, (loadAvg / cpus.length) * 100));
 		
 		const totalMem = os.totalmem();
@@ -16,11 +16,26 @@ export const GET: RequestHandler = async () => {
 		
 		const uptime = os.uptime();
 
+		// Try to get disk info (Node 18+)
+		let disk = { total: 0, free: 0, used: 0, usage: 0 };
+		try {
+			// @ts-ignore - statfsSync is in newer Node versions
+			if (fs.statfsSync) {
+				// @ts-ignore
+				const stats = fs.statfsSync('/');
+				disk.total = stats.bsize * stats.blocks;
+				disk.free = stats.bsize * stats.bfree;
+				disk.used = disk.total - disk.free;
+				disk.usage = (disk.used / disk.total) * 100;
+			}
+		} catch (e) { /* fallback */ }
+
 		return json({
 			cpu: {
 				usage: cpuUsage,
 				cores: cpus.length,
-				model: cpus[0]?.model || 'Unknown CPU'
+				model: cpus[0]?.model || 'Unknown CPU',
+				load: os.loadavg()
 			},
 			memory: {
 				usage: memUsage,
@@ -28,9 +43,13 @@ export const GET: RequestHandler = async () => {
 				free: freeMem,
 				used: usedMem
 			},
+			disk,
 			uptime: uptime,
 			platform: os.platform(),
-			release: os.release()
+			release: os.release(),
+			node: process.version,
+			arch: os.arch(),
+			hostname: os.hostname()
 		});
 	} catch (error) {
 		console.error('Failed to get system stats:', error);

@@ -152,12 +152,12 @@
 		</div>
 
 		<div class="qtm__corner qtm__corner--br">
-			<div class="qtm__corner-title">❖ TELEMETRÍA</div>
+			<div class="qtm__corner-title">❖ TELEMETRÍA_REAL</div>
 			<div class="qtm__routines">
-				<div class="qtm__routine"><span class="qtm__r-dot"></span> ENLACE ESTABLECIDO</div>
-				<div class="qtm__routine"><span class="qtm__r-dot"></span> CIFRADO AES-256</div>
-				<div class="qtm__routine"><span class="qtm__r-dot"></span> PING AL NÚCLEO: 4ms</div>
-				<div class="qtm__routine"><span class="qtm__r-dot"></span> MATRIZ SINCRONIZADA</div>
+				<div class="qtm__routine"><span class="qtm__r-dot"></span> UPTIME: {Math.floor(telemetry.uptime/3600)}H {Math.floor((telemetry.uptime%3600)/60)}M</div>
+				<div class="qtm__routine"><span class="qtm__r-dot"></span> CARGA_NÚCLEO: {telemetry.cpu.toFixed(1)}%</div>
+				<div class="qtm__routine"><span class="qtm__r-dot"></span> RED_TRÁFICO: {telemetry.netRX.toFixed(1)} Mb/s</div>
+				<div class="qtm__routine"><span class="qtm__r-dot"></span> MEM_SISTEMA: {telemetry.mem.toFixed(1)}%</div>
 			</div>
 		</div>
 

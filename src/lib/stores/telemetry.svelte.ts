@@ -19,12 +19,13 @@ export function createTelemetryStore() {
 				cpu = data.cpu.usage;
 				mem = data.memory.usage;
 				uptime = data.uptime;
+				disk = data.disk.usage || 45;
 				
-				// Simulate the rest for visual flair
-				disk = Math.min(95, Math.max(40, disk + (Math.random() - 0.5) * 2));
-				netTX = Math.min(100, Math.max(1, netTX + (Math.random() - 0.5) * 30));
-				netRX = Math.min(100, Math.max(1, netRX + (Math.random() - 0.5) * 30));
-				procs = Math.max(100, Math.round(procs + (Math.random() - 0.5) * 4));
+				// Simulate high-frequency traffic for "juice"
+				netTX = Math.min(100, Math.max(1, netTX + (Math.random() - 0.5) * 40));
+				netRX = Math.min(100, Math.max(1, netRX + (Math.random() - 0.5) * 40));
+				// Procs count based on real load + simulation
+				procs = Math.round(150 + (data.cpu.load[0] * 10) + (Math.random() * 5));
 			}
 		} catch (e) {
 			console.error('Failed to fetch telemetry:', e);

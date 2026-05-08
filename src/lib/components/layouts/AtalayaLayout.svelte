@@ -97,11 +97,14 @@
 	<!-- TICKER -->
 	<div class="ata__ticker">
 		<div class="ata__ticker-scroll">
-			{#each Array(5) as _}
-				<span>VAROSERVER NÚCLEO v7.2</span>
-				<span>ESTADO: ESTABLE</span>
-				<span>UPTIME: {telemetry.uptime}s</span>
-				<span>PROCESOS: {telemetry.procs}</span>
+			{#each Array(3) as _}
+				<span>SISTEMA VAROSERVER N150: OPERATIVO</span>
+				<span>ESTADO DEL NÚCLEO: NOMINAL</span>
+				<span>TIEMPO DE ACTIVIDAD: {Math.floor(telemetry.uptime / 3600)}h {Math.floor((telemetry.uptime % 3600) / 60)}m</span>
+				<span>PROCESOS EN EJECUCIÓN: {telemetry.procs}</span>
+				<span>CARGA DE RED: {telemetry.netRX.toFixed(1)} Mb/s</span>
+				<span>ALMACENAMIENTO: {telemetry.disk.toFixed(1)}% EN USO</span>
+				<span>TEMPERATURA: {Math.floor(35 + telemetry.cpu * 0.2)}°C</span>
 			{/each}
 		</div>
 	</div>

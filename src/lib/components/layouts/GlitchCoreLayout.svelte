@@ -66,15 +66,17 @@
 			const freq = 0.5 + Math.sin(tick / 10) * (0.2 + cpuFactor);
 			sineWave = [...sineWave.slice(1), 50 + Math.sin(tick * freq) * (20 + cpuFactor*30) + (Math.random() * 10 - 5)];
 			
-			// Add random memory fragments for matrix rain
-			if (memoryFragments.length > 30) memoryFragments = memoryFragments.slice(1);
-			memoryFragments = [...memoryFragments, `0x${randomHex(8)} ${Math.random()>0.8?randomGarble(4):'OK'}`];
+			// Add real system events in Spanish for matrix rain
+			if (memoryFragments.length > 20) memoryFragments = memoryFragments.slice(1);
+			const svc = allServices[Math.floor(Math.random() * allServices.length)];
+			const logMsg = svc ? `[${svc.name.toUpperCase()}] ESTADO: ${statuses[svc.name as string] === 'online' ? 'NOMINAL' : 'BRECHA'}` : `[SISTEMA] CPU_LOAD: ${telemetry.cpu.toFixed(1)}%`;
+			memoryFragments = [...memoryFragments, logMsg];
 
-			// Fast scrolling hex dump reacting to CPU
-			if (hexDump.length > 25) hexDump = hexDump.slice(1);
-			const numLines = Math.min(3, Math.max(1, Math.floor(telemetry.cpu / 30)));
+			// Fast scrolling hex dump using real-ish address lookups
+			if (hexDump.length > 15) hexDump = hexDump.slice(1);
+			const numLines = Math.min(2, Math.max(1, Math.floor(telemetry.cpu / 40)));
 			for (let i=0; i<numLines; i++) {
-				hexDump = [...hexDump, `[${randomHex(4)}] ${randomHex(8)} ${randomHex(8)} ${randomHex(8)} ${randomHex(8)} | ${randomGarble(8)}`];
+				hexDump = [...hexDump, `[0x${randomHex(4)}] ADDR_${randomHex(8)} >> VOLCADO_MEMORIA: ${telemetry.mem.toFixed(1)}% | OK`];
 			}
 			
 		}, 150);

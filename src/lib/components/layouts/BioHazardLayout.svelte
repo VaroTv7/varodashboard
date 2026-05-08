@@ -82,7 +82,10 @@
 							<div class="bio__stat-fill" style="width: {telemetry.cpu}%"></div>
 						</div>
 					</div>
-				</div>
+					<div class="bio__stat">
+						<div class="bio__stat-name">ESTABILIDAD_TIEMPO (UPTIME)</div>
+						<div class="bio__stat-val-text">{Math.floor(telemetry.uptime/3600)}H {Math.floor((telemetry.uptime%3600)/60)}M</div>
+					</div>
 			</div>
 		</div>
 	</main>
@@ -241,6 +244,7 @@
 	.bio__stat-name { font-size: 0.65rem; font-weight: bold; margin-bottom: 5px; }
 	.bio__stat-bar { height: 10px; background: #222; border: 1px solid #333; }
 	.bio__stat-fill { height: 100%; background: var(--bio-yellow); }
+	.bio__stat-val-text { font-size: 1.2rem; font-weight: 900; }
 
 	.bio__footer {
 		background: var(--bio-yellow);

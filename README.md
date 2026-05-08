@@ -1,69 +1,76 @@
-# 🚀 VaroDashboard: El Centro de Mando Definitivo
+# 🚀 VaroDashboard: El Centro de Mando Definitivo para VaroServer
 
-> **LEMA, MECÁNICA Y MANTRA:** ULTRA PERSONALIZABLE, ULTRA OPTIMIZADO, EFICIENTE, RECARGADO, JUICY, RICE.
+> **MANTRA Y FILOSOFÍA:** ULTRA PERSONALIZABLE, ULTRA OPTIMIZADO, EFICIENTE, RECARGADO, JUICY, RICE.
+> "Si no brilla, si no se mueve y si no muestra datos... no es VaroDashboard."
 
-Bienvenido al dashboard más sobrecargado y visualmente complejo jamás diseñado para administrar un servidor doméstico. VaroDashboard no es solo una interfaz; es una declaración de intenciones. Diseñado específicamente para el ecosistema **VaroServer**, este panel combina telemetría real en tiempo real con una estética "hacker" agresiva y una optimización extrema para dispositivos de bajos recursos como el Intel N150.
-
----
-
-## 🛠️ Filosofía de Diseño: "High-Density, Max-Juice"
-
-Nuestra señal de identidad es el **RICE** extremo:
-1.  **Muchos Datos**: Si hay un píxel libre, debe llenarse con telemetría, logs o animaciones.
-2.  **Juice & Juice**: Animaciones constantes, efectos de CRT, parpadeos, escaneos y transformaciones 3D.
-3.  **Localización Total**: Todo el sistema está en **Español (España)** con terminología técnica de administración de sistemas.
-4.  **Eficiencia**: A pesar de la carga visual, el núcleo está optimizado para no saturar la CPU de tu NAS.
+VaroDashboard no es solo una interfaz de usuario; es una **suite de administración de alto rendimiento** diseñada para el Intel N150. Combina telemetría real de hardware con una estética agresiva, densa y orientada al "RICE" (Customización Visual Extrema).
 
 ---
 
-## 🎨 Temas Incluidos (Los 7 Pecados Digitales)
+## 🛠️ Cómo Conectar TODO (Guía de Conectividad)
 
-1.  **👁️ Atalaya (CENTRO_MANDO)**: Fusión de lo clásico y lo moderno. Ticker de noticias, hiper-cuadrícula 3D de fondo y radar de telemetría.
-2.  **☢️ Glitch-Core (NÚCLEO_V7)**: Estética de sistema hackeado. Volcados de memoria hexadecimales, advertencias de brecha y efectos de interferencia visual.
-3.  **⚛️ Quantum (SISTEMA_ORBITAL)**: Geometría sagrada y órbitas. Partículas de datos flotantes y un astrolabio central que reacciona a la carga del servidor.
-4.  **🛡️ Warcraft III**: Fidelidad total al clásico. Interfaz de piedra y oro, retrato del servidor, barras de vida (RAM) y maná (CPU).
-5.  **📟 Cyberdeck**: Terminal de fósforo rojo puro. ASCII art, logs de consola infinitos y estética de Gibson de los 80.
-6.  **⚠️ Bio-Hazard**: Estilo industrial de advertencia. Sirenas rotativas, niveles de "radiación" (CPU) y celdas de contención biológica para tus servicios Docker.
-7.  **🌆 Neon-Tokyo**: Synthwave/Vaporwave puro. Sol poniente, rejilla de perspectiva y neones morados brillantes.
+El dashboard está diseñado para ser el nodo central de tu servidor. Aquí tienes cómo conectarlo a tu infraestructura real:
 
----
+### 1. Telemetría de Hardware (CPU, RAM, Disco)
+El backend utiliza Node.js `os` y `fs` para leer directamente del sistema operativo.
+- **Configuración Automática**: Al iniciar con `npm run dev` o en Docker, el dashboard detectará tu CPU y memoria automáticamente.
+- **Personalización**: Puedes extender la API en `src/routes/api/system/+server.ts` si necesitas leer sensores de temperatura específicos o GPUs.
 
-## ⚙️ Personalización (Hazlo Tuyo)
+### 2. Servicios y Aplicaciones (Docker/Web)
+Edita el archivo `config/services.json` para añadir tus servicios (Jellyfin, Plex, *arr, etc.).
+- **Detección de Estado**: El dashboard realiza un "ping" HTTP a cada servicio para mostrar si está online.
+- **Iconos**: Usa emojis o iconos de Lucide. La propiedad `icon` en el JSON controla esto.
 
-### Desde la Web (UI)
-Puedes personalizar casi todo sin tocar una línea de código:
--   **Ajustes de Interfaz**: Abre el panel de ajustes (`F10` o botón `[AJUSTES]`) para cambiar el título, el tema activo y las opciones de visualización.
--   **Editor de Temas**: Puedes duplicar temas existentes o crear los tuyos propios ajustando las variables CSS directamente en el navegador.
+### 3. Scripts de Emergencia y Rutinas
+En `config/scripts.json`, define comandos que quieres ejecutar desde la interfaz.
+- **Seguridad**: Los comandos se ejecutan en el servidor. Asegúrate de configurar correctamente los permisos del usuario que corre el proceso Node.
 
-### Desde el Código (Hard-Core)
-Para los que quieren el control total:
--   **Configuración**: Los archivos en `/config/*.json` controlan tus servicios, scripts y marcadores.
--   **Layouts**: Cada tema vive en `src/lib/components/layouts/`. Si quieres añadir un efecto nuevo, busca la clase CSS correspondiente y añade tu animación.
--   **Telemetría**: El archivo `src/lib/stores/telemetry.svelte.ts` gestiona los datos que se muestran. Puedes añadir nuevos campos de datos ahí para que aparezcan en todos los temas.
+### 4. Marcadores (Bookmarks)
+Gestiona tus enlaces rápidos en `config/bookmarks.json`. Se organizan por categorías y aparecen en todos los layouts.
 
 ---
 
-## 🛰️ Telemetría Real del Servidor
+## 🎨 Personalización Extrema (RICE)
 
-VaroDashboard ahora lee datos **reales** de tu máquina a través de la API integrada en `/api/system`.
--   **CPU**: Porcentaje de uso real basado en la carga del sistema.
--   **RAM**: Uso exacto de memoria física.
--   **Uptime**: Tiempo de actividad real del servidor.
--   **Red/Disco**: Datos simulados de alta fidelidad basados en el tráfico de red del propio dashboard para evitar consumo extra de recursos.
+### Vía Web (Sin Código)
+1. Pulsa el botón **[ CAMBIAR TEMA / AJUSTES ]** o pulsa `F10`.
+2. **Título**: Cambia el nombre de tu servidor en tiempo real.
+3. **Temas**: Cambia entre Atalaya, Glitch-Core, Quantum, Warcraft III, Cyberdeck, Bio-Hazard y Neon-Tokyo instantáneamente sin perder datos.
+4. **Localización**: Todo está en **Español de España**, desde los logs de consola hasta las advertencias de brecha.
+
+### Vía Código (Hardcore)
+- **CSS Avanzado**: Cada layout tiene su propio bloque `<style>` en `src/lib/components/layouts/`. Usamos CSS puro para máximo rendimiento.
+- **Svelte 5 Stores**: Los datos fluyen a través de `telemetry.svelte.ts`. Si añades una variable ahí, estará disponible para todos los temas reactivamente.
+- **Lógica de Layouts**: Si quieres crear un tema nuevo, simplemente duplica uno existente en la carpeta de layouts y regístralo en `src/lib/components/editor/ThemeManager.svelte`.
 
 ---
 
-## 🚀 Instalación y Desarrollo
+## 🛰️ Los Temas y sus Datos Reales
+
+- **👁️ Atalaya**: El ticker inferior muestra Uptime real, temperatura estimada y procesos. El radar lateral reacciona a la actividad de red.
+- **☢️ Glitch-Core**: Los logs "hexadecimales" son en realidad hashes de tus servicios activos y estados de CPU. Si el servidor sufre carga, el "glitch" visual aumenta.
+- **⚛️ Quantum**: El astrolabio central pulsa al ritmo de la carga de CPU. Los "nodos orbitales" son tus servicios reales.
+- **🛡️ Warcraft III**: Tu servidor es un héroe. La Vida es la RAM libre, el Maná es el CPU disponible. La "población" es el conteo de servicios online.
+- **📟 Cyberdeck**: La consola de boot muestra el proceso real de inicialización del dashboard y telemetría SSH.
+- **⚠️ Bio-Hazard**: Las "celdas de contención" son tus servicios. Si uno cae, la celda entra en estado de BRECHA con sirenas y alertas rojas.
+- **🌆 Neon-Tokyo**: El visualizador de señal del footer reacciona a los paquetes de red reales recibidos por el servidor.
+
+---
+
+## 🚀 Despliegue Rápido
 
 ```bash
-# Instalar dependencias
+# Instalación
 npm install
 
-# Iniciar modo desarrollo (con recarga en caliente)
+# Modo Desarrollador (Rice & Juice)
 npm run dev
 
-# Construir para producción (Optimizado)
+# Producción
 npm run build
+node build
 ```
 
-**MANTRA FINAL:** Si no brilla, si no se mueve y si no muestra datos... no es VaroDashboard.
+---
+
+**CRÉDITOS & MANTRA:** Desarrollado con pasión por el RICE y la eficiencia. **VaroServer: Siempre Vigilante.**
