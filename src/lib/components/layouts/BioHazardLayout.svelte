@@ -176,7 +176,14 @@
 	.bio__cpu-val { font-size: 1.5rem; font-weight: 900; }
 
 	.bio__content { flex: 1; padding: 20px; position: relative; z-index: 5; overflow: hidden; }
-	.bio__grid { display: grid; grid-template-columns: 1fr 350px; gap: 20px; height: 100%; }
+	.bio__grid { display: grid; grid-template-columns: 1fr 22rem; gap: 1.25rem; height: 100%; }
+
+	@media (max-width: 1024px) {
+		.bio__grid { grid-template-columns: 1fr; }
+		.bio__side { display: none; }
+		.bio__header-content { flex-direction: column; text-align: center; gap: 1rem; }
+		.bio__cpu-danger { text-align: center; width: 100%; }
+	}
 
 	.bio__panel {
 		background: rgba(0,0,0,0.9);
@@ -196,8 +203,8 @@
 	.bio__service-grid {
 		padding: 10px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-		gap: 8px;
+		grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+		gap: 0.5rem;
 		overflow-y: auto;
 	}
 

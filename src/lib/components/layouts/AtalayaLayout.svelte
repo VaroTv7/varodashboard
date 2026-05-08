@@ -294,9 +294,9 @@
 	@keyframes tickerScroll { from{transform:translateX(0%)} to{transform:translateX(-50%)} }
 
 	/* MAIN GRID */
-	.ata__main { flex: 1; padding: 20px 30px; position: relative; z-index: 10; overflow: hidden; }
-	.ata__grid { display: grid; grid-template-columns: 350px 1fr 300px; gap: 20px; height: 100%; }
-	.ata__col { display: flex; flex-direction: column; gap: 20px; min-height: 0; }
+	.ata__main { flex: 1; padding: 1.25rem 2rem; position: relative; z-index: 10; overflow: hidden; }
+	.ata__grid { display: grid; grid-template-columns: 22rem 1fr 18rem; gap: 1.25rem; height: 100%; }
+	.ata__col { display: flex; flex-direction: column; gap: 1.25rem; min-height: 0; }
 	.ata__col--main { flex: 1; overflow-y: auto; }
 
 	/* PANELS */
@@ -357,6 +357,20 @@
 	.ata__b-title { font-size: 0.75rem; color: #009985; margin: 0; }
 	.ata__b-list { display: flex; flex-direction: column; gap: 5px; }
 
-	@media (max-width: 1400px) { .ata__grid { grid-template-columns: 300px 1fr 250px; } }
-	@media (max-width: 1000px) { .ata__grid { grid-template-columns: 1fr; } .ata__col--sidebar { display: none; } }
+	@media (max-width: 1024px) {
+		.ata__grid { grid-template-columns: 1fr; }
+		.ata__col--sidebar, .ata__col--right { display: none; }
+		.ata__brand .ata__title { font-size: 0.8rem; letter-spacing: 2px; }
+		.ata__search-wrap { display: none; }
+		.ata__main { padding: 10px; }
+		.ata__header { padding: 10px 15px; }
+	}
+
+	@media (min-width: 2500px) {
+		.ata { font-size: 1.5rem; }
+		.ata__grid { grid-template-columns: 500px 1fr 400px; gap: 40px; }
+		.ata__header { padding: 30px 60px; }
+		.ata__ticker { height: 40px; }
+		.ata__group-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
+	}
 </style>

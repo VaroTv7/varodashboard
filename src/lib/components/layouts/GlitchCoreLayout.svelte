@@ -331,8 +331,8 @@
 	.glc__search { flex: 1; background: transparent; border: none; color: #fff; font-family: inherit; font-size: 1.4rem; outline: none; }
 	.glc__cursor { color: #39ff14; animation: fast-blink 0.5s infinite; }
 
-	.glc__grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 15px; flex: 1; min-height: 0; }
-	.glc__col { display: flex; flex-direction: column; gap: 15px; min-height: 0; }
+	.glc__grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 1rem; flex: 1; min-height: 0; }
+	.glc__col { display: flex; flex-direction: column; gap: 1rem; min-height: 0; }
 
 	/* PANELS */
 	.glc__panel {
@@ -419,10 +419,22 @@
 
 	@keyframes fast-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
-	@media (max-width: 1200px) {
-		.glc__grid { grid-template-columns: 1fr 1fr; }
-	}
-	@media (max-width: 900px) {
+	@media (max-width: 1024px) {
 		.glc__grid { grid-template-columns: 1fr; }
+		.glc__col--left, .glc__col--right { display: none; }
+		.glc__title { font-size: 1.5rem; }
+		.glc__sub-title { font-size: 0.6rem; }
+		.glc__header { padding: 10px 15px; }
+		.glc__stats { gap: 10px; }
+		.glc__stat-box { display: none; }
+		.glc__stat-box:last-child { display: flex; }
+	}
+
+	@media (min-width: 2500px) {
+		.glc { font-size: 1.5rem; }
+		.glc__grid { grid-template-columns: 500px 1fr 400px; gap: 40px; }
+		.glc__header { padding: 30px 60px; height: 120px; }
+		.glc__node { padding: 20px; }
+		.glc__node-name { font-size: 1.8rem; }
 	}
 </style>

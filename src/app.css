@@ -19,7 +19,15 @@ html {
 	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
 	scroll-behavior: smooth;
-	font-size: 16px;
+	
+	/* 🚀 GLOBAL RESPONSIVE ENGINE: Scales from Mobile to 4K automatically */
+	--base-fs: clamp(14px, 0.4vw + 12px, 24px);
+	font-size: var(--base-fs);
+}
+
+/* Global scale factor for spacing/ui elements */
+:root {
+	--ui-scale: clamp(0.8, 0.5vw + 0.7, 1.4);
 }
 
 body {
@@ -124,21 +132,21 @@ img {
 	--gradient-glow: radial-gradient(circle at center, var(--color-primary-glow), transparent 70%);
 
 	/* Spacing */
-	--space-xs: 4px;
-	--space-sm: 8px;
-	--space-md: 16px;
-	--space-lg: 24px;
-	--space-xl: 32px;
-	--space-2xl: 48px;
-	--space-3xl: 64px;
+	--space-xs: calc(4px * var(--ui-scale));
+	--space-sm: calc(8px * var(--ui-scale));
+	--space-md: calc(16px * var(--ui-scale));
+	--space-lg: calc(24px * var(--ui-scale));
+	--space-xl: calc(32px * var(--ui-scale));
+	--space-2xl: calc(48px * var(--ui-scale));
+	--space-3xl: calc(64px * var(--ui-scale));
 
 	/* Radius */
-	--radius-xs: 6px;
-	--radius-sm: 8px;
-	--radius-md: 12px;
-	--radius-lg: 16px;
-	--radius-xl: 20px;
-	--radius-2xl: 24px;
+	--radius-xs: calc(6px * var(--ui-scale));
+	--radius-sm: calc(8px * var(--ui-scale));
+	--radius-md: calc(12px * var(--ui-scale));
+	--radius-lg: calc(16px * var(--ui-scale));
+	--radius-xl: calc(20px * var(--ui-scale));
+	--radius-2xl: calc(24px * var(--ui-scale));
 	--radius-full: 9999px;
 
 	/* Shadows */
@@ -182,6 +190,22 @@ img {
 	--content-max-width: 1600px;
 	--tile-min-width: 280px;
 	--tile-gap: var(--space-md);
+}
+
+@media (max-width: 1024px) {
+	:root {
+		--sidebar-width: 0px;
+		--header-height: 56px;
+		--space-md: 12px;
+	}
+}
+
+@media (min-width: 2500px) {
+	:root {
+		--sidebar-width: 400px;
+		--header-height: 80px;
+		--space-md: 32px;
+	}
 }
 
 /* ── Theme: Light ──────────────────────── */

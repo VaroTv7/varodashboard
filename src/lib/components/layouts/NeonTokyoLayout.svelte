@@ -115,8 +115,8 @@
 		top: 10%;
 		left: 50%;
 		transform: translateX(-50%);
-		width: 400px;
-		height: 400px;
+		width: 50vmin;
+		height: 50vmin;
 		background: linear-gradient(to bottom, #ff00ff, #7000ff);
 		border-radius: 50%;
 		box-shadow: 0 0 100px #ff00ff;
@@ -130,26 +130,30 @@
 		width: 200%;
 		height: 600px;
 		background-image: 
-			linear-gradient(transparent 0%, var(--tokyo-pink) 2%, transparent 3%),
-			linear-gradient(90deg, transparent 0%, var(--tokyo-pink) 2%, transparent 3%);
-		background-size: 60px 60px;
+		linear-gradient(transparent 0%, var(--tokyo-pink) 2%, transparent 3%),
+		linear-gradient(90deg, transparent 0%, var(--tokyo-pink) 2%, transparent 3%);
+		background-size: 4rem 4rem;
 		transform: rotateX(60deg);
 		animation: grid-move 2s linear infinite;
 		opacity: 0.3;
 	}
-	@keyframes grid-move { from { background-position: 0 0; } to { background-position: 0 60px; } }
+	@keyframes grid-move { from { background-position: 0 0; } to { background-position: 0 4rem; } }
 
 	.tokyo__header {
-		height: 80px;
+		height: 5rem;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0 40px;
+		padding: 0 2rem;
 		background: rgba(5,5,16,0.8);
 		border-bottom: 2px solid var(--tokyo-pink);
 		box-shadow: 0 5px 20px rgba(255,0,255,0.2);
 		z-index: 10;
 		backdrop-filter: blur(10px);
+	}
+	@media (max-width: 768px) {
+		.tokyo__header { height: auto; flex-direction: column; padding: 1rem; gap: 1rem; }
+		.tokyo__telemetry { display: none; }
 	}
 
 	.tokyo__logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 10px; color: var(--tokyo-cyan); text-shadow: 0 0 10px var(--tokyo-cyan); }

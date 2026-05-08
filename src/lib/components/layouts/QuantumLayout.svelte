@@ -234,21 +234,21 @@
 	/* MAIN ASTROLABE */
 	.qtm__main { flex: 1; position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-	.qtm__astrolabe { position: relative; width: 700px; height: 700px; display: flex; align-items: center; justify-content: center; }
+	.qtm__astrolabe { position: relative; width: 80vmin; height: 80vmin; display: flex; align-items: center; justify-content: center; }
 
 	/* RINGS */
 	.qtm__ring { position: absolute; border-radius: 50%; border: 1px solid rgba(223, 187, 255, 0.1); }
-	.qtm__ring--1 { width: 650px; height: 650px; border: 2px dashed rgba(223, 187, 255, 0.2); animation: spin 80s linear infinite; }
-	.qtm__ring--2 { width: 520px; height: 520px; border-width: 2px; border-color: rgba(0, 255, 255, 0.2); animation: spin 50s linear infinite reverse; }
-	.qtm__ring--3 { width: 380px; height: 380px; border: 1px dotted rgba(255, 215, 0, 0.4); animation: spin 30s linear infinite; }
-	.qtm__ring--4 { width: 250px; height: 250px; border: 4px double rgba(223, 187, 255, 0.1); animation: spin 20s linear infinite reverse; }
-	.qtm__ring--5 { width: 160px; height: 160px; border: 1px solid rgba(255, 255, 255, 0.3); animation: spin 10s linear infinite; }
+	.qtm__ring--1 { width: 75vmin; height: 75vmin; border: 2px dashed rgba(223, 187, 255, 0.2); animation: spin 80s linear infinite; }
+	.qtm__ring--2 { width: 60vmin; height: 60vmin; border-width: 2px; border-color: rgba(0, 255, 255, 0.2); animation: spin 50s linear infinite reverse; }
+	.qtm__ring--3 { width: 45vmin; height: 45vmin; border: 1px dotted rgba(255, 215, 0, 0.4); animation: spin 30s linear infinite; }
+	.qtm__ring--4 { width: 30vmin; height: 30vmin; border: 4px double rgba(223, 187, 255, 0.1); animation: spin 20s linear infinite reverse; }
+	.qtm__ring--5 { width: 20vmin; height: 20vmin; border: 1px solid rgba(255, 255, 255, 0.3); animation: spin 10s linear infinite; }
 
 	@keyframes spin { 100% { transform: rotate(360deg); } }
 
 	/* CORE */
 	.qtm__core {
-		position: absolute; width: 140px; height: 140px;
+		position: absolute; width: 20vmin; height: 20vmin;
 		background: radial-gradient(circle, rgba(223,187,255,0.2) 0%, rgba(0,0,0,0.8) 70%);
 		border-radius: 50%; border: 2px solid #dfbbff;
 		box-shadow: 0 0 30px rgba(223, 187, 255, 0.6), inset 0 0 20px rgba(223, 187, 255, 0.4);
@@ -262,8 +262,8 @@
 		animation: spin 3s linear infinite;
 	}
 	.qtm__core-inner { text-align: center; position: relative; z-index: 2; }
-	.qtm__core-val { font-size: 2.5rem; font-weight: 200; color: #fff; text-shadow: 0 0 15px #fff; line-height: 1; }
-	.qtm__core-lbl { font-size: 0.6rem; letter-spacing: 4px; margin-top: 5px; color: #dfbbff; text-shadow: 0 0 5px #dfbbff; }
+	.qtm__core-val { font-size: 5vmin; font-weight: 200; color: #fff; text-shadow: 0 0 15px #fff; line-height: 1; }
+	.qtm__core-lbl { font-size: 1.2vmin; letter-spacing: 4px; margin-top: 5px; color: #dfbbff; text-shadow: 0 0 5px #dfbbff; }
 
 	/* VITALS AROUND CORE */
 	.qtm__vital { position: absolute; width: 80px; height: 80px; }

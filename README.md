@@ -72,6 +72,19 @@ Si quieres que tus datos personalizados salgan en un sitio específico:
 
 ---
 
+## 📐 Motor de Escalado Global (Responsive 4K & Mobile)
+
+VaroDashboard integra un **Motor de Escalado Dinámico** en `src/app.css` que garantiza que la interfaz se vea profesional en cualquier pantalla:
+
+1.  **Tipografía Fluida**: Usamos `clamp()` para que el tamaño base de la fuente escale automáticamente entre **14px (móvil)** y **24px (4K)**.
+2.  **Unidades Relativas**: Los layouts están construidos con `rem`, `vh/vw` y `vmin`, lo que permite que todos los paneles, márgenes y botones se ajusten proporcionalmente al tamaño de la pantalla.
+3.  **Adaptación Automática**:
+    *   **4K TV**: La interfaz aprovecha el espacio extra aumentando el espaciado y la densidad de datos sin perder legibilidad.
+    *   **1080p Monitor**: La experiencia estándar, equilibrada y nítida.
+    *   **Smartphone (Vertical)**: Los layouts detectan el ancho de pantalla y apilan las columnas de forma inteligente, ocultando elementos secundarios para priorizar el control de servicios.
+
+---
+
 ## 🚀 Despliegue Rápido
 
 ```bash
