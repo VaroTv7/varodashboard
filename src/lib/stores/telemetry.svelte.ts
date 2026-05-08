@@ -6,7 +6,8 @@ export function createTelemetryStore() {
 	let netRX = $state(10);
 	let procs = $state(150);
 	let uptime = $state(0);
-	let customData = $state<any>({});
+	let arrStatus = $state({ radarr: 'OFFLINE', sonarr: 'OFFLINE' });
+	let time = $state('');
 
 	let isFetching = false;
 
@@ -22,11 +23,15 @@ export function createTelemetryStore() {
 				uptime = data.uptime;
 				disk = data.disk.usage || 45;
 				customData = data.custom || {};
+				arrStatus = data.arr || { radarr: 'OFFLINE', sonarr: 'OFFLINE' };
 				
+				// Update clock
+				const now = new Date();
+				time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
 				// Simulate high-frequency traffic for "juice"
 				netTX = Math.min(100, Math.max(1, netTX + (Math.random() - 0.5) * 40));
 				netRX = Math.min(100, Math.max(1, netRX + (Math.random() - 0.5) * 40));
-				// Procs count based on real load + simulation
 				procs = Math.round(150 + (data.cpu.load[0] * 10) + (Math.random() * 5));
 			}
 		} catch (e) {
@@ -56,6 +61,8 @@ export function createTelemetryStore() {
 		get procs() { return procs; },
 		get uptime() { return uptime; },
 		get customData() { return customData; },
+		get arrStatus() { return arrStatus; },
+		get time() { return time; },
 		start,
 		stop
 	};

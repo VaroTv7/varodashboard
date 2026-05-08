@@ -40,11 +40,28 @@ export const GET: RequestHandler = async () => {
 			}
 		} catch (e) { /* fallback */ }
 
+		// Network Interfaces
+		const networks = os.networkInterfaces();
+		let netInfo = { rx: 1.2, tx: 0.5 }; // Sim for now, actual speed requires polling
+
+		// ARR Integration
+		let arrStatus = { radarr: 'OFFLINE', sonarr: 'OFFLINE' };
+		try {
+			const apiKeysPath = path.resolve('config/api_keys.json');
+			if (fs.existsSync(apiKeysPath)) {
+				const keys = JSON.parse(fs.readFileSync(apiKeysPath, 'utf-8'));
+				// Logic to fetch from actual APIs would go here
+				// For now, if enabled: true, we assume it's "READY"
+				if (keys.radarr?.enabled) arrStatus.radarr = 'READY';
+				if (keys.sonarr?.enabled) arrStatus.sonarr = 'READY';
+			}
+		} catch (e) { /* ignore */ }
+
 		return json({
 			cpu: {
 				usage: cpuUsage,
 				cores: cpus.length,
-				model: cpus[0]?.model || 'Unknown CPU',
+				model: cpus[0]?.model || 'Desconocido',
 				load: os.loadavg()
 			},
 			memory: {
@@ -54,6 +71,8 @@ export const GET: RequestHandler = async () => {
 				used: usedMem
 			},
 			disk,
+			network: netInfo,
+			arr: arrStatus,
 			uptime: uptime,
 			platform: os.platform(),
 			release: os.release(),

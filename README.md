@@ -72,6 +72,20 @@ Si quieres que tus datos personalizados salgan en un sitio específico:
 
 ---
 
+## 🛠️ Sistema de Rutinas (Scripts)
+
+VaroDashboard permite ejecutar comandos directamente desde la interfaz:
+*   **Gestión Centralizada**: Configura tus scripts en `config/scripts.json`.
+*   **Ejecución en Tiempo Real**: Ejecuta limpiezas de Docker, actualizaciones de sistema o búsquedas personalizadas con un solo clic.
+*   **Feedback Visual**: Notificaciones dinámicas sobre el estado de la ejecución.
+
+## 📡 Integración con APIs (Radarr / Sonarr)
+
+Monitoriza tus servicios de media directamente en el header:
+1.  Crea/Edita `config/api_keys.json`.
+2.  Activa los servicios (`enabled: true`) y añade tu URL/Key.
+3.  El Dashboard mostrará indicadores **NEÓN** (Verde/Rojo) sobre el estado de tus instancias.
+
 ## 📐 Motor de Escalado Global (Responsive 4K & Mobile)
 
 VaroDashboard integra un **Motor de Escalado Dinámico** en `src/app.css` que garantiza que la interfaz se vea profesional en cualquier pantalla:

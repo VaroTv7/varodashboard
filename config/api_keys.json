@@ -1,0 +1,12 @@
+{
+	"radarr": {
+		"enabled": false,
+		"url": "http://localhost:7878",
+		"key": "YOUR_RADARR_API_KEY"
+	},
+	"sonarr": {
+		"enabled": false,
+		"url": "http://localhost:8989",
+		"key": "YOUR_SONARR_API_KEY"
+	}
+}

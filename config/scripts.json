@@ -2,26 +2,26 @@
 	"scripts": [
 		{
 			"id": "search-game",
-			"name": "Search Game",
-			"description": "Search for a game across multiple sources",
+			"name": "BUSCAR JUEGO",
+			"description": "Busca un juego en múltiples fuentes",
 			"icon": "gamepad-2",
 			"color": "#9b59b6",
 			"command": "python3 scripts/search_game.py",
 			"parameters": [
 				{
 					"name": "game",
-					"label": "Game Name",
+					"label": "Nombre del Juego",
 					"type": "text",
 					"required": true,
-					"placeholder": "Enter game name..."
+					"placeholder": "Introduzca nombre..."
 				}
 			],
 			"timeout": 30
 		},
 		{
 			"id": "system-update",
-			"name": "System Update",
-			"description": "Update all system packages",
+			"name": "ACTUALIZAR SISTEMA",
+			"description": "Actualiza todos los paquetes del sistema",
 			"icon": "refresh-cw",
 			"color": "#2ecc71",
 			"command": "apt update && apt upgrade -y",
@@ -31,8 +31,8 @@
 		},
 		{
 			"id": "docker-cleanup",
-			"name": "Docker Cleanup",
-			"description": "Remove unused Docker images and volumes",
+			"name": "LIMPIEZA DOCKER",
+			"description": "Elimina imágenes y volúmenes de Docker sin uso",
 			"icon": "trash-2",
 			"color": "#e74c3c",
 			"command": "docker system prune -f",

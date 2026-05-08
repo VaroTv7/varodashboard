@@ -2,6 +2,25 @@
 	import ServiceTile from '$lib/components/tiles/ServiceTile.svelte';
 	import BookmarkTile from '$lib/components/tiles/BookmarkTile.svelte';
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import { showToast } from '$lib/stores/toast.svelte';
+
+	async function executeScript(id: any) {
+		showToast(`EJECUTANDO: ${id.toUpperCase()}...`, 'info');
+		try {
+			const res = await fetch('/api/scripts', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id })
+			});
+			if (res.ok) {
+				showToast(`ÉXITO: ${id.toUpperCase()} COMPLETADO`, 'success');
+			} else {
+				showToast(`ERROR: FALLO AL EJECUTAR ${id.toUpperCase()}`, 'error');
+			}
+		} catch (e) {
+			showToast(`ERROR DE CONEXIÓN`, 'error');
+		}
+	}
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -83,7 +102,28 @@
 		</div>
 
 		<div class="ata__sys-info">
-			<div class="ata__sys-time">{timeStr}</div>
+			<div class="ata__header-widgets">
+				<div class="ata__h-widget">
+					<span class="ata__h-lbl">CPU</span>
+					<div class="ata__h-bar"><div class="ata__h-fill" style="width: {telemetry.cpu}%"></div></div>
+					<span class="ata__h-val">{telemetry.cpu.toFixed(0)}%</span>
+				</div>
+				<div class="ata__h-widget">
+					<span class="ata__h-lbl">RAM</span>
+					<div class="ata__h-bar"><div class="ata__h-fill" style="width: {telemetry.mem}%"></div></div>
+					<span class="ata__h-val">{telemetry.mem.toFixed(0)}%</span>
+				</div>
+				<div class="ata__h-sep"></div>
+				<div class="ata__h-arr">
+					<span class="ata__h-arr-dot" class:ata__h-arr-dot--ok={telemetry.arrStatus.radarr === 'READY'} title="RADARR"></span>
+					<span class="ata__h-arr-lbl">RADR</span>
+				</div>
+				<div class="ata__h-arr">
+					<span class="ata__h-arr-dot" class:ata__h-arr-dot--ok={telemetry.arrStatus.sonarr === 'READY'} title="SONARR"></span>
+					<span class="ata__h-arr-lbl">SONR</span>
+				</div>
+			</div>
+			<div class="ata__sys-time">{telemetry.time}</div>
 			<div class="ata__sys-nodes">
 				<span class="ata__node-stat ata__node-stat--up">ACTIVOS: {onlineCount}</span>
 				{#if offlineCount > 0}
@@ -168,10 +208,10 @@
 					<div class="ata__panel-title">RUTINAS</div>
 					<div class="ata__list">
 						{#each filteredScripts as script}
-							<div class="ata__list-item">
+							<button class="ata__list-item" onclick={() => executeScript(script.id)}>
 								<span class="ata__list-icon">►</span>
 								<span class="ata__list-text">{script.name}</span>
-							</div>
+							</button>
 						{/each}
 					</div>
 				</div>
@@ -284,6 +324,19 @@
 
 	.ata__btn { background: transparent; border: 1px solid #00e5c8; color: #00e5c8; padding: 5px 15px; font-family: inherit; cursor: pointer; transition: all 0.2s; }
 	.ata__btn:hover { background: #00e5c8; color: #000; box-shadow: 0 0 15px #00e5c8; }
+
+	/* HEADER WIDGETS */
+	.ata__header-widgets { display: flex; gap: 20px; margin-right: 30px; border-right: 1px solid rgba(0,229,200,0.2); padding-right: 30px; }
+	.ata__h-widget { display: flex; align-items: center; gap: 10px; font-size: 0.7rem; }
+	.ata__h-lbl { color: #009985; font-weight: bold; }
+	.ata__h-bar { width: 60px; height: 4px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,229,200,0.3); position: relative; overflow: hidden; }
+	.ata__h-fill { height: 100%; background: #00e5c8; box-shadow: 0 0 5px #00e5c8; transition: width 0.5s ease; }
+	.ata__h-val { color: #fff; width: 30px; text-align: right; }
+	.ata__h-sep { width: 1px; height: 15px; background: rgba(0,229,200,0.2); margin: 0 5px; }
+	.ata__h-arr { display: flex; align-items: center; gap: 6px; }
+	.ata__h-arr-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff3355; box-shadow: 0 0 5px #ff3355; }
+	.ata__h-arr-dot--ok { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
+	.ata__h-arr-lbl { font-size: 0.55rem; color: #009985; font-weight: bold; letter-spacing: 1px; }
 
 	/* TICKER */
 	.ata__ticker { flex-shrink:0; height:clamp(16px,1.6vh,22px); background:#050b14; border-top:1px solid rgba(0,229,200,0.08); border-bottom:1px solid rgba(0,229,200,0.08); overflow:hidden; position:relative; }
