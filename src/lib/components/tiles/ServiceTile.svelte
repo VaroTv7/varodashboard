@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import StatusDot from '$lib/components/ui/StatusDot.svelte';
 
 	interface Service {
@@ -9,9 +10,55 @@
 		description?: string;
 		statusCheck?: boolean;
 		openInNewTab?: boolean;
+		containerName?: string;
 	}
 
 	let { service, status = 'unknown' }: { service: Service; status?: string } = $props();
+
+	let containerStatus = $state<'running' | 'exited' | 'loading' | 'unknown'>('unknown');
+	let isActionLoading = $state(false);
+
+	onMount(() => {
+		if (service.containerName) {
+			fetchContainerStatus();
+		}
+	});
+
+	async function fetchContainerStatus() {
+		try {
+			const res = await fetch(`/api/container?containerName=${service.containerName}`);
+			const data = await res.json();
+			if (data.status) {
+				containerStatus = data.status === 'running' ? 'running' : 'exited';
+			}
+		} catch (err) {
+			console.error('Failed to fetch container status:', err);
+		}
+	}
+
+	async function handleAction(action: 'start' | 'stop', e: Event) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (isActionLoading || !service.containerName) return;
+
+		isActionLoading = true;
+		try {
+			const res = await fetch('/api/container', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ action, containerName: service.containerName })
+			});
+			const data = await res.json();
+			if (data.success) {
+				containerStatus = data.status === 'running' ? 'running' : 'exited';
+			}
+		} catch (err) {
+			console.error(`Failed to ${action} container:`, err);
+		} finally {
+			isActionLoading = false;
+		}
+	}
 
 	const iconMap: Record<string, string> = {
 		'tv': 'M4 7V4h16v14H4v-3 M2 20h20 M9 17v3 M15 17v3',
@@ -41,6 +88,7 @@
 	target={service.openInNewTab !== false ? '_blank' : '_self'}
 	rel="noopener noreferrer"
 	class="service-tile"
+	class:service-tile--stopped={service.containerName && containerStatus === 'exited'}
 	id="service-{service.name.toLowerCase().replace(/\s+/g, '-')}"
 	style:--tile-accent={service.color || 'var(--color-primary)'}
 >
@@ -62,6 +110,30 @@
 				<span class="service-tile__desc">{service.description}</span>
 			{/if}
 		</div>
+
+		{#if service.containerName}
+			<div class="service-tile__actions">
+				{#if isActionLoading}
+					<div class="spinner"></div>
+				{:else if containerStatus === 'running'}
+					<button 
+						class="action-btn action-btn--stop" 
+						onclick={(e) => handleAction('stop', e)}
+						title="Stop Container"
+					>
+						<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+					</button>
+				{:else if containerStatus === 'exited'}
+					<button 
+						class="action-btn action-btn--start" 
+						onclick={(e) => handleAction('start', e)}
+						title="Start Container"
+					>
+						<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+					</button>
+				{/if}
+			</div>
+		{/if}
 		<svg class="service-tile__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
 			<path d="M7 17l9.2-9.2M17 17V7.8H7.8" />
 		</svg>
@@ -82,6 +154,11 @@
 		overflow: hidden;
 		cursor: pointer;
 		text-decoration: none;
+	}
+
+	.service-tile--stopped {
+		opacity: 0.6;
+		filter: grayscale(0.5);
 	}
 
 	.service-tile__glow {
@@ -172,6 +249,62 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.service-tile__actions {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		margin-right: 4px;
+	}
+
+	.action-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 6px;
+		border: 1px solid var(--vs-surface0, #313244);
+		background: transparent;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		padding: 0;
+	}
+
+	.action-btn--start {
+		color: var(--vs-ok, #a6e3a1);
+	}
+
+	.action-btn--start:hover {
+		background: rgba(166, 227, 161, 0.1);
+		border-color: var(--vs-ok, #a6e3a1);
+		transform: scale(1.1);
+	}
+
+	.action-btn--stop {
+		color: var(--vs-error, #f38ba8);
+	}
+
+	.action-btn--stop:hover {
+		background: rgba(243, 139, 168, 0.1);
+		border-color: var(--vs-error, #f38ba8);
+		transform: scale(1.1);
+	}
+
+	.spinner {
+		width: 16px;
+		height: 16px;
+		border: 2px solid rgba(255, 255, 255, 0.1);
+		border-top-color: var(--color-text);
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(360deg); }
 	}
 
 	.service-tile__arrow {

@@ -21,6 +21,13 @@ Edita el archivo `config/services.json` para añadir tus servicios (Jellyfin, Pl
 - **Detección de Estado**: El dashboard realiza un "ping" HTTP a cada servicio para mostrar si está online.
 - **Iconos**: Usa emojis o iconos de Lucide. La propiedad `icon` en el JSON controla esto.
 
+
+### 2b. Control de Contenedores Docker (Start/Stop)
+VaroDashboard puede encender y apagar contenedores directamente desde los tiles.
+- **Requisito**: El dashboard debe tener acceso al socket de Docker (`/var/run/docker.sock`) con permisos de escritura (`:rw` en docker-compose).
+- **Configuración**: Añade `"containerName": "nombre_del_contenedor"` a cualquier servicio en `config/services.json`.
+- **Interfaz**: Si el `containerName` está configurado, aparecerán botones ▶/⏹ en el tile. El tile se atenuará automáticamente cuando el contenedor esté apagado.
+
 ### 3. Scripts de Emergencia y Rutinas
 En `config/scripts.json`, define comandos que quieres ejecutar desde la interfaz.
 - **Seguridad**: Los comandos se ejecutan en el servidor. Asegúrate de configurar correctamente los permisos del usuario que corre el proceso Node.

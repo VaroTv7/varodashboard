@@ -55,7 +55,8 @@
 					"color": "#13b5ea",
 					"description": "Docker Management",
 					"statusCheck": true,
-					"openInNewTab": true
+					"openInNewTab": true,
+					"containerName": "portainer"
 				},
 				{
 					"name": "Nginx Proxy",
@@ -89,7 +90,8 @@
 					"color": "#609926",
 					"description": "Git Repository",
 					"statusCheck": true,
-					"openInNewTab": true
+					"openInNewTab": true,
+					"containerName": "gitea"
 				},
 				{
 					"name": "Vaultwarden",
