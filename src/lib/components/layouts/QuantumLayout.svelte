@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -128,7 +129,14 @@
 					<div class="qtm__node-wrapper" style="--angle: {angle}deg; --radius: {orbitRadius}px;">
 						<a href={svc.url as string} target="_blank" rel="noopener" class="qtm__node" class:qtm__node--err={!isOnline}>
 							<div class="qtm__node-point"></div>
-							<div class="qtm__node-label">{svc.name}</div>
+							<div class="qtm__node-label">
+								{svc.name}
+								{#if svc.containerName}
+									<div style="margin-top: 4px; display: flex; justify-content: center;">
+										<ContainerControl containerName={svc.containerName} variant="compact" />
+									</div>
+								{/if}
+							</div>
 							{#if !isOnline}
 								<div class="qtm__node-status">CAÍDO</div>
 							{/if}

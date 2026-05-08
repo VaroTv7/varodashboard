@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import { onMount } from 'svelte';
 
 	let {
@@ -55,8 +56,15 @@
 			{#each allServices as svc}
 				{@const isOnline = statuses[svc.name as string] === 'online'}
 				<a href={svc.url as string} target="_blank" class="wc3__unit" class:wc3__unit--dead={!isOnline}>
-					<div class="wc3__unit-icon">{svc.icon || '🛡️'}</div>
-					<div class="wc3__unit-bars">
+					<div class="wc3__unit-icon" style="position: relative;">
+						{svc.icon || '🛡️'}
+						{#if svc.containerName}
+							<div style="position: absolute; bottom: -20px; z-index: 10;">
+								<ContainerControl containerName={svc.containerName} variant="compact" />
+							</div>
+						{/if}
+					</div>
+					<div class="wc3__unit-bars" style="margin-top: 15px;">
 						<div class="wc3__health-bar">
 							<div class="wc3__bar-fill wc3__bar-fill--hp" style="width: {isOnline ? 100 : 0}%"></div>
 						</div>

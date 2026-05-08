@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import { onMount } from 'svelte';
 
 	let {
@@ -107,7 +108,12 @@
 					{#each allServices as svc}
 						<div class="deck__svc" class:deck__svc--off={statuses[svc.name as string] !== 'online'}>
 							<span class="deck__svc-status">[{statuses[svc.name as string] === 'online' ? ' OK ' : 'FAIL'}]</span>
-							<span class="deck__svc-name">{svc.name}</span>
+							<span class="deck__svc-name" style="flex: 1;">{svc.name}</span>
+							{#if svc.containerName}
+								<div style="margin-right: 10px;">
+									<ContainerControl containerName={svc.containerName} variant="compact" />
+								</div>
+							{/if}
 							<span class="deck__svc-addr">192.168.1.{Math.floor(Math.random()*255)}</span>
 						</div>
 					{/each}

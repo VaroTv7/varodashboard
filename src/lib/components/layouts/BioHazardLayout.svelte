@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -43,7 +44,12 @@
 				<div class="bio__service-grid">
 					{#each allServices as svc}
 						<div class="bio__cell" class:bio__cell--breach={statuses[svc.name as string] !== 'online'}>
-							<div class="bio__cell-head">{svc.name}</div>
+							<div class="bio__cell-head" style="display: flex; justify-content: space-between; align-items: center; padding: 2px 8px;">
+								<span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{svc.name}</span>
+								{#if svc.containerName}
+									<ContainerControl containerName={svc.containerName} variant="compact" />
+								{/if}
+							</div>
 							<div class="bio__cell-body">
 								<div class="bio__cell-icon">{svc.icon || '🧬'}</div>
 								<div class="bio__cell-status">

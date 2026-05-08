@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -49,6 +50,11 @@
 						<div class="tokyo__node" class:tokyo__node--offline={!isOnline}>
 							<div class="tokyo__node-icon">{svc.icon || '💎'}</div>
 							<div class="tokyo__node-name">{svc.name}</div>
+							{#if svc.containerName}
+								<div style="margin-top: 10px; z-index: 10;">
+									<ContainerControl containerName={svc.containerName} variant="compact" />
+								</div>
+							{/if}
 							<div class="tokyo__node-glow"></div>
 						</div>
 					{/each}

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import StatusDot from '$lib/components/ui/StatusDot.svelte';
+	import ContainerControl from './ContainerControl.svelte';
 
 	interface Service {
 		name: string;
@@ -16,48 +16,9 @@
 	let { service, status = 'unknown' }: { service: Service; status?: string } = $props();
 
 	let containerStatus = $state<'running' | 'exited' | 'loading' | 'unknown'>('unknown');
-	let isActionLoading = $state(false);
 
-	onMount(() => {
-		if (service.containerName) {
-			fetchContainerStatus();
-		}
-	});
-
-	async function fetchContainerStatus() {
-		try {
-			const res = await fetch(`/api/container?containerName=${service.containerName}`);
-			const data = await res.json();
-			if (data.status) {
-				containerStatus = data.status === 'running' ? 'running' : 'exited';
-			}
-		} catch (err) {
-			console.error('Failed to fetch container status:', err);
-		}
-	}
-
-	async function handleAction(action: 'start' | 'stop', e: Event) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		if (isActionLoading || !service.containerName) return;
-
-		isActionLoading = true;
-		try {
-			const res = await fetch('/api/container', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ action, containerName: service.containerName })
-			});
-			const data = await res.json();
-			if (data.success) {
-				containerStatus = data.status === 'running' ? 'running' : 'exited';
-			}
-		} catch (err) {
-			console.error(`Failed to ${action} container:`, err);
-		} finally {
-			isActionLoading = false;
-		}
+	function handleStatusChange(status: string) {
+		containerStatus = status as any;
 	}
 
 	const iconMap: Record<string, string> = {
@@ -113,25 +74,10 @@
 
 		{#if service.containerName}
 			<div class="service-tile__actions">
-				{#if isActionLoading}
-					<div class="spinner"></div>
-				{:else if containerStatus === 'running'}
-					<button 
-						class="action-btn action-btn--stop" 
-						onclick={(e) => handleAction('stop', e)}
-						title="Stop Container"
-					>
-						<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
-					</button>
-				{:else if containerStatus === 'exited'}
-					<button 
-						class="action-btn action-btn--start" 
-						onclick={(e) => handleAction('start', e)}
-						title="Start Container"
-					>
-						<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-					</button>
-				{/if}
+				<ContainerControl 
+					containerName={service.containerName} 
+					onStatusChange={handleStatusChange} 
+				/>
 			</div>
 		{/if}
 		<svg class="service-tile__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">

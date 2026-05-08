@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -232,6 +233,11 @@
 										<span>IP: 192.168.{Math.floor(Math.random()*255)}.{Math.floor(Math.random()*255)}</span>
 									</div>
 								</div>
+								{#if svc.containerName}
+									<div style="z-index: 10; margin-right: 10px;">
+										<ContainerControl containerName={svc.containerName} variant="compact" />
+									</div>
+								{/if}
 								<div class="glc__node-target">⌖</div>
 							</a>
 						{/each}
