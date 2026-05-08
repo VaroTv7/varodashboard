@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -71,10 +72,12 @@
 			<div class="bio__panel bio__panel--center">
 				<div class="bio__panel-label" style="display: flex; justify-content: space-between; align-items: center;">
 					<span>CELDAS_DE_CONTENCIÓN (SERVICIOS)</span>
-					<div class="bio__batch-actions">
-						<button class="bio__batch-btn bio__batch-btn--start" onclick={() => batchControl('CELDAS', 'start')}>▶ ACTIVAR_TODO</button>
-						<button class="bio__batch-btn bio__batch-btn--stop" onclick={() => batchControl('CELDAS', 'stop')}>⏹ DESACTIVAR_TODO</button>
-					</div>
+					{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
+					{#if containerServices.length > 0}
+						<div class="bio__batch-actions">
+							<FleetControl containers={containerServices} groupName="CELDAS" variant="compact" />
+						</div>
+					{/if}
 				</div>
 				<div class="bio__service-grid">
 					{#each allServices as svc}

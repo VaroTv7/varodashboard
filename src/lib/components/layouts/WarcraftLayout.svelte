@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import { onMount } from 'svelte';
 
@@ -131,11 +132,11 @@
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="DISCO">{Math.floor(telemetry.disk)}% 🗄️</div></div>
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="RED">{Math.floor(telemetry.netRX)}M 📡</div></div>
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="PROCS">{telemetry.procs} 👥</div></div>
-				<div class="wc3__inv-slot">
-					<button class="wc3__batch-btn wc3__batch-btn--start" onclick={() => batchControl('start')}>▶ LEVA_TOTAL</button>
-				</div>
-				<div class="wc3__inv-slot">
-					<button class="wc3__batch-btn wc3__batch-btn--stop" onclick={() => batchControl('stop')}>⏹ RETIRADA</button>
+				{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
+				<div class="wc3__inv-slot" style="grid-column: span 2;">
+					{#if containerServices.length > 0}
+						<FleetControl containers={containerServices} groupName="ALIANZA" />
+					{/if}
 				</div>
 				<div class="wc3__inv-slot"></div>
 			</div>

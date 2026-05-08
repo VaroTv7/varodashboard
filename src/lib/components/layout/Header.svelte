@@ -1,16 +1,26 @@
 <script lang="ts">
-	import SearchWidget from '$lib/components/widgets/SearchWidget.svelte';
+		import SearchWidget from '$lib/components/widgets/SearchWidget.svelte';
 	import ClockWidget from '$lib/components/widgets/ClockWidget.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 
 	let {
 		settings,
+		services = { groups: [] },
 		onSearch = (_q: string) => {},
 		onOpenSettings = () => {},
 	}: {
 		settings: Record<string, unknown>;
+		services: { groups: Array<{ services: Array<Record<string, unknown>> }> };
 		onSearch: (query: string) => void;
 		onOpenSettings: () => void;
 	} = $props();
+
+	const allContainers = $derived(
+		(services?.groups || [])
+			.flatMap(g => g.services)
+			.filter(s => s.containerName)
+			.map(s => s.containerName as string)
+	);
 
 	const layout = $derived((settings.layout as Record<string, boolean>) || {});
 </script>
@@ -47,6 +57,11 @@
 		</div>
 
 		<div class="header__right">
+			{#if allContainers.length > 0}
+				<div class="header__fleet">
+					<FleetControl containers={allContainers} groupName="GLOBAL" />
+				</div>
+			{/if}
 			{#if layout.showClock !== false}
 				<ClockWidget />
 			{/if}
@@ -141,6 +156,10 @@
 		display: flex;
 		align-items: center;
 		gap: var(--space-md);
+	}
+
+	.header__fleet {
+		margin-right: var(--space-sm);
 	}
 
 	.header__settings-btn {

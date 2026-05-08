@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
@@ -165,10 +166,12 @@
 			</div>
 			
 			<!-- BATCH CONTROLS (QUANTUM STYLE) -->
-			<div class="qtm__batch-orbit">
-				<button class="qtm__batch-btn qtm__batch-btn--start" onclick={() => batchControl('start')}>▶ BOOT</button>
-				<button class="qtm__batch-btn qtm__batch-btn--stop" onclick={() => batchControl('stop')}>⏹ KILL</button>
-			</div>
+			{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
+			{#if containerServices.length > 0}
+				<div class="qtm__batch-orbit">
+					<FleetControl containers={containerServices} groupName="CORE" variant="compact" />
+				</div>
+			{/if}
 
 		</div>
 		

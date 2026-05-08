@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ServiceTile from '$lib/components/tiles/ServiceTile.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import BookmarkTile from '$lib/components/tiles/BookmarkTile.svelte';
 	import { telemetry } from '$lib/stores/telemetry.svelte';
 	import { ui } from '$lib/stores/ui.svelte';
@@ -100,6 +101,13 @@
 		return () => clearInterval(id);
 	});
 	
+	const allContainers = $derived(
+		(services?.groups || [])
+			.flatMap(g => g.services)
+			.filter(s => s.containerName)
+			.map(s => s.containerName as string)
+	);
+
 	const timeStr = $derived(now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
 	
 </script>
@@ -156,6 +164,13 @@
 					<span class="ata__node-stat ata__node-stat--down">CAÍDOS: {offlineCount}</span>
 				{/if}
 			</div>
+
+			{#if allContainers.length > 0}
+				<div class="ata__global-fleet">
+					<FleetControl containers={allContainers} groupName="FLOTA" variant="compact" />
+				</div>
+			{/if}
+
 			<button class="ata__btn" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
 		</div>
 	</header>
@@ -255,18 +270,10 @@
 									<div class="ata__group-title-text">
 										<span class="ata__group-icon">{group.icon}</span> {group.name}
 									</div>
-									{#if group.services.some(s => s.containerName)}
+									{@const containerServices = group.services.filter(s => s.containerName).map(s => s.containerName as string)}
+									{#if containerServices.length > 0}
 										<div class="ata__group-actions">
-											<button class="ata__group-btn ata__group-btn--start" 
-												onclick={() => batchControl(group.name, 'start', group.services.filter(s => s.containerName).map(s => s.containerName as string))} 
-												title="Arrancar todo el grupo">
-												▶ INICIAR TODO
-											</button>
-											<button class="ata__group-btn ata__group-btn--stop" 
-												onclick={() => batchControl(group.name, 'stop', group.services.filter(s => s.containerName).map(s => s.containerName as string))} 
-												title="Apagar todo el grupo">
-												⏹ PARAR TODO
-											</button>
+											<FleetControl containers={containerServices} groupName={group.name} />
 										</div>
 									{/if}
 								</h3>
@@ -357,14 +364,33 @@
 	.ata__search { background: transparent; border: none; color: #fff; font-family: inherit; font-size: 1rem; outline: none; width: 300px; }
 	.ata__search:focus { box-shadow: inset 0 0 10px rgba(0,229,200,0.2); }
 
-	.ata__sys-info { display: flex; align-items: center; gap: 20px; font-size: 0.8rem; font-weight: bold; }
+	.ata__sys-info { 
+		display: flex; 
+		align-items: center; 
+		gap: 20px; 
+		font-size: 0.8rem; 
+		font-weight: bold;
+		height: 100%;
+	}
 	.ata__sys-time { color: #fff; text-shadow: 0 0 5px #fff; }
 	.ata__sys-nodes { display: flex; gap: 10px; }
 	.ata__node-stat--up { color: #00e5c8; }
 	.ata__node-stat--down { color: #ff3366; animation: blink 1s infinite; }
 	@keyframes blink { 50% { opacity: 0; } }
 
-	.ata__btn { background: transparent; border: 1px solid #00e5c8; color: #00e5c8; padding: 5px 15px; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+	.ata__btn { 
+		background: transparent; 
+		border: 1px solid #00e5c8; 
+		color: #00e5c8; 
+		padding: 4px 12px; 
+		font-family: inherit; 
+		font-size: 0.65rem;
+		cursor: pointer; 
+		transition: all 0.2s; 
+		white-space: nowrap;
+		line-height: 1;
+		height: fit-content;
+	}
 	.ata__btn:hover { background: #00e5c8; color: #000; box-shadow: 0 0 15px #00e5c8; }
 
 	/* HEADER WIDGETS */
@@ -472,6 +498,16 @@
 
 	.ata__group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
 	
+	.ata__global-fleet {
+		display: flex;
+		align-items: center;
+		height: 32px;
+		margin: 0 5px;
+		padding: 0 15px;
+		border-left: 1px solid rgba(0,229,200,0.2);
+		border-right: 1px solid rgba(0,229,200,0.2);
+	}
+
 	.ata__service-wrapper { position: relative; overflow: hidden; border: 1px solid rgba(0,229,200,0.2); }
 	.ata__service-scan { position: absolute; top: -100%; left: 0; width: 100%; height: 2px; background: #00e5c8; box-shadow: 0 0 10px #00e5c8; opacity: 0.5; animation: scan-drop 3s linear infinite; pointer-events: none; z-index: 5; }
 	@keyframes scan-drop { 0% { top: -10px; } 100% { top: 100%; } }

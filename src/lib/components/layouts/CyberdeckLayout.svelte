@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import { onMount } from 'svelte';
 
@@ -124,10 +125,12 @@
 			<div class="deck__panel">
 				<div class="deck__panel-head" style="display: flex; justify-content: space-between; align-items: center;">
 					<span>SERVICIOS_ACTIVOS</span>
-					<div class="deck__batch">
-						<button class="deck__batch-btn deck__batch-btn--start" onclick={() => batchControl('start')}>[ RUN_ALL ]</button>
-						<button class="deck__batch-btn deck__batch-btn--stop" onclick={() => batchControl('stop')}>[ KILL_ALL ]</button>
-					</div>
+					{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
+					{#if containerServices.length > 0}
+						<div class="deck__batch">
+							<FleetControl containers={containerServices} groupName="SERVICES" variant="compact" />
+						</div>
+					{/if}
 				</div>
 				<div class="deck__service-list">
 					{#each allServices as svc}

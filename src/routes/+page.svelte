@@ -232,7 +232,7 @@
 	/>
 {:else}
 <div class="dashboard">
-	<Header {settings} onSearch={(q) => searchQuery = q} onOpenSettings={() => settingsOpen = true} />
+	<Header {settings} {services} onSearch={(q) => searchQuery = q} onOpenSettings={() => settingsOpen = true} />
 
 	<main class="dashboard__main">
 		<div class="dashboard__content">

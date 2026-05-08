@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
@@ -239,10 +240,12 @@
 					<div class="glc__panel-corner"></div>
 					<div class="glc__panel-head" style="display: flex; justify-content: space-between; align-items: center;">
 						<div class="glc__panel-title">ENLACE_NODOS</div>
-						<div class="glc__batch">
-							<button class="glc__batch-btn glc__batch-btn--start" onclick={() => batchControl('start')}>▶ BOOT_ALL</button>
-							<button class="glc__batch-btn glc__batch-btn--stop" onclick={() => batchControl('stop')}>⏹ KILL_ALL</button>
-						</div>
+						{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
+						{#if containerServices.length > 0}
+							<div class="glc__batch">
+								<FleetControl containers={containerServices} groupName="NODOS" variant="compact" />
+							</div>
+						{/if}
 					</div>
 					<div class="glc__nodes">
 						{#each allServices as svc}

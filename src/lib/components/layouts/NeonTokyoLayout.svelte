@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { telemetry } from '$lib/stores/telemetry.svelte';
+	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 
 	let {
@@ -43,7 +44,13 @@
 	<main class="tokyo__content">
 		<div class="tokyo__columns">
 			<div class="tokyo__col tokyo__col--services">
-				<h2 class="tokyo__section-title">ACTIVE_SYSTEMS</h2>
+				<div class="tokyo__section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+					<h2 class="tokyo__section-title" style="margin: 0;">ACTIVE_SYSTEMS</h2>
+					{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
+					{#if containerServices.length > 0}
+						<FleetControl containers={containerServices} groupName="SYSTEMS" variant="compact" />
+					{/if}
+				</div>
 				<div class="tokyo__service-grid">
 					{#each allServices as svc}
 						{@const isOnline = statuses[svc.name as string] === 'online'}

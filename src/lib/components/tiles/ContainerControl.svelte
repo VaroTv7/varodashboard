@@ -16,6 +16,7 @@
 
 	let containerStatus = $state<'running' | 'exited' | 'loading' | 'unknown'>('unknown');
 	let exitCode = $state<number>(0);
+	let manualStop = $state(false);
 	let uptime = $state<number | null>(null);
 	let isActionLoading = $state(false);
 	let pollInterval: any;
@@ -23,8 +24,8 @@
 	onMount(() => {
 		if (containerName) {
 			fetchContainerStatus();
-			// Polling every 20 seconds
-			pollInterval = setInterval(fetchContainerStatus, 20000);
+			// Polling every 8 seconds for real-time feel
+			pollInterval = setInterval(fetchContainerStatus, 8000);
 		}
 	});
 
@@ -40,6 +41,10 @@
 				containerStatus = data.status === 'running' ? 'running' : 'exited';
 				uptime = data.uptime;
 				exitCode = data.exitCode || 0;
+				
+				// If it's running again, reset manualStop
+				if (containerStatus === 'running') manualStop = false;
+				
 				onStatusChange(containerStatus);
 			}
 		} catch (err) {
@@ -79,6 +84,9 @@
 				containerStatus = data.status === 'running' ? 'running' : 'exited';
 				onStatusChange(containerStatus);
 				
+				if (action === 'stop') manualStop = true;
+				if (action === 'start') manualStop = false;
+
 				const actionName = action === 'start' ? 'arrancado' : 'detenido';
 				ui.addToast(`${containerName} ${actionName} ✓`, 'success');
 				
@@ -115,8 +123,8 @@
 		</div>
 	{:else if containerStatus === 'exited'}
 		<div class="control-group">
-			{#if exitCode !== 0}
-				<span class="crash-indicator" title="Contenedor crasheado (Exit Code: {exitCode})">🟡</span>
+			{#if exitCode !== 0 && !manualStop}
+				<span class="crash-indicator" title="CRASH DETECTADO (Exit Code: {exitCode})">🟡</span>
 			{/if}
 			<button 
 				class="action-btn action-btn--start" 
