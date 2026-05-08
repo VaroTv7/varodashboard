@@ -187,8 +187,11 @@
 						<div class="ata__mon-row">
 							<span class="ata__mon-dot" class:ata__mon-dot--on={status === 'online'} class:ata__mon-dot--off={status === 'offline'}></span>
 							<span class="ata__mon-name">{(svc.name as string).toLowerCase()}</span>
+							<div class="ata__mon-bar">
+								<div class="ata__mon-bar-fill" class:ata__mon-bar-fill--on={status === 'online'} class:ata__mon-bar-fill--off={status === 'offline'}></div>
+							</div>
 							<span class="ata__mon-status" class:ata__mon-status--on={status === 'online'} class:ata__mon-status--off={status === 'offline'}>
-								{status === 'online' ? 'ONLINE' : status === 'offline' ? 'OFFLINE' : '· · ·'}
+								{status === 'online' ? 'ON' : status === 'offline' ? 'OFF' : '---'}
 							</span>
 						</div>
 					{/each}
@@ -223,15 +226,20 @@
 </div>
 
 <style>
-	/* ═══ ROOT ═══ */
 	.ata {
-		min-height: 100vh;
+		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		font-family: 'JetBrains Mono', 'Fira Code', monospace;
 		background: #060d1a;
 		color: #b8dce8;
-		font-size: 0.65rem;
+		font-size: clamp(0.6rem, 0.5vw + 0.3rem, 0.85rem);
+		overflow: hidden;
+		background-image:
+			radial-gradient(circle, rgba(0,230,200,0.03) 1px, transparent 1px),
+			radial-gradient(ellipse at 20% 80%, rgba(0,230,200,0.04) 0%, transparent 50%),
+			radial-gradient(ellipse at 80% 20%, rgba(0,255,136,0.02) 0%, transparent 40%);
+		background-size: 20px 20px, 100% 100%, 100% 100%;
 	}
 
 	/* ═══ TOP BAR ═══ */
@@ -288,10 +296,11 @@
 	.ata__body {
 		flex: 1;
 		display: grid;
-		grid-template-columns: 200px 1fr 220px;
-		gap: 8px;
-		padding: 8px;
+		grid-template-columns: clamp(160px, 12vw, 260px) 1fr clamp(180px, 14vw, 300px);
+		gap: clamp(4px, 0.4vw, 10px);
+		padding: clamp(4px, 0.4vw, 10px);
 		min-height: 0;
+		overflow: hidden;
 	}
 
 	/* ═══ SIDEBAR ═══ */
@@ -398,40 +407,55 @@
 
 	.ata__svc {
 		display: flex; flex-direction: column; gap: 3px;
-		padding: 8px 10px;
+		padding: clamp(6px, 0.5vw, 12px) clamp(8px, 0.6vw, 14px);
 		background: #0d1925;
 		border: 1px solid rgba(0, 230, 200, 0.08);
 		border-radius: 3px;
 		text-decoration: none;
 		color: #b8dce8;
-		transition: all 100ms ease;
+		transition: all 150ms ease;
 		position: relative;
+		overflow: hidden;
 	}
 
 	.ata__svc::before {
 		content: '';
 		position: absolute; top: 0; left: 0; right: 0; height: 1px;
-		background: linear-gradient(90deg, transparent, rgba(0, 230, 200, 0.2), transparent);
+		background: linear-gradient(90deg, transparent, rgba(0, 230, 200, 0.25), transparent);
 	}
 
+	.ata__svc::after {
+		content: '';
+		position: absolute; bottom: 0; left: 0; height: 2px;
+		width: 100%;
+		background: linear-gradient(90deg, #00e5c8, #00ff88);
+		opacity: 0;
+		transition: opacity 150ms ease;
+	}
+
+	.ata__svc--on::after { opacity: 0.4; }
+	.ata__svc--off::after { opacity: 0; }
+
 	.ata__svc:hover {
-		border-color: rgba(0, 230, 200, 0.25);
+		border-color: rgba(0, 230, 200, 0.3);
 		background: #0f1e2d;
-		box-shadow: 0 0 12px rgba(0, 230, 200, 0.06);
+		box-shadow: 0 0 20px rgba(0, 230, 200, 0.08), inset 0 0 30px rgba(0, 230, 200, 0.02);
 	}
 
 	.ata__svc-top { display: flex; align-items: center; gap: 5px; }
 
 	.ata__svc-dot {
-		width: 5px; height: 5px; border-radius: 50%;
+		width: 6px; height: 6px; border-radius: 50%;
 		background: #2d5568; flex-shrink: 0;
 	}
-	.ata__svc-dot--on { background: #00ff88; box-shadow: 0 0 4px rgba(0, 255, 136, 0.5); }
+	.ata__svc-dot--on { background: #00ff88; box-shadow: 0 0 6px rgba(0, 255, 136, 0.6); animation: pulse 2s ease infinite; }
 	.ata__svc-dot--off { background: #ff3355; box-shadow: 0 0 4px rgba(255, 51, 85, 0.4); }
 
-	.ata__svc-name { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-	.ata__svc-desc { font-size: 0.48rem; color: #2d5568; }
-	.ata__svc-url { font-size: 0.45rem; color: #1a3545; font-variant-numeric: tabular-nums; }
+	@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+	.ata__svc-name { font-size: clamp(0.55rem, 0.4vw + 0.3rem, 0.75rem); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+	.ata__svc-desc { font-size: clamp(0.45rem, 0.3vw + 0.25rem, 0.6rem); color: #2d5568; }
+	.ata__svc-url { font-size: clamp(0.4rem, 0.25vw + 0.2rem, 0.55rem); color: #1a3545; font-variant-numeric: tabular-nums; }
 
 	/* Scripts */
 	.ata__scripts { display: flex; flex-direction: column; gap: 3px; }
@@ -463,7 +487,18 @@
 	.ata__mon-dot--on { background: #00ff88; box-shadow: 0 0 4px rgba(0, 255, 136, 0.5); }
 	.ata__mon-dot--off { background: #ff3355; }
 
-	.ata__mon-name { flex: 1; color: #6a98a8; font-family: 'JetBrains Mono', monospace; }
+	.ata__mon-bar {
+		flex: 1; height: 4px; background: rgba(0,230,200,0.06);
+		border-radius: 1px; overflow: hidden; margin: 0 4px;
+	}
+	.ata__mon-bar-fill {
+		height: 100%; width: 30%; background: #2d5568;
+		border-radius: 1px; transition: all 300ms ease;
+	}
+	.ata__mon-bar-fill--on { width: 100%; background: linear-gradient(90deg, #00e5c8, #00ff88); box-shadow: 0 0 4px rgba(0,255,136,0.3); }
+	.ata__mon-bar-fill--off { width: 60%; background: linear-gradient(90deg, #ff3355, #ff6644); }
+
+	.ata__mon-name { color: #6a98a8; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
 	.ata__mon-status { font-weight: 700; letter-spacing: 0.1em; color: #2d5568; font-size: 0.45rem; }
 	.ata__mon-status--on { color: #00ff88; }
 	.ata__mon-status--off { color: #ff3355; }
@@ -500,8 +535,18 @@
 	.ata__bottombar-ver { margin-left: auto; color: #1a3545; }
 
 	/* ═══ RESPONSIVE ═══ */
-	@media (max-width: 900px) {
+	@media (max-width: 768px) {
 		.ata__body { grid-template-columns: 1fr; }
 		.ata__sidebar, .ata__right { display: none; }
+		.ata__topbar-date, .ata__topbar-mode, .ata__topbar-search { display: none; }
+		.ata__svc-grid { grid-template-columns: 1fr 1fr; }
+	}
+	@media (min-width: 769px) and (max-width: 1200px) {
+		.ata__body { grid-template-columns: 1fr clamp(180px, 16vw, 250px); }
+		.ata__sidebar { display: none; }
+	}
+	@media (min-width: 2560px) {
+		.ata { background-size: 28px 28px, 100% 100%, 100% 100%; }
+		.ata__svc-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 	}
 </style>
