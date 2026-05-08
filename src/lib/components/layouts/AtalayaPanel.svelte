@@ -58,6 +58,9 @@
 		background: #0a1520;
 		overflow: hidden;
 		position: relative;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 	}
 
 	.atp::before {
@@ -107,7 +110,7 @@
 
 	.atp__title {
 		font-family: 'JetBrains Mono', monospace;
-		font-size: 0.55rem;
+		font-size: clamp(0.5rem, 0.4vw + 0.25rem, 0.75rem);
 		font-weight: 700;
 		letter-spacing: 0.2em;
 		text-transform: uppercase;
@@ -133,5 +136,11 @@
 
 	.atp__chevron--collapsed { transform: rotate(-90deg); }
 
-	.atp__body { padding: 8px; }
+	.atp__body {
+		padding: clamp(6px, 0.5vw, 12px);
+		flex: 1;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+	}
 </style>

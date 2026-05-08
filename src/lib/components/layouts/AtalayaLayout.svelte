@@ -145,7 +145,8 @@
 				</div>
 			</AtalayaPanel>
 
-			<!-- Service Cards Grid -->
+			<!-- Service Cards Grid (stretches to fill) -->
+			<div class="ata__flex-grow">
 			<AtalayaPanel title="active.services" count={allServices.length}>
 				<div class="ata__svc-grid">
 					{#each allServices as svc (svc.name)}
@@ -161,6 +162,7 @@
 					{/each}
 				</div>
 			</AtalayaPanel>
+			</div>
 
 			<!-- Scripts Panel -->
 			{#if filteredScripts.length > 0}
@@ -307,8 +309,9 @@
 	.ata__sidebar {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: clamp(4px, 0.4vw, 10px);
 		overflow-y: auto;
+		min-height: 0;
 	}
 
 	.ata__tree { display: flex; flex-direction: column; gap: 2px; }
@@ -366,8 +369,20 @@
 	.ata__center {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: clamp(4px, 0.4vw, 10px);
 		overflow-y: auto;
+		min-height: 0;
+	}
+
+	.ata__flex-grow {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+	}
+
+	.ata__flex-grow > :global(.atp) {
+		flex: 1;
 	}
 
 	/* Identity */
@@ -401,8 +416,10 @@
 	/* Service grid */
 	.ata__svc-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-		gap: 6px;
+		grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 10vw, 240px), 1fr));
+		gap: clamp(4px, 0.4vw, 10px);
+		flex: 1;
+		align-content: start;
 	}
 
 	.ata__svc {
@@ -471,8 +488,10 @@
 
 	/* ═══ RIGHT SIDEBAR ═══ */
 	.ata__right {
-		display: flex; flex-direction: column; gap: 8px;
+		display: flex; flex-direction: column;
+		gap: clamp(4px, 0.4vw, 10px);
 		overflow-y: auto;
+		min-height: 0;
 	}
 
 	.ata__monitor { display: flex; flex-direction: column; gap: 2px; }
