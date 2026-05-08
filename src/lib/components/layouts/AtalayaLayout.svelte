@@ -38,27 +38,47 @@
 
 	let now = $state(new Date());
 	$effect(() => { const id = setInterval(() => now = new Date(), 1000); return () => clearInterval(id); });
-	const timeStr = $derived(now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-	const dateStr = $derived(now.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase());
+	const timeStr = $derived(now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+	const dateStr = $derived(now.toLocaleDateString('es-ES', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase());
 
-	// Fake vitals for visual richness
+	// Uptime
+	const uptimeStart = new Date(Date.now() - 86400000 * 14 - 3600000 * 7);
+	const uptime = $derived(() => {
+		const diff = now.getTime() - uptimeStart.getTime();
+		const d = Math.floor(diff / 86400000); const h = Math.floor((diff % 86400000) / 3600000);
+		const m = Math.floor((diff % 3600000) / 60000);
+		return `${d}d ${h}h ${m}m`;
+	});
+
+	// Simulated vitals
 	let cpu = $state(23); let mem = $state(41); let temp = $state(44);
+	let disk = $state(67); let swap = $state(18); let net = $state(12);
+	let conns = $state(47); let procs = $state(189); let iops = $state(340);
 	$effect(() => {
 		const id = setInterval(() => {
 			cpu = Math.min(100, Math.max(5, cpu + (Math.random() - 0.5) * 8));
 			mem = Math.min(100, Math.max(10, mem + (Math.random() - 0.5) * 3));
 			temp = Math.min(85, Math.max(30, temp + (Math.random() - 0.5) * 2));
+			disk = Math.min(95, Math.max(40, disk + (Math.random() - 0.5) * 0.5));
+			swap = Math.min(60, Math.max(5, swap + (Math.random() - 0.5) * 2));
+			net = Math.min(95, Math.max(1, net + (Math.random() - 0.5) * 6));
+			conns = Math.max(10, Math.round(conns + (Math.random() - 0.5) * 8));
+			procs = Math.max(100, Math.round(procs + (Math.random() - 0.5) * 4));
+			iops = Math.max(50, Math.round(iops + (Math.random() - 0.5) * 40));
 		}, 2000);
 		return () => clearInterval(id);
 	});
 
-	// Activity log entries
+	// Activity log with varied entries
 	const logEntries = $derived([
 		...allServices.map(s => ({
 			time: timeStr,
-			level: statuses[s.name as string] === 'online' ? 'OK' : 'WARN',
-			msg: `${(s.name as string).toLowerCase()} → ${statuses[s.name as string] || 'checking'}`,
-		}))
+			level: statuses[s.name as string] === 'online' ? 'INFO' : 'AVISO',
+			msg: `${(s.name as string).toLowerCase()} → ${statuses[s.name as string] === 'online' ? 'en línea' : 'sin conexión'}`,
+		})),
+		{ time: timeStr, level: 'INFO', msg: `cifrado AES-256 · ${conns} conexiones activas` },
+		{ time: timeStr, level: 'INFO', msg: `disco: ${disk.toFixed(0)}% · swap: ${swap.toFixed(0)}%` },
+		{ time: timeStr, level: 'OK', msg: `rendimiento: ${iops} IOPS · ${procs} procesos` },
 	]);
 </script>
 
