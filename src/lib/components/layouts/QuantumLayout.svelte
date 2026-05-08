@@ -73,7 +73,7 @@
 		</div>
 		<div class="qtm__controls">
 			<span class="qtm__time">{timeStr}</span>
-			<button class="qtm__btn" onclick={onOpenSettings}>◆ OMEGA</button>
+			<button class="qtm__btn" onclick={onOpenSettings}>◆ AJUSTES / CAMBIAR TEMA</button>
 		</div>
 	</header>
 

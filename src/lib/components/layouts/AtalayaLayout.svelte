@@ -90,7 +90,7 @@
 					<span class="ata__node-stat ata__node-stat--down">CAÍDOS: {offlineCount}</span>
 				{/if}
 			</div>
-			<button class="ata__btn" onclick={onOpenSettings}>[ CONECTAR ]</button>
+			<button class="ata__btn" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
 		</div>
 	</header>
 

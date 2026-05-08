@@ -88,7 +88,7 @@
 	</main>
 
 	<footer class="bio__footer">
-		<button class="bio__access-btn" onclick={onOpenSettings}>[ ACCESO_SEGURIDAD_NIVEL_A ]</button>
+		<button class="bio__access-btn" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
 		<div class="bio__footer-msg">ADVERTENCIA: CUALQUIER ANOMALÍA DEBE SER REPORTADA INMEDIATAMENTE.</div>
 	</footer>
 </div>
@@ -190,10 +190,10 @@
 	}
 
 	.bio__service-grid {
-		padding: 20px;
+		padding: 10px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		gap: 15px;
+		grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+		gap: 8px;
 		overflow-y: auto;
 	}
 
@@ -202,11 +202,13 @@
 		border: 1px solid rgba(255,204,0,0.2);
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
+		height: 100px;
 	}
-	.bio__cell-head { font-size: 0.7rem; padding: 4px; border-bottom: 1px solid rgba(255,204,0,0.2); text-align: center; font-weight: bold; }
-	.bio__cell-body { padding: 15px; text-align: center; }
-	.bio__cell-icon { font-size: 2rem; margin-bottom: 10px; }
-	.bio__cell-status { font-size: 0.6rem; font-weight: bold; }
+	.bio__cell-head { font-size: 0.6rem; padding: 2px 4px; border-bottom: 1px solid rgba(255,204,0,0.2); text-align: center; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	.bio__cell-body { padding: 5px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-height: 0; }
+	.bio__cell-icon { font-size: 1.2rem; margin-bottom: 2px; }
+	.bio__cell-status { font-size: 0.5rem; font-weight: bold; letter-spacing: 0.5px; opacity: 0.8; }
 
 	.bio__cell--breach {
 		border-color: var(--bio-red);
@@ -218,23 +220,24 @@
 
 	.bio__side { display: flex; flex-direction: column; gap: 20px; }
 	
-	.bio__scripts { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+	.bio__scripts { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
 	.bio__script-btn {
 		background: transparent;
 		border: 1px solid var(--bio-yellow);
 		color: var(--bio-yellow);
-		padding: 10px;
+		padding: 8px 12px;
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		cursor: pointer;
 		font-weight: bold;
 		text-align: left;
+		font-size: 0.75rem;
 	}
 	.bio__script-btn:hover { background: var(--bio-yellow); color: var(--bio-black); }
 
 	.bio__stat { padding: 15px; }
-	.bio__stat-name { font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; }
+	.bio__stat-name { font-size: 0.65rem; font-weight: bold; margin-bottom: 5px; }
 	.bio__stat-bar { height: 10px; background: #222; border: 1px solid #333; }
 	.bio__stat-fill { height: 100%; background: var(--bio-yellow); }
 
@@ -245,15 +248,25 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		border-top: 4px solid var(--bio-black);
 	}
 
 	.bio__access-btn {
 		background: var(--bio-black);
 		color: var(--bio-yellow);
-		border: none;
-		padding: 5px 20px;
+		border: 2px solid var(--bio-black);
+		padding: 6px 15px;
 		font-weight: 900;
 		cursor: pointer;
+		font-family: inherit;
+		text-transform: uppercase;
+		font-size: 0.8rem;
+		transition: all 0.2s;
 	}
-	.bio__footer-msg { font-size: 0.7rem; font-weight: 900; }
+	.bio__access-btn:hover {
+		background: var(--bio-red);
+		color: #fff;
+		box-shadow: 0 0 15px var(--bio-red);
+	}
+	.bio__footer-msg { font-size: 0.65rem; font-weight: 900; letter-spacing: 1px; }
 </style>

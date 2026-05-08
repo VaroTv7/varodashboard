@@ -120,7 +120,7 @@
 		</div>
 	</div>
 	
-	<button class="wc3__menu-btn" onclick={onOpenSettings}>MENÚ (F10)</button>
+	<button class="wc3__menu-btn" onclick={onOpenSettings}>MENÚ / CAMBIAR TEMA (F10)</button>
 </div>
 
 <style>

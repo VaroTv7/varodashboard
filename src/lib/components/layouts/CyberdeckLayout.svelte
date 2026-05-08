@@ -129,7 +129,7 @@
 		<div class="deck__status-bar">
 			SISTEMA OPERATIVO VARO-OS v7.2 // SEGURIDAD: NIVEL_5 // CONEXIÓN: ESTABLE
 		</div>
-		<button class="deck__menu-trigger" onclick={onOpenSettings}>[ AJUSTES ]</button>
+		<button class="deck__menu-trigger" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
 	</footer>
 </div>
 

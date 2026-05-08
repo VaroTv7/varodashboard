@@ -137,7 +137,7 @@
 				<span class="glc__stat-lbl">NODOS_OFF</span>
 				<span class="glc__stat-val glc__stat-val--err">{offlineCount}</span>
 			</div>
-			<button class="glc__btn" onclick={onOpenSettings}>[ ACCESO_RAÍZ ]</button>
+			<button class="glc__btn" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
 		</div>
 	</header>
 

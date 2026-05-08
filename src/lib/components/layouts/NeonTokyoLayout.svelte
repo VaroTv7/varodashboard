@@ -36,7 +36,7 @@
 				<span class="tokyo__stat-val">{telemetry.mem.toFixed(1)}%</span>
 			</div>
 		</div>
-		<button class="tokyo__menu-btn" onclick={onOpenSettings}>SETTINGS</button>
+		<button class="tokyo__menu-btn" onclick={onOpenSettings}>AJUSTES / TEMAS</button>
 	</header>
 
 	<main class="tokyo__content">
