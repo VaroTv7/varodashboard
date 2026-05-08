@@ -103,6 +103,37 @@
 					"openInNewTab": true
 				}
 			]
+		},
+		{
+			"name": "Gaming",
+			"icon": "gamepad-2",
+			"collapsed": false,
+			"services": [
+				{
+					"name": "Minecraft",
+					"url": null,
+					"icon": "gamepad-2",
+					"color": "#2ecc71",
+					"description": "Survival Server (No Web UI)",
+					"containerName": "minecraft"
+				}
+			]
+		},
+		{
+			"name": "Mis Apps",
+			"icon": "wrench",
+			"collapsed": false,
+			"services": [
+				{
+					"name": "Outline",
+					"url": "http://localhost:3005",
+					"icon": "film",
+					"color": "#3498db",
+					"description": "Knowledge Base",
+					"containerName": "outline",
+					"dependsOn": ["outline-postgres", "outline-redis"]
+				}
+			]
 		}
 	]
 }

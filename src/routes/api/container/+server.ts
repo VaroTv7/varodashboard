@@ -38,7 +38,16 @@ export const GET: RequestHandler = async ({ url }) => {
 		
 		if (statusCode === 200) {
 			const info = JSON.parse(body);
-			return json({ status: info.State.Status });
+			const status = info.State.Status;
+			let uptime = null;
+
+			if (status === 'running') {
+				const startedAt = new Date(info.State.StartedAt).getTime();
+				const now = Date.now();
+				uptime = Math.floor((now - startedAt) / 1000);
+			}
+
+			return json({ status, uptime });
 		} else if (statusCode === 404) {
 			return json({ status: 'not_found' });
 		} else {
@@ -52,10 +61,18 @@ export const GET: RequestHandler = async ({ url }) => {
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const { action, containerName } = await request.json();
+		const { action, containerName, dependencies = [] } = await request.json();
 
 		if (!containerName || !['start', 'stop'].includes(action)) {
 			return json({ error: 'Invalid request' }, { status: 400 });
+		}
+
+		// Handle dependencies for 'start' action
+		if (action === 'start' && Array.isArray(dependencies) && dependencies.length > 0) {
+			for (const dep of dependencies) {
+				// We don't await strictly to not block if one fails, but we try to start them
+				dockerRequest(`/containers/${dep}/start`, 'POST').catch(e => console.error(`Dependency start fail: ${dep}`, e));
+			}
 		}
 
 		const { statusCode, body } = await dockerRequest(`/containers/${containerName}/${action}`, 'POST');

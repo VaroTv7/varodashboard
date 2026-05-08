@@ -2,10 +2,10 @@
 	import ServiceTile from '$lib/components/tiles/ServiceTile.svelte';
 	import BookmarkTile from '$lib/components/tiles/BookmarkTile.svelte';
 	import { telemetry } from '$lib/stores/telemetry.svelte';
-	import { showToast } from '$lib/stores/toast.svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	async function executeScript(id: any) {
-		showToast(`EJECUTANDO: ${id.toUpperCase()}...`, 'info');
+		ui.addToast(`EJECUTANDO: ${id.toUpperCase()}...`, 'info');
 		try {
 			const res = await fetch('/api/scripts', {
 				method: 'POST',
@@ -13,12 +13,38 @@
 				body: JSON.stringify({ id })
 			});
 			if (res.ok) {
-				showToast(`ÉXITO: ${id.toUpperCase()} COMPLETADO`, 'success');
+				ui.addToast(`ÉXITO: ${id.toUpperCase()} COMPLETADO`, 'success');
 			} else {
-				showToast(`ERROR: FALLO AL EJECUTAR ${id.toUpperCase()}`, 'error');
+				ui.addToast(`ERROR: FALLO AL EJECUTAR ${id.toUpperCase()}`, 'error');
 			}
 		} catch (e) {
-			showToast(`ERROR DE CONEXIÓN`, 'error');
+			ui.addToast(`ERROR DE CONEXIÓN`, 'error');
+		}
+	}
+
+	async function batchControl(groupName: string, action: 'start' | 'stop', containers: string[]) {
+		if (containers.length === 0) return;
+		
+		ui.addToast(`${action === 'start' ? 'Iniciando' : 'Deteniendo'} grupo ${groupName}...`, 'info');
+		
+		let successCount = 0;
+		for (const containerName of containers) {
+			try {
+				const res = await fetch('/api/container', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ action, containerName })
+				});
+				if (res.ok) successCount++;
+			} catch (e) {
+				console.error(`Batch error for ${containerName}:`, e);
+			}
+		}
+		
+		if (successCount === containers.length) {
+			ui.addToast(`Grupo ${groupName} ${action === 'start' ? 'completado' : 'detenido'} ✓`, 'success');
+		} else {
+			ui.addToast(`${successCount}/${containers.length} contenedores procesados`, 'info');
 		}
 	}
 
@@ -226,7 +252,20 @@
 						{#each filteredServices as group}
 							<div class="ata__group">
 								<h3 class="ata__group-title">
-									<span class="ata__group-icon">{group.icon}</span> {group.name}
+									<div class="ata__group-title-text">
+										<span class="ata__group-icon">{group.icon}</span> {group.name}
+									</div>
+									{@const containerServices = group.services.filter(s => s.containerName).map(s => s.containerName as string)}
+									{#if containerServices.length > 0}
+										<div class="ata__group-actions">
+											<button class="ata__group-btn ata__group-btn--start" onclick={() => batchControl(group.name, 'start', containerServices)} title="Arrancar todo el grupo">
+												▶ INICIAR TODO
+											</button>
+											<button class="ata__group-btn ata__group-btn--stop" onclick={() => batchControl(group.name, 'stop', containerServices)} title="Apagar todo el grupo">
+												⏹ PARAR TODO
+											</button>
+										</div>
+									{/if}
 								</h3>
 								<div class="ata__group-grid">
 									{#each group.services as service}
@@ -397,7 +436,37 @@
 	/* SERVICES */
 	.ata__services { flex: 1; padding-right: 10px; }
 	.ata__group { margin-bottom: 30px; }
-	.ata__group-title { font-size: 0.9rem; color: #009985; margin-bottom: 15px; border-bottom: 1px solid rgba(0,229,200,0.1); padding-bottom: 5px; }
+	.ata__group-title { 
+		font-size: 0.9rem; 
+		color: #009985; 
+		margin-bottom: 15px; 
+		border-bottom: 1px solid rgba(0,229,200,0.1); 
+		padding-bottom: 8px; 
+		display: flex; 
+		justify-content: space-between; 
+		align-items: center;
+	}
+	.ata__group-title-text { display: flex; align-items: center; gap: 8px; }
+	.ata__group-actions { display: flex; gap: 10px; }
+	.ata__group-btn {
+		background: rgba(0,0,0,0.3);
+		border: 1px solid rgba(0,229,200,0.2);
+		color: #009985;
+		font-size: 0.6rem;
+		padding: 2px 8px;
+		cursor: pointer;
+		transition: all 0.2s;
+		font-family: inherit;
+		letter-spacing: 1px;
+	}
+	.ata__group-btn:hover {
+		background: rgba(0,229,200,0.1);
+		border-color: #00e5c8;
+		color: #00e5c8;
+	}
+	.ata__group-btn--start:hover { color: #00ff88; border-color: #00ff88; }
+	.ata__group-btn--stop:hover { color: #ff3366; border-color: #ff3366; }
+
 	.ata__group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
 	
 	.ata__service-wrapper { position: relative; overflow: hidden; border: 1px solid rgba(0,229,200,0.2); }

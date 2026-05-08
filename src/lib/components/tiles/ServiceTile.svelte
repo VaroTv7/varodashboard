@@ -4,13 +4,14 @@
 
 	interface Service {
 		name: string;
-		url: string;
+		url: string | null;
 		icon: string;
 		color?: string;
 		description?: string;
 		statusCheck?: boolean;
 		openInNewTab?: boolean;
 		containerName?: string;
+		dependsOn?: string[];
 	}
 
 	let { service, status = 'unknown' }: { service: Service; status?: string } = $props();
@@ -44,15 +45,7 @@
 	}
 </script>
 
-<a
-	href={service.url}
-	target={service.openInNewTab !== false ? '_blank' : '_self'}
-	rel="noopener noreferrer"
-	class="service-tile"
-	class:service-tile--stopped={service.containerName && containerStatus === 'exited'}
-	id="service-{service.name.toLowerCase().replace(/\s+/g, '-')}"
-	style:--tile-accent={service.color || 'var(--color-primary)'}
->
+{#snippet tileContent()}
 	<div class="service-tile__glow"></div>
 	<div class="service-tile__content">
 		<div class="service-tile__icon-wrap">
@@ -76,15 +69,42 @@
 			<div class="service-tile__actions">
 				<ContainerControl 
 					containerName={service.containerName} 
+					dependencies={service.dependsOn}
 					onStatusChange={handleStatusChange} 
 				/>
 			</div>
 		{/if}
-		<svg class="service-tile__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-			<path d="M7 17l9.2-9.2M17 17V7.8H7.8" />
-		</svg>
+		
+		{#if service.url}
+			<svg class="service-tile__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+				<path d="M7 17l9.2-9.2M17 17V7.8H7.8" />
+			</svg>
+		{/if}
 	</div>
-</a>
+{/snippet}
+
+{#if service.url}
+	<a
+		href={service.url}
+		target={service.openInNewTab !== false ? '_blank' : '_self'}
+		rel="noopener noreferrer"
+		class="service-tile"
+		class:service-tile--offline={service.containerName && containerStatus === 'exited'}
+		id="service-{service.name.toLowerCase().replace(/\s+/g, '-')}"
+		style:--tile-accent={service.color || 'var(--color-primary)'}
+	>
+		{@render tileContent()}
+	</a>
+{:else}
+	<div
+		class="service-tile service-tile--no-url"
+		class:service-tile--offline={service.containerName && containerStatus === 'exited'}
+		id="service-{service.name.toLowerCase().replace(/\s+/g, '-')}"
+		style:--tile-accent={service.color || 'var(--color-primary)'}
+	>
+		{@render tileContent()}
+	</div>
+{/if}
 
 <style>
 	.service-tile {
@@ -102,7 +122,11 @@
 		text-decoration: none;
 	}
 
-	.service-tile--stopped {
+	.service-tile--no-url {
+		cursor: default;
+	}
+
+	.service-tile--offline {
 		opacity: 0.6;
 		filter: grayscale(0.5);
 	}
@@ -119,7 +143,7 @@
 		pointer-events: none;
 	}
 
-	.service-tile:hover {
+	.service-tile:hover:not(.service-tile--no-url) {
 		border-color: var(--glass-border-hover);
 		transform: translateY(-4px);
 		box-shadow: var(--shadow-lg), 0 0 30px color-mix(in srgb, var(--tile-accent) 15%, transparent);
@@ -139,7 +163,7 @@
 		box-shadow: 0 0 20px color-mix(in srgb, var(--tile-accent) 25%, transparent);
 	}
 
-	.service-tile:active {
+	.service-tile:active:not(.service-tile--no-url) {
 		transform: translateY(-2px) scale(0.99);
 	}
 
@@ -201,56 +225,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 28px;
-		height: 28px;
 		margin-right: 4px;
-	}
-
-	.action-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 26px;
-		height: 26px;
-		border-radius: 6px;
-		border: 1px solid var(--vs-surface0, #313244);
-		background: transparent;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		padding: 0;
-	}
-
-	.action-btn--start {
-		color: var(--vs-ok, #a6e3a1);
-	}
-
-	.action-btn--start:hover {
-		background: rgba(166, 227, 161, 0.1);
-		border-color: var(--vs-ok, #a6e3a1);
-		transform: scale(1.1);
-	}
-
-	.action-btn--stop {
-		color: var(--vs-error, #f38ba8);
-	}
-
-	.action-btn--stop:hover {
-		background: rgba(243, 139, 168, 0.1);
-		border-color: var(--vs-error, #f38ba8);
-		transform: scale(1.1);
-	}
-
-	.spinner {
-		width: 16px;
-		height: 16px;
-		border: 2px solid rgba(255, 255, 255, 0.1);
-		border-top-color: var(--color-text);
-		border-radius: 50%;
-		animation: spin 0.8s linear infinite;
-	}
-
-	@keyframes spin {
-		to { transform: rotate(360deg); }
+		z-index: 10;
 	}
 
 	.service-tile__arrow {

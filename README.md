@@ -22,11 +22,16 @@ Edita el archivo `config/services.json` para añadir tus servicios (Jellyfin, Pl
 - **Iconos**: Usa emojis o iconos de Lucide. La propiedad `icon` en el JSON controla esto.
 
 
-### 2b. Control de Contenedores Docker (Start/Stop)
-VaroDashboard puede encender y apagar contenedores directamente desde los tiles.
-- **Requisito**: El dashboard debe tener acceso al socket de Docker (`/var/run/docker.sock`) con permisos de escritura (`:rw` en docker-compose).
-- **Configuración**: Añade `"containerName": "nombre_del_contenedor"` a cualquier servicio en `config/services.json`.
-- **Interfaz**: Si el `containerName` está configurado, aparecerán botones ▶/⏹ en el tile. El tile se atenuará automáticamente cuando el contenedor esté apagado.
+### 2b. Control de Contenedores Docker (Avanzado)
+VaroDashboard es ahora una suite completa de control de contenedores.
+- **Acceso Directo**: Requiere el socket de Docker (`/var/run/docker.sock`) con permisos `:rw`.
+- **Botones Dinámicos**: Si configuras `containerName` en `services.json`, el tile mostrará controles ▶/⏹.
+- **Arranque en Cascada**: Usa `"dependsOn": ["dep1", "dep2"]` para que al iniciar un servicio, arranquen automáticamente sus dependencias (ej: Bases de Datos).
+- **Tiles sin URL**: Si pones `"url": null`, el tile se convierte en un panel de control puro (ideal para Minecraft o DBs que no tienen web UI).
+- **Estado en Tiempo Real**: El dashboard sincroniza el estado cada 30 segundos automáticamente.
+- **Telemetría de Uptime**: Al pasar el ratón por el botón de parada, verás cuánto tiempo lleva el contenedor encendido (ej: `2h 15m`).
+- **Sistema de Toasts**: Confirmaciones visuales instantáneas al arrancar o detener servicios.
+- **Acciones de Grupo**: En el tema **Atalaya**, cada sección tiene botones maestros para "Iniciar Todo" o "Parar Todo" el grupo.
 
 ### 3. Scripts de Emergencia y Rutinas
 En `config/scripts.json`, define comandos que quieres ejecutar desde la interfaz.

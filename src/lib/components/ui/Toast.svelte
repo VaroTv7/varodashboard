@@ -1,116 +1,99 @@
-<script lang="ts" module>
-	interface ToastMessage {
-		id: number;
-		message: string;
-		type: 'success' | 'error' | 'info' | 'warning';
-		duration: number;
-	}
-
-	let toasts = $state<ToastMessage[]>([]);
-	let nextId = 0;
-
-	export function showToast(message: string, type: ToastMessage['type'] = 'info', duration = 4000) {
-		const id = nextId++;
-		toasts.push({ id, message, type, duration });
-		setTimeout(() => removeToast(id), duration);
-	}
-
-	function removeToast(id: number) {
-		toasts = toasts.filter((t) => t.id !== id);
-	}
-</script>
-
 <script lang="ts">
-	function getIcon(type: string) {
-		switch (type) {
-			case 'success': return '✓';
-			case 'error': return '✕';
-			case 'warning': return '⚠';
-			default: return 'ℹ';
-		}
-	}
+	import { ui } from '$lib/stores/ui.svelte';
+	import { fly } from 'svelte/transition';
 </script>
 
-{#if toasts.length > 0}
-	<div class="toast-container" role="status" aria-live="polite">
-		{#each toasts as toast (toast.id)}
-			<div class="toast toast--{toast.type}" role="alert">
-				<span class="toast__icon">{getIcon(toast.type)}</span>
-				<span class="toast__message">{toast.message}</span>
-				<button
-					class="toast__close"
-					onclick={() => removeToast(toast.id)}
-					aria-label="Close notification"
-				>✕</button>
+<div class="toast-container">
+	{#each ui.toasts as toast (toast.id)}
+		<div
+			class="toast toast--{toast.type}"
+			in:fly={{ y: 20, duration: 300 }}
+			out:fly={{ x: 100, duration: 200 }}
+		>
+			<div class="toast__icon">
+				{#if toast.type === 'success'}
+					✓
+				{:else if toast.type === 'error'}
+					✕
+				{:else}
+					ℹ
+				{/if}
 			</div>
-		{/each}
-	</div>
-{/if}
+			<div class="toast__message">{toast.message}</div>
+			<button class="toast__close" onclick={() => ui.removeToast(toast.id)}>
+				✕
+			</button>
+		</div>
+	{/each}
+</div>
 
 <style>
 	.toast-container {
 		position: fixed;
-		top: var(--space-lg);
-		right: var(--space-lg);
-		z-index: var(--z-toast);
+		bottom: 2rem;
+		right: 2rem;
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-sm);
-		max-width: 400px;
+		gap: 0.75rem;
+		z-index: 9999;
+		pointer-events: none;
 	}
 
 	.toast {
+		pointer-events: auto;
+		background: var(--vs-mantle, #181825);
+		border: 1px solid var(--vs-surface0, #313244);
+		border-radius: var(--vs-radius-md, 8px);
+		padding: 12px 16px;
 		display: flex;
 		align-items: center;
-		gap: var(--space-sm);
-		padding: var(--space-sm) var(--space-md);
-		background: var(--glass-bg);
-		backdrop-filter: blur(var(--glass-blur));
-		-webkit-backdrop-filter: blur(var(--glass-blur));
-		border: 1px solid var(--glass-border);
-		border-radius: var(--radius-md);
-		box-shadow: var(--shadow-lg);
-		animation: toast-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-		font-size: var(--font-sm);
+		gap: 12px;
 		min-width: 280px;
+		max-width: 400px;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+		color: var(--vs-text, #cdd6f4);
 	}
 
-	.toast--success { border-left: 3px solid var(--color-success); }
-	.toast--error { border-left: 3px solid var(--color-error); }
-	.toast--warning { border-left: 3px solid var(--color-warning); }
-	.toast--info { border-left: 3px solid var(--color-primary); }
+	.toast--success {
+		border-left: 4px solid var(--vs-ok, #a6e3a1);
+	}
+
+	.toast--error {
+		border-left: 4px solid var(--vs-error, #f38ba8);
+	}
+
+	.toast--info {
+		border-left: 4px solid var(--vs-primary, #cba6f7);
+	}
 
 	.toast__icon {
-		font-size: var(--font-md);
-		flex-shrink: 0;
-		width: 24px;
-		height: 24px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: var(--radius-full);
+		font-weight: bold;
+		font-size: 1.2rem;
 	}
 
-	.toast--success .toast__icon { color: var(--color-success); }
-	.toast--error .toast__icon { color: var(--color-error); }
-	.toast--warning .toast__icon { color: var(--color-warning); }
-	.toast--info .toast__icon { color: var(--color-primary); }
+	.toast--success .toast__icon { color: var(--vs-ok, #a6e3a1); }
+	.toast--error .toast__icon { color: var(--vs-error, #f38ba8); }
+	.toast--info .toast__icon { color: var(--vs-primary, #cba6f7); }
 
 	.toast__message {
 		flex: 1;
-		color: var(--color-text);
-		line-height: 1.4;
+		font-size: 0.9rem;
+		font-weight: 500;
 	}
 
 	.toast__close {
-		color: var(--color-text-muted);
-		font-size: var(--font-sm);
-		padding: 2px;
-		transition: color var(--transition-fast);
-		flex-shrink: 0;
+		background: none;
+		border: none;
+		color: var(--vs-overlay, #6c7086);
+		cursor: pointer;
+		padding: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: color 0.2s;
 	}
 
 	.toast__close:hover {
-		color: var(--color-text);
+		color: var(--vs-text, #cdd6f4);
 	}
 </style>
