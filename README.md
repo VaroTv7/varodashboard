@@ -22,16 +22,16 @@ Edita el archivo `config/services.json` para añadir tus servicios (Jellyfin, Pl
 - **Iconos**: Usa emojis o iconos de Lucide. La propiedad `icon` en el JSON controla esto.
 
 
-### 2b. Control de Contenedores Docker (Avanzado)
-VaroDashboard es ahora una suite completa de control de contenedores.
+### 2b. Control de Contenedores Docker (Avanzado Pro)
+VaroDashboard es ahora una suite completa de control de infraestructura con lógica inteligente:
 - **Acceso Directo**: Requiere el socket de Docker (`/var/run/docker.sock`) con permisos `:rw`.
 - **Botones Dinámicos**: Si configuras `containerName` en `services.json`, el tile mostrará controles ▶/⏹.
-- **Arranque en Cascada**: Usa `"dependsOn": ["dep1", "dep2"]` para que al iniciar un servicio, arranquen automáticamente sus dependencias (ej: Bases de Datos).
-- **Tiles sin URL**: Si pones `"url": null`, el tile se convierte en un panel de control puro (ideal para Minecraft o DBs que no tienen web UI).
-- **Estado en Tiempo Real**: El dashboard sincroniza el estado cada 30 segundos automáticamente.
-- **Telemetría de Uptime**: Al pasar el ratón por el botón de parada, verás cuánto tiempo lleva el contenedor encendido (ej: `2h 15m`).
-- **Sistema de Toasts**: Confirmaciones visuales instantáneas al arrancar o detener servicios.
-- **Acciones de Grupo**: En el tema **Atalaya**, cada sección tiene botones maestros para "Iniciar Todo" o "Parar Todo" el grupo.
+- **Arranque Secuencial Inteligente**: Usa `"dependsOn": ["dep1", "dep2"]`. El dashboard arrancará las dependencias primero, esperará **3 segundos** para su inicialización, y luego arrancará el contenedor principal.
+- **Indicadores de Crash (Exit Codes)**: Si un contenedor se detiene con un error (`exitCode != 0`), aparecerá un indicador **🟡 parpadeante**. Útil para detectar fallos sin mirar logs.
+- **Tiles sin URL**: Si pones `"url": null`, el tile se convierte en un panel de control puro (ideal para Minecraft o DBs).
+- **Estado Sincronizado**: El dashboard sincroniza el estado real cada **20 segundos** automáticamente.
+- **Telemetría de Uptime**: Al pasar el ratón por el botón de parada, verás el tiempo real de ejecución.
+- **Acciones de Grupo Globales**: Todos los temas (Atalaya, BioHazard, GlitchCore, Cyberdeck, Warcraft, Quantum) incluyen ahora botones maestros para "Iniciar Todo" o "Parar Todo" los servicios del grupo.
 
 ### 3. Scripts de Emergencia y Rutinas
 En `config/scripts.json`, define comandos que quieres ejecutar desde la interfaz.

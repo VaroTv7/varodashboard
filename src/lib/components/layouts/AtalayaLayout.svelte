@@ -255,13 +255,16 @@
 									<div class="ata__group-title-text">
 										<span class="ata__group-icon">{group.icon}</span> {group.name}
 									</div>
-									{@const containerServices = group.services.filter(s => s.containerName).map(s => s.containerName as string)}
-									{#if containerServices.length > 0}
+									{#if group.services.some(s => s.containerName)}
 										<div class="ata__group-actions">
-											<button class="ata__group-btn ata__group-btn--start" onclick={() => batchControl(group.name, 'start', containerServices)} title="Arrancar todo el grupo">
+											<button class="ata__group-btn ata__group-btn--start" 
+												onclick={() => batchControl(group.name, 'start', group.services.filter(s => s.containerName).map(s => s.containerName as string))} 
+												title="Arrancar todo el grupo">
 												▶ INICIAR TODO
 											</button>
-											<button class="ata__group-btn ata__group-btn--stop" onclick={() => batchControl(group.name, 'stop', containerServices)} title="Apagar todo el grupo">
+											<button class="ata__group-btn ata__group-btn--stop" 
+												onclick={() => batchControl(group.name, 'stop', group.services.filter(s => s.containerName).map(s => s.containerName as string))} 
+												title="Apagar todo el grupo">
 												⏹ PARAR TODO
 											</button>
 										</div>

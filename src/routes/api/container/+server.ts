@@ -2,10 +2,14 @@ import { json } from '@sveltejs/kit';
 import http from 'http';
 import type { RequestHandler } from './$types';
 
-function dockerRequest(path: string, method: 'GET' | 'POST' = 'GET'): Promise<{ statusCode: number; body: string }> {
+const DOCKER_SOCKET = '/var/run/docker.sock';
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function dockerRequest(path: string, method: 'GET' | 'POST' = 'GET', body: any = null): Promise<{ statusCode: number; body: string }> {
 	return new Promise((resolve, reject) => {
 		const options = {
-			socketPath: '/var/run/docker.sock',
+			socketPath: DOCKER_SOCKET,
 			path: `/v1.41${path}`,
 			method: method
 		};
@@ -39,6 +43,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		if (statusCode === 200) {
 			const info = JSON.parse(body);
 			const status = info.State.Status;
+			const exitCode = info.State.ExitCode;
 			let uptime = null;
 
 			if (status === 'running') {
@@ -47,7 +52,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				uptime = Math.floor((now - startedAt) / 1000);
 			}
 
-			return json({ status, uptime });
+			return json({ status, uptime, exitCode });
 		} else if (statusCode === 404) {
 			return json({ status: 'not_found' });
 		} else {
@@ -70,9 +75,10 @@ export const POST: RequestHandler = async ({ request }) => {
 		// Handle dependencies for 'start' action
 		if (action === 'start' && Array.isArray(dependencies) && dependencies.length > 0) {
 			for (const dep of dependencies) {
-				// We don't await strictly to not block if one fails, but we try to start them
-				dockerRequest(`/containers/${dep}/start`, 'POST').catch(e => console.error(`Dependency start fail: ${dep}`, e));
+				await dockerRequest(`/containers/${dep}/start`, 'POST').catch(e => console.error(`Dependency start fail: ${dep}`, e));
 			}
+			// Wait 3 seconds for dependencies to initialize before starting main container
+			await sleep(3000);
 		}
 
 		const { statusCode, body } = await dockerRequest(`/containers/${containerName}/${action}`, 'POST');

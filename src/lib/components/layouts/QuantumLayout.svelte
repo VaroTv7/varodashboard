@@ -22,6 +22,25 @@
 		onSearch: (q: string) => void;
 	} = $props();
 
+	import { ui } from '$lib/stores/ui.svelte';
+
+	async function batchControl(action: 'start' | 'stop') {
+		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
+		if (containers.length === 0) return;
+		
+		ui.addToast(`${action === 'start' ? 'Iniciando' : 'Colapsando'} singularidad de grupo...`, 'info');
+		
+		for (const containerName of containers) {
+			fetch('/api/container', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ action, containerName })
+			}).catch(console.error);
+		}
+		
+		ui.addToast(`Fluctuación cuántica enviada.`, 'success');
+	}
+
 	const q = $derived(searchQuery.toLowerCase());
 	const allServices = $derived(
 		(services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name })))
@@ -143,6 +162,12 @@
 						</a>
 					</div>
 				{/each}
+			</div>
+			
+			<!-- BATCH CONTROLS (QUANTUM STYLE) -->
+			<div class="qtm__batch-orbit">
+				<button class="qtm__batch-btn qtm__batch-btn--start" onclick={() => batchControl('start')}>▶ BOOT</button>
+				<button class="qtm__batch-btn qtm__batch-btn--stop" onclick={() => batchControl('stop')}>⏹ KILL</button>
 			</div>
 
 		</div>
@@ -291,6 +316,30 @@
 		animation: orbit-spin 120s linear infinite;
 	}
 	@keyframes orbit-spin { 100% { transform: rotate(360deg); } }
+
+	.qtm__batch-orbit {
+		position: absolute;
+		top: 50%; left: 50%;
+		transform: translate(-50%, -50%);
+		display: flex; gap: 40vmin;
+		pointer-events: none;
+		z-index: 5;
+	}
+	.qtm__batch-btn {
+		pointer-events: auto;
+		background: rgba(0,0,0,0.8);
+		border: 1px solid var(--dfbbff);
+		color: #dfbbff;
+		border-radius: 50%;
+		width: 45px;
+		height: 45px;
+		font-size: 0.5rem;
+		cursor: pointer;
+		transition: all 0.3s;
+		box-shadow: 0 0 10px rgba(223,187,255,0.3);
+	}
+	.qtm__batch-btn:hover { background: #dfbbff; color: #000; box-shadow: 0 0 20px #dfbbff; transform: scale(1.1); }
+	.qtm__batch-btn--stop:hover { background: #ff0055; border-color: #ff0055; box-shadow: 0 0 20px #ff0055; }
 
 	.qtm__node-wrapper {
 		position: absolute; top: 50%; left: 50%;

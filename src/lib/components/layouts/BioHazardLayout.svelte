@@ -16,6 +16,35 @@
 		onOpenSettings: () => void;
 	} = $props();
 
+	import { ui } from '$lib/stores/ui.svelte';
+
+	async function batchControl(groupName: string, action: 'start' | 'stop') {
+		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
+		if (containers.length === 0) return;
+		
+		ui.addToast(`${action === 'start' ? 'Iniciando' : 'Deteniendo'} ${groupName}...`, 'info');
+		
+		let successCount = 0;
+		for (const containerName of containers) {
+			try {
+				const res = await fetch('/api/container', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ action, containerName })
+				});
+				if (res.ok) successCount++;
+			} catch (e) {
+				console.error(`Batch error for ${containerName}:`, e);
+			}
+		}
+		
+		if (successCount === containers.length) {
+			ui.addToast(`${groupName} ${action === 'start' ? 'completado' : 'detenido'} ✓`, 'success');
+		} else {
+			ui.addToast(`${successCount}/${containers.length} procesados`, 'info');
+		}
+	}
+
 	const allServices = $derived((services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name }))));
 </script>
 
@@ -40,7 +69,13 @@
 	<main class="bio__content">
 		<div class="bio__grid">
 			<div class="bio__panel bio__panel--center">
-				<div class="bio__panel-label">CELDAS_DE_CONTENCIÓN (SERVICIOS)</div>
+				<div class="bio__panel-label" style="display: flex; justify-content: space-between; align-items: center;">
+					<span>CELDAS_DE_CONTENCIÓN (SERVICIOS)</span>
+					<div class="bio__batch-actions">
+						<button class="bio__batch-btn bio__batch-btn--start" onclick={() => batchControl('CELDAS', 'start')}>▶ ACTIVAR_TODO</button>
+						<button class="bio__batch-btn bio__batch-btn--stop" onclick={() => batchControl('CELDAS', 'stop')}>⏹ DESACTIVAR_TODO</button>
+					</div>
+				</div>
 				<div class="bio__service-grid">
 					{#each allServices as svc}
 						<div class="bio__cell" class:bio__cell--breach={statuses[svc.name as string] !== 'online'}>
@@ -205,6 +240,19 @@
 		font-weight: 900;
 		padding: 2px 10px;
 	}
+
+	.bio__batch-actions { display: flex; gap: 10px; }
+	.bio__batch-btn {
+		background: var(--bio-black);
+		border: 1px solid var(--bio-black);
+		color: var(--bio-yellow);
+		font-size: 0.6rem;
+		padding: 1px 6px;
+		cursor: pointer;
+		font-weight: 900;
+	}
+	.bio__batch-btn--start:hover { background: #00ff00; color: #000; }
+	.bio__batch-btn--stop:hover { background: var(--bio-red); color: #fff; }
 
 	.bio__service-grid {
 		padding: 10px;

@@ -17,6 +17,25 @@
 		onOpenSettings: () => void;
 	} = $props();
 
+	import { ui } from '$lib/stores/ui.svelte';
+
+	async function batchControl(action: 'start' | 'stop') {
+		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
+		if (containers.length === 0) return;
+		
+		ui.addToast(`INICIANDO SECUENCIA ${action.toUpperCase()}...`, 'info');
+		
+		for (const containerName of containers) {
+			fetch('/api/container', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ action, containerName })
+			}).catch(console.error);
+		}
+		
+		ui.addToast(`ORDEN ${action.toUpperCase()} ENVIADA A LA RED.`, 'success');
+	}
+
 	let logs = $state<string[]>([]);
 	let bootSequence = $state(true);
 	
@@ -103,7 +122,13 @@
 
 		<div class="deck__col deck__col--right">
 			<div class="deck__panel">
-				<div class="deck__panel-head">SERVICIOS_ACTIVOS</div>
+				<div class="deck__panel-head" style="display: flex; justify-content: space-between; align-items: center;">
+					<span>SERVICIOS_ACTIVOS</span>
+					<div class="deck__batch">
+						<button class="deck__batch-btn deck__batch-btn--start" onclick={() => batchControl('start')}>[ RUN_ALL ]</button>
+						<button class="deck__batch-btn deck__batch-btn--stop" onclick={() => batchControl('stop')}>[ KILL_ALL ]</button>
+					</div>
+				</div>
 				<div class="deck__service-list">
 					{#each allServices as svc}
 						<div class="deck__svc" class:deck__svc--off={statuses[svc.name as string] !== 'online'}>
@@ -200,12 +225,20 @@
 	}
 
 	.deck__panel-head {
-		background: var(--deck-red);
-		color: #000;
-		font-size: 0.7rem;
-		padding: 2px 10px;
 		font-weight: bold;
 	}
+
+	.deck__batch { display: flex; gap: 10px; }
+	.deck__batch-btn {
+		background: transparent;
+		border: none;
+		color: var(--deck-red);
+		font-size: 0.6rem;
+		cursor: pointer;
+		font-family: inherit;
+		padding: 0;
+	}
+	.deck__batch-btn:hover { color: #fff; text-shadow: 0 0 5px var(--deck-red); }
 
 	.deck__console {
 		flex: 1;

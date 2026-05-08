@@ -22,6 +22,23 @@
 		onSearch: (q: string) => void;
 	} = $props();
 
+	async function batchControl(action: 'start' | 'stop') {
+		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
+		if (containers.length === 0) return;
+		
+		ui.addToast(`Iniciando secuencia ${action.toUpperCase()}...`, 'info');
+		
+		for (const containerName of containers) {
+			fetch('/api/container', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ action, containerName })
+			}).catch(console.error);
+		}
+		
+		ui.addToast(`Secuencia ${action.toUpperCase()} enviada.`, 'success');
+	}
+
 	const q = $derived(searchQuery.toLowerCase());
 	const allServices = $derived(
 		(services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name })))
@@ -220,7 +237,13 @@
 			<div class="glc__col glc__col--3">
 				<div class="glc__panel glc__panel--green glc__scroll glc__nodes-panel">
 					<div class="glc__panel-corner"></div>
-					<div class="glc__panel-title">ENLACE_NODOS</div>
+					<div class="glc__panel-head" style="display: flex; justify-content: space-between; align-items: center;">
+						<div class="glc__panel-title">ENLACE_NODOS</div>
+						<div class="glc__batch">
+							<button class="glc__batch-btn glc__batch-btn--start" onclick={() => batchControl('start')}>▶ BOOT_ALL</button>
+							<button class="glc__batch-btn glc__batch-btn--stop" onclick={() => batchControl('stop')}>⏹ KILL_ALL</button>
+						</div>
+					</div>
 					<div class="glc__nodes">
 						{#each allServices as svc}
 							{@const isOnline = statuses[svc.name as string] === 'online'}
@@ -363,6 +386,19 @@
 	.glc__panel--green .glc__panel-title { background: #39ff14; }
 	.glc__panel--cyan .glc__panel-title { background: #00ffff; }
 	.glc__panel--red .glc__panel-title { background: #ff003c; color: #fff; }
+
+	.glc__batch { display: flex; gap: 10px; }
+	.glc__batch-btn {
+		background: transparent;
+		border: 1px solid rgba(0,255,0,0.3);
+		color: #39ff14;
+		font-size: 0.6rem;
+		padding: 1px 6px;
+		cursor: pointer;
+		font-family: inherit;
+	}
+	.glc__batch-btn:hover { background: rgba(0,255,0,0.1); border-color: #39ff14; }
+	.glc__batch-btn--stop:hover { border-color: #f00; color: #f00; }
 
 	.glc__scroll { overflow-y: auto; padding: 10px; }
 

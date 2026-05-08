@@ -17,6 +17,25 @@
 		onOpenSettings: () => void;
 	} = $props();
 
+	import { ui } from '$lib/stores/ui.svelte';
+
+	async function batchControl(action: 'start' | 'stop') {
+		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
+		if (containers.length === 0) return;
+		
+		ui.addToast(`¡POR LA ALIANZA! ${action === 'start' ? 'Desplegando' : 'Retirando'} tropas...`, 'info');
+		
+		for (const containerName of containers) {
+			fetch('/api/container', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ action, containerName })
+			}).catch(console.error);
+		}
+		
+		ui.addToast(`Órdenes enviadas al frente.`, 'success');
+	}
+
 	const allServices = $derived((services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name }))));
 	const onlineCount = $derived(Object.values(statuses).filter(s => s === 'online').length);
 	
@@ -112,8 +131,12 @@
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="DISCO">{Math.floor(telemetry.disk)}% 🗄️</div></div>
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="RED">{Math.floor(telemetry.netRX)}M 📡</div></div>
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="PROCS">{telemetry.procs} 👥</div></div>
-				<div class="wc3__inv-slot"></div>
-				<div class="wc3__inv-slot"></div>
+				<div class="wc3__inv-slot">
+					<button class="wc3__batch-btn wc3__batch-btn--start" onclick={() => batchControl('start')}>▶ LEVA_TOTAL</button>
+				</div>
+				<div class="wc3__inv-slot">
+					<button class="wc3__batch-btn wc3__batch-btn--stop" onclick={() => batchControl('stop')}>⏹ RETIRADA</button>
+				</div>
 				<div class="wc3__inv-slot"></div>
 			</div>
 		</div>
@@ -292,6 +315,19 @@
 	}
 	.wc3__inv-slot { background: #000; border: 1px solid #222; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 	.wc3__inv-item { font-size: 0.6rem; color: var(--wc3-gold); text-align: center; }
+
+	.wc3__batch-btn {
+		background: transparent;
+		border: none;
+		color: var(--wc3-gold);
+		font-size: 0.5rem;
+		font-family: inherit;
+		cursor: pointer;
+		width: 100%;
+		height: 100%;
+	}
+	.wc3__batch-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+	.wc3__batch-btn--stop:hover { color: #ff3333; }
 
 	.wc3__commands {
 		display: grid;

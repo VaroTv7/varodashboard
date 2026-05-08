@@ -15,6 +15,7 @@
 	} = $props();
 
 	let containerStatus = $state<'running' | 'exited' | 'loading' | 'unknown'>('unknown');
+	let exitCode = $state<number>(0);
 	let uptime = $state<number | null>(null);
 	let isActionLoading = $state(false);
 	let pollInterval: any;
@@ -22,8 +23,8 @@
 	onMount(() => {
 		if (containerName) {
 			fetchContainerStatus();
-			// Polling every 30 seconds
-			pollInterval = setInterval(fetchContainerStatus, 30000);
+			// Polling every 20 seconds
+			pollInterval = setInterval(fetchContainerStatus, 20000);
 		}
 	});
 
@@ -38,6 +39,7 @@
 			if (data.status) {
 				containerStatus = data.status === 'running' ? 'running' : 'exited';
 				uptime = data.uptime;
+				exitCode = data.exitCode || 0;
 				onStatusChange(containerStatus);
 			}
 		} catch (err) {
@@ -112,14 +114,19 @@
 			</button>
 		</div>
 	{:else if containerStatus === 'exited'}
-		<button 
-			class="action-btn action-btn--start" 
-			class:action-btn--compact={variant === 'compact'}
-			onclick={(e) => handleAction('start', e)}
-			title="Arrancar contenedor"
-		>
-			<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-		</button>
+		<div class="control-group">
+			{#if exitCode !== 0}
+				<span class="crash-indicator" title="Contenedor crasheado (Exit Code: {exitCode})">🟡</span>
+			{/if}
+			<button 
+				class="action-btn action-btn--start" 
+				class:action-btn--compact={variant === 'compact'}
+				onclick={(e) => handleAction('start', e)}
+				title="Arrancar contenedor"
+			>
+				<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+			</button>
+		</div>
 	{/if}
 </div>
 
@@ -145,6 +152,17 @@
 		background: rgba(0,0,0,0.2);
 		padding: 1px 4px;
 		border-radius: 3px;
+	}
+
+	.crash-indicator {
+		font-size: 0.8rem;
+		animation: pulse 2s infinite;
+	}
+
+	@keyframes pulse {
+		0% { opacity: 0.6; transform: scale(0.9); }
+		50% { opacity: 1; transform: scale(1.1); }
+		100% { opacity: 0.6; transform: scale(0.9); }
 	}
 
 	.action-btn {

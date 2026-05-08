@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Modal from '$lib/components/ui/Modal.svelte';
-	import { showToast } from '$lib/components/ui/Toast.svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	interface ScriptParam {
 		name: string;
@@ -53,14 +53,14 @@
 
 			if (result.success) {
 				output = result.output;
-				showToast(`${script.name} completed successfully`, 'success');
+				ui.addToast(`${script.name} completed successfully`, 'success');
 			} else {
 				output = result.error || 'Script failed';
-				showToast(`${script.name} failed: ${result.error}`, 'error');
+				ui.addToast(`${script.name} failed: ${result.error}`, 'error');
 			}
 		} catch (err) {
 			output = 'Network error';
-			showToast('Failed to connect to script API', 'error');
+			ui.addToast('Failed to connect to script API', 'error');
 		} finally {
 			isRunning = false;
 		}
