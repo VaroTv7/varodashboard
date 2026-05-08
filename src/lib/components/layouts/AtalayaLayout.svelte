@@ -251,6 +251,13 @@
 		</div>
 	</div>
 
+	<!-- TICKER -->
+	<div class="ata__ticker">
+		<div class="ata__ticker-scroll">
+			<span>⟡ "una sola gesta de huellas aquí dentro" — varoserver vta v22.0 ⟡ sistema vigilado · bóveda sellada · nodos confiables: {onlineCount}/{totalServices} · latencia: 12ms ⟡ atalaya: modo surveillance activo ⟡ cifrado: AES-256-GCM · protocolo: TLS 1.3 ⟡</span>
+		</div>
+	</div>
+
 	<!-- BOTTOM BAR -->
 	<footer class="ata__bot">
 		<span>services: {totalServices}</span><span class="ata__sep">│</span>
@@ -266,15 +273,24 @@
 <style>
 	.ata { height:100vh; display:flex; flex-direction:column; font-family:'JetBrains Mono','Fira Code',monospace;
 		background:#060d1a; color:#b8dce8; font-size:clamp(0.55rem,0.45vw+0.3rem,0.8rem); overflow:hidden;
-		background-image:radial-gradient(circle,rgba(0,230,200,0.03) 1px,transparent 1px);
-		background-size:clamp(14px,1.2vw,24px) clamp(14px,1.2vw,24px); }
+		background-image:
+			radial-gradient(circle,rgba(0,230,200,0.03) 1px,transparent 1px),
+			linear-gradient(rgba(0,230,200,0.015) 1px,transparent 1px),
+			linear-gradient(90deg,rgba(0,230,200,0.015) 1px,transparent 1px);
+		background-size:clamp(14px,1.2vw,24px) clamp(14px,1.2vw,24px),clamp(60px,5vw,100px) clamp(60px,5vw,100px),clamp(60px,5vw,100px) clamp(60px,5vw,100px); }
+	/* Scan-lines + vignette + edge glow */
+	.ata::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:998;
+		background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.4) 100%);
+		box-shadow:inset 0 0 120px rgba(0,230,200,0.03); }
 	.ata::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-		background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+		background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
+		animation:flicker 8s ease-in-out infinite; }
+	@keyframes flicker { 0%,97%,100%{opacity:1} 98%{opacity:0.97} 99%{opacity:1} }
 	.ata__g { color:#00ff88!important; } .ata__r { color:#ff3355!important; }
 	.ata__dim { color:#2d5568; } .ata__sep { color:#1a3545; } .ata__pr { color:#00e5c8; font-weight:700; }
 
 	.ata__top { display:flex; align-items:center; justify-content:space-between; padding:0 clamp(8px,0.6vw,16px);
-		height:clamp(26px,2.5vh,36px); background:#050b14; border-bottom:1px solid rgba(0,230,200,0.15); flex-shrink:0; z-index:200; }
+		height:clamp(26px,2.5vh,36px); background:#050b14; border-bottom:1px solid rgba(0,230,200,0.15); flex-shrink:0; z-index:200; position:relative; }
 	.ata__top-l,.ata__top-r { display:flex; align-items:center; gap:clamp(4px,0.4vw,10px); }
 	.ata__top-c { display:flex; align-items:center; gap:4px; flex:1; max-width:clamp(180px,16vw,350px); margin:0 auto; }
 	.ata__badge { background:rgba(0,230,200,0.08); border:1px solid rgba(0,230,200,0.2); padding:1px 6px;
@@ -405,6 +421,7 @@
 		.ata__grid { grid-template-columns:1fr; }
 		.ata__c1,.ata__c3 { display:none; }
 		.ata__r1,.ata__r2,.ata__r3 { grid-template-columns:1fr; }
+		.ata__ticker { display:none; }
 	}
 	@media(min-width:769px) and (max-width:1200px) {
 		.ata__grid { grid-template-columns:1fr clamp(160px,14vw,240px); }
@@ -415,4 +432,21 @@
 	@media(min-width:2560px) {
 		.ata__sg { grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }
 	}
+
+	/* === TICKER === */
+	.ata__ticker { flex-shrink:0; height:clamp(16px,1.6vh,22px); background:#050b14;
+		border-top:1px solid rgba(0,230,200,0.08); border-bottom:1px solid rgba(0,230,200,0.08);
+		overflow:hidden; position:relative; }
+	.ata__ticker::before { content:''; position:absolute; left:0; top:0; bottom:0; width:40px;
+		background:linear-gradient(90deg,#050b14,transparent); z-index:1; }
+	.ata__ticker::after { content:''; position:absolute; right:0; top:0; bottom:0; width:40px;
+		background:linear-gradient(-90deg,#050b14,transparent); z-index:1; }
+	.ata__ticker-scroll { display:flex; align-items:center; height:100%; white-space:nowrap;
+		animation:tickerScroll 40s linear infinite; font-size:0.75em; color:#1a3545; letter-spacing:0.1em; }
+	.ata__ticker-scroll span { padding:0 2em; }
+	@keyframes tickerScroll { from{transform:translateX(100%)} to{transform:translateX(-100%)} }
+
+	/* === TOP BAR GLOW === */
+	.ata__top::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:1px;
+		background:linear-gradient(90deg,transparent,rgba(0,230,200,0.3),rgba(0,255,136,0.15),rgba(0,230,200,0.3),transparent); }
 </style>
