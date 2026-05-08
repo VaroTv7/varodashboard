@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import * as os from 'os';
 import * as fs from 'fs';
+import * as path from 'path';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
@@ -15,6 +16,15 @@ export const GET: RequestHandler = async () => {
 		const memUsage = (usedMem / totalMem) * 100;
 		
 		const uptime = os.uptime();
+
+		// Load custom metrics if they exist
+		let custom = {};
+		try {
+			const configPath = path.resolve('config/custom_metrics.json');
+			if (fs.existsSync(configPath)) {
+				custom = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+			}
+		} catch (e) { /* ignore */ }
 
 		// Try to get disk info (Node 18+)
 		let disk = { total: 0, free: 0, used: 0, usage: 0 };
@@ -49,7 +59,8 @@ export const GET: RequestHandler = async () => {
 			release: os.release(),
 			node: process.version,
 			arch: os.arch(),
-			hostname: os.hostname()
+			hostname: os.hostname(),
+			custom
 		});
 	} catch (error) {
 		console.error('Failed to get system stats:', error);

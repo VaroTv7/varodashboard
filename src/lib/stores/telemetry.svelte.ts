@@ -6,6 +6,7 @@ export function createTelemetryStore() {
 	let netRX = $state(10);
 	let procs = $state(150);
 	let uptime = $state(0);
+	let customData = $state<any>({});
 
 	let isFetching = false;
 
@@ -20,6 +21,7 @@ export function createTelemetryStore() {
 				mem = data.memory.usage;
 				uptime = data.uptime;
 				disk = data.disk.usage || 45;
+				customData = data.custom || {};
 				
 				// Simulate high-frequency traffic for "juice"
 				netTX = Math.min(100, Math.max(1, netTX + (Math.random() - 0.5) * 40));
@@ -53,6 +55,7 @@ export function createTelemetryStore() {
 		get netRX() { return netRX; },
 		get procs() { return procs; },
 		get uptime() { return uptime; },
+		get customData() { return customData; },
 		start,
 		stop
 	};

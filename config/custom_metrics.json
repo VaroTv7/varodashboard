@@ -1,0 +1,20 @@
+{
+	"mensajes": [
+		"BIENVENIDO AL NÚCLEO VAROSERVER",
+		"SEGURIDAD NIVEL 7 ACTIVA",
+		"PROTOCOLO 'SAFETY FIRST' CARGADO",
+		"SIN AMENAZAS DETECTADAS",
+		"VIGILANCIA CONSTANTE",
+		"ESPERANDO ÓRDENES..."
+	],
+	"easter_eggs": [
+		"ID_KONA: 42",
+		"VARO_WAS_HERE",
+		"U_R_THE_OPERATOR"
+	],
+	"servidor": {
+		"ubicación": "BÚNKER_VARO",
+		"propietario": "VARO",
+		"propósito": "CENTRO_DE_MANDO_TOTAL"
+	}
+}

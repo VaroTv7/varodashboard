@@ -97,9 +97,15 @@
 	<!-- TICKER -->
 	<div class="ata__ticker">
 		<div class="ata__ticker-scroll">
-			{#each Array(3) as _}
-				<span>SISTEMA VAROSERVER N150: OPERATIVO</span>
-				<span>ESTADO DEL NÚCLEO: NOMINAL</span>
+			{#each Array(2) as _}
+				{#if telemetry.customData?.mensajes?.length}
+					{#each telemetry.customData.mensajes as msg}
+						<span>{msg.toUpperCase()}</span>
+					{/each}
+				{:else}
+					<span>SISTEMA VAROSERVER N150: OPERATIVO</span>
+					<span>ESTADO DEL NÚCLEO: NOMINAL</span>
+				{/if}
 				<span>TIEMPO DE ACTIVIDAD: {Math.floor(telemetry.uptime / 3600)}h {Math.floor((telemetry.uptime % 3600) / 60)}m</span>
 				<span>PROCESOS EN EJECUCIÓN: {telemetry.procs}</span>
 				<span>CARGA DE RED: {telemetry.netRX.toFixed(1)} Mb/s</span>

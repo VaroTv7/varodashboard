@@ -55,6 +55,21 @@ Gestiona tus enlaces rápidos en `config/bookmarks.json`. Se organizan por categ
 - **⚠️ Bio-Hazard**: Las "celdas de contención" son tus servicios. Si uno cae, la celda entra en estado de BRECHA con sirenas y alertas rojas.
 - **🌆 Neon-Tokyo**: El visualizador de señal del footer reacciona a los paquetes de red reales recibidos por el servidor.
 
+### 5. Datos Personalizados y Easter Eggs
+Edita el archivo `config/custom_metrics.json` para añadir tus propios datos a la API.
+- **Mensajes**: El array `mensajes` aparecerá automáticamente en los tickers de texto de los temas (como en Atalaya).
+- **Easter Eggs**: Puedes meter datos que aparecerán en paneles ocultos o áreas de "volcado de memoria" (Glitch-Core, Cyberdeck).
+- **Extensibilidad**: Cualquier campo que añadas a este JSON estará disponible en el frontend a través de `telemetry.customData`.
+
+---
+
+## 🛠️ Desarrollo de Temas (Rice Avanzado)
+
+Si quieres que tus datos personalizados salgan en un sitio específico:
+1. Añade el dato a `config/custom_metrics.json`.
+2. En el archivo del tema (ej: `AtalayaLayout.svelte`), usa `{telemetry.customData.tu_campo}`.
+3. El dashboard se actualizará cada 2 segundos con tus nuevos datos.
+
 ---
 
 ## 🚀 Despliegue Rápido
