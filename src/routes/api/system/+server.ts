@@ -2,8 +2,11 @@ import { json } from '@sveltejs/kit';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import type { RequestHandler } from './$types';
+
+const execAsync = promisify(exec);
 
 // Global state for network delta calculation
 let lastNetData = {
@@ -12,14 +15,35 @@ let lastNetData = {
 	time: Date.now()
 };
 
-function getProcessCount(): number {
+// Initialize network data to avoid the first-call zero spike
+function initNetworkData() {
+	try {
+		if (os.platform() === 'linux') {
+			const data = fs.readFileSync('/proc/net/dev', 'utf8');
+			const lines = data.split('\n');
+			let totalRx = 0;
+			let totalTx = 0;
+			for (const line of lines) {
+				if (line.includes(':')) {
+					const parts = line.trim().split(/\s+/);
+					totalRx += parseInt(parts[1], 10) || 0;
+					totalTx += parseInt(parts[9], 10) || 0;
+				}
+			}
+			lastNetData = { rx: totalRx, tx: totalTx, time: Date.now() };
+		}
+	} catch (e) {}
+}
+initNetworkData();
+
+async function getProcessCount(): Promise<number> {
 	try {
 		if (os.platform() === 'win32') {
-			const output = execSync('tasklist').toString();
-			return output.split('\n').length - 5; // Approximate
+			const { stdout } = await execAsync('tasklist', { timeout: 2000 });
+			return stdout.split('\n').length - 5;
 		} else {
-			const output = execSync('ps aux | wc -l').toString();
-			return parseInt(output.trim(), 10) - 1; // Exclude header
+			const { stdout } = await execAsync('ps aux | wc -l', { timeout: 2000 });
+			return parseInt(stdout.trim(), 10) - 1;
 		}
 	} catch (e) {
 		return 0;
@@ -37,9 +61,8 @@ function getNetworkTraffic() {
 			for (const line of lines) {
 				if (line.includes(':')) {
 					const parts = line.trim().split(/\s+/);
-					// Parts: [interface, rx_bytes, rx_packets, ..., tx_bytes, ...]
-					totalRx += parseInt(parts[1], 10);
-					totalTx += parseInt(parts[9], 10);
+					totalRx += parseInt(parts[1], 10) || 0;
+					totalTx += parseInt(parts[9], 10) || 0;
 				}
 			}
 
@@ -58,10 +81,25 @@ function getNetworkTraffic() {
 				tx: Math.max(0, txSpeed) 
 			};
 		}
-	} catch (e) {
-		// Fallback or ignore
-	}
+	} catch (e) {}
 	return { rx: 0, tx: 0 };
+}
+
+async function checkArrStatus(url: string, apiKey: string): Promise<string> {
+	if (!url || !apiKey) return 'OFFLINE';
+	try {
+		const controller = new AbortController();
+		const id = setTimeout(() => controller.abort(), 2000); // 2s timeout
+		
+		const baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+		const res = await fetch(`${baseUrl}/api/v3/system/status?apiKey=${apiKey}`, {
+			signal: controller.signal
+		});
+		clearTimeout(id);
+		return res.ok ? 'ONLINE' : 'OFFLINE';
+	} catch (e) {
+		return 'OFFLINE';
+	}
 }
 
 export const GET: RequestHandler = async () => {
@@ -100,20 +138,27 @@ export const GET: RequestHandler = async () => {
 			}
 		} catch (e) { /* fallback */ }
 
-		// Real Network Traffic
-		const netInfo = getNetworkTraffic();
+		// Parallel fetch of dynamic data
+		const [procs, netInfo] = await Promise.all([
+			getProcessCount(),
+			Promise.resolve(getNetworkTraffic())
+		]);
 
-		// Real Process Count
-		const procs = getProcessCount();
-
-		// ARR Integration
+		// ARR Integration with real checks
 		let arrStatus = { radarr: 'OFFLINE', sonarr: 'OFFLINE' };
 		try {
 			const apiKeysPath = path.resolve('config/api_keys.json');
 			if (fs.existsSync(apiKeysPath)) {
 				const keys = JSON.parse(fs.readFileSync(apiKeysPath, 'utf-8'));
-				if (keys.radarr?.enabled) arrStatus.radarr = 'READY';
-				if (keys.sonarr?.enabled) arrStatus.sonarr = 'READY';
+				
+				const checks = [];
+				if (keys.radarr?.enabled) {
+					checks.push(checkArrStatus(keys.radarr.url, keys.radarr.apiKey).then(s => arrStatus.radarr = s));
+				}
+				if (keys.sonarr?.enabled) {
+					checks.push(checkArrStatus(keys.sonarr.url, keys.sonarr.apiKey).then(s => arrStatus.sonarr = s));
+				}
+				await Promise.all(checks);
 			}
 		} catch (e) { /* ignore */ }
 
