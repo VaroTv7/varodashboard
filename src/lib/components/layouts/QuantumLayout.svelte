@@ -93,8 +93,12 @@
 			<input class="qtm__search" type="text" value={searchQuery} oninput={(e) => onSearch((e.target as HTMLInputElement).value)} placeholder="INYECTAR COORDENADAS..." spellcheck="false" />
 		</div>
 		<div class="qtm__controls">
+			<div class="qtm__arr-status">
+				<span class="qtm__arr-lbl" class:qtm__arr-lbl--ok={telemetry.arrStatus.radarr === 'ONLINE'}>RADR</span>
+				<span class="qtm__arr-lbl" class:qtm__arr-lbl--ok={telemetry.arrStatus.sonarr === 'ONLINE'}>SONR</span>
+			</div>
 			<span class="qtm__time">{timeStr}</span>
-			<button class="qtm__btn" onclick={onOpenSettings}>◆ AJUSTES / CAMBIAR TEMA</button>
+			<button class="qtm__btn" onclick={onOpenSettings}>◆ AJUSTES</button>
 		</div>
 	</header>
 
@@ -256,7 +260,12 @@
 	}
 	.qtm__search:focus { background: rgba(255,255,255,0.1); border-color: #dfbbff; box-shadow: 0 0 15px rgba(223,187,255,0.3); }
 
-	.qtm__controls { display: flex; align-items: center; gap: 20px; }
+	.qtm__controls { display: flex; align-items: center; gap: 25px; }
+	
+	.qtm__arr-status { display: flex; gap: 10px; padding-right: 20px; border-right: 1px solid rgba(223,187,255,0.2); }
+	.qtm__arr-lbl { font-size: 0.7rem; color: #444; font-weight: bold; letter-spacing: 1px; }
+	.qtm__arr-lbl--ok { color: #dfbbff; text-shadow: 0 0 8px #dfbbff; }
+
 	.qtm__time { font-family: monospace; font-size: 0.9rem; letter-spacing: 2px; text-shadow: 0 0 5px #dfbbff; }
 	.qtm__btn {
 		background: transparent; border: 1px solid rgba(223, 187, 255, 0.5);
@@ -376,5 +385,6 @@
 	@media (max-width: 900px) {
 		.qtm__astrolabe { transform: scale(0.6); }
 		.qtm__corner { display: none; }
+		.qtm__arr-status { display: none; }
 	}
 </style>

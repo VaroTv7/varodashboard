@@ -2,7 +2,6 @@
 	import { telemetry } from '$lib/stores/telemetry.svelte';
 	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
-	import { onMount } from 'svelte';
 	import { ui } from '$lib/stores/ui.svelte';
 
 	let {
@@ -52,20 +51,30 @@
 <div class="wc3">
 	<!-- TOP BAR (RESOURCES) -->
 	<div class="wc3__top-bar">
+		<div class="wc3__resource wc3__resource--arr">
+			<span class="wc3__res-icon">🏰</span>
+			<span class="wc3__res-val" style="color: {telemetry.arrStatus.radarr === 'ONLINE' ? 'var(--wc3-lumber)' : '#ff0000'}">{telemetry.arrStatus.radarr}</span>
+			<span class="wc3__res-lbl">RADR</span>
+		</div>
+		<div class="wc3__resource wc3__resource--arr">
+			<span class="wc3__res-icon">⚔️</span>
+			<span class="wc3__res-val" style="color: {telemetry.arrStatus.sonarr === 'ONLINE' ? 'var(--wc3-lumber)' : '#ff0000'}">{telemetry.arrStatus.sonarr}</span>
+			<span class="wc3__res-lbl">SONR</span>
+		</div>
 		<div class="wc3__resource wc3__resource--gold">
 			<span class="wc3__res-icon">💰</span>
 			<span class="wc3__res-val">{Math.floor(telemetry.netRX * 10)}</span>
-			<span class="wc3__res-lbl">TRÁFICO_RX</span>
+			<span class="wc3__res-lbl">NET_RX</span>
 		</div>
 		<div class="wc3__resource wc3__resource--lumber">
 			<span class="wc3__res-icon">🌲</span>
 			<span class="wc3__res-val">{Math.floor(telemetry.netTX * 10)}</span>
-			<span class="wc3__res-lbl">TRÁFICO_TX</span>
+			<span class="wc3__res-lbl">NET_TX</span>
 		</div>
 		<div class="wc3__resource wc3__resource--food">
 			<span class="wc3__res-icon">🍖</span>
 			<span class="wc3__res-val">{onlineCount}/{allServices.length}</span>
-			<span class="wc3__res-lbl">POBLACIÓN</span>
+			<span class="wc3__res-lbl">POB</span>
 		</div>
 		<div class="wc3__time">{timeStr}</div>
 	</div>

@@ -60,7 +60,6 @@
 	let hexDump = $state<string[]>([]);
 	
 	const hexChars = "0123456789ABCDEF";
-	const garbleChars = "!@#$%^&*()_+-=[]{}|;':,./<>?~`";
 	
 	function randomHex(len: number) {
 		return Array.from({length: len}, () => hexChars[Math.floor(Math.random() * hexChars.length)]).join('');
@@ -145,8 +144,12 @@
 
 		<div class="glc__stats">
 			<div class="glc__stat-box">
-				<span class="glc__stat-lbl">TIEMPO_SIS</span>
-				<span class="glc__stat-val">{timeStr}</span>
+				<span class="glc__stat-lbl">RADR</span>
+				<span class="glc__stat-val" class:glc__stat-val--ok={telemetry.arrStatus.radarr === 'ONLINE'} class:glc__stat-val--err={telemetry.arrStatus.radarr !== 'ONLINE'}>{telemetry.arrStatus.radarr === 'ONLINE' ? 'NOMINAL' : 'FALLO'}</span>
+			</div>
+			<div class="glc__stat-box">
+				<span class="glc__stat-lbl">SONR</span>
+				<span class="glc__stat-val" class:glc__stat-val--ok={telemetry.arrStatus.sonarr === 'ONLINE'} class:glc__stat-val--err={telemetry.arrStatus.sonarr !== 'ONLINE'}>{telemetry.arrStatus.sonarr === 'ONLINE' ? 'NOMINAL' : 'FALLO'}</span>
 			</div>
 			<div class="glc__stat-box">
 				<span class="glc__stat-lbl">NODOS_ON</span>
@@ -343,7 +346,7 @@
 	.glc__ticker-item--alt { color: #ff00ff; opacity: 0.5; }
 
 	.glc__stats { display: flex; gap: 15px; font-size: 0.8rem; }
-	.glc__stat-box { display: flex; flex-direction: column; background: #0a0a0a; border: 1px solid #333; padding: 4px 10px; }
+	.glc__stat-box { display: flex; flex-direction: column; background: #0a0a0a; border: 1px solid #333; padding: 4px 10px; min-width: 80px; text-align: center; }
 	.glc__stat-lbl { font-size: 0.6rem; color: #555; }
 	.glc__stat-val { font-weight: bold; font-size: 1rem; color: #00ffff; }
 	.glc__stat-val--ok { color: #39ff14; }

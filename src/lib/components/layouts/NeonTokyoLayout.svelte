@@ -31,6 +31,14 @@
 		<div class="tokyo__logo">V A R O S E R V E R</div>
 		<div class="tokyo__telemetry">
 			<div class="tokyo__stat">
+				<span class="tokyo__stat-lbl">RADR_ST</span>
+				<span class="tokyo__stat-val" style="color: {telemetry.arrStatus.radarr === 'ONLINE' ? 'var(--tokyo-cyan)' : '#ff0033'}">{telemetry.arrStatus.radarr}</span>
+			</div>
+			<div class="tokyo__stat">
+				<span class="tokyo__stat-lbl">SONR_ST</span>
+				<span class="tokyo__stat-val" style="color: {telemetry.arrStatus.sonarr === 'ONLINE' ? 'var(--tokyo-cyan)' : '#ff0033'}">{telemetry.arrStatus.sonarr}</span>
+			</div>
+			<div class="tokyo__stat">
 				<span class="tokyo__stat-lbl">CPU_LOAD</span>
 				<span class="tokyo__stat-val">{telemetry.cpu.toFixed(1)}%</span>
 			</div>
@@ -48,7 +56,9 @@
 				<div class="tokyo__section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
 					<h2 class="tokyo__section-title" style="margin: 0;">ACTIVE_SYSTEMS</h2>
 					{#if containerServices.length > 0}
-						<FleetControl containers={containerServices} groupName="SYSTEMS" variant="compact" />
+						<div class="tokyo__fleet-wrap">
+							<FleetControl containers={containerServices} groupName="SYSTEMS" variant="compact" />
+						</div>
 					{/if}
 				</div>
 				<div class="tokyo__service-grid">
@@ -164,7 +174,7 @@
 		z-index: 10;
 		backdrop-filter: blur(10px);
 	}
-	@media (max-width: 768px) {
+	@media (max-width: 1024px) {
 		.tokyo__header { height: auto; flex-direction: column; padding: 1rem; gap: 1rem; }
 		.tokyo__telemetry { display: none; }
 	}
@@ -174,7 +184,7 @@
 	.tokyo__telemetry { display: flex; gap: 40px; }
 	.tokyo__stat { display: flex; flex-direction: column; align-items: flex-end; }
 	.tokyo__stat-lbl { font-size: 0.6rem; color: var(--tokyo-pink); font-weight: bold; }
-	.tokyo__stat-val { font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px #fff; }
+	.tokyo__stat-val { font-size: 1rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px #fff; }
 
 	.tokyo__menu-btn {
 		background: transparent;

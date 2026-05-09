@@ -59,6 +59,18 @@
 		<div class="bio__header-content">
 			<div class="bio__logo">☢️</div>
 			<div class="bio__title">PROTOCOLO_CUARENTENA // {(settings.title as string || 'VAROSERVER').toUpperCase()}</div>
+			
+			<div class="bio__arr-wrap">
+				<div class="bio__arr-item" class:bio__arr-item--ok={telemetry.arrStatus.radarr === 'ONLINE'}>
+					<span class="bio__arr-lbl">RADR</span>
+					<span class="bio__arr-status">{telemetry.arrStatus.radarr === 'ONLINE' ? 'CONTENIDO' : 'BRECHA'}</span>
+				</div>
+				<div class="bio__arr-item" class:bio__arr-item--ok={telemetry.arrStatus.sonarr === 'ONLINE'}>
+					<span class="bio__arr-lbl">SONR</span>
+					<span class="bio__arr-status">{telemetry.arrStatus.sonarr === 'ONLINE' ? 'CONTENIDO' : 'BRECHA'}</span>
+				</div>
+			</div>
+
 			<div class="bio__cpu-danger">
 				<span class="bio__cpu-lbl">NIVEL_RADIACIÓN:</span>
 				<span class="bio__cpu-val">{telemetry.cpu.toFixed(1)} mSv/h</span>
@@ -214,6 +226,14 @@
 
 	.bio__title { flex: 1; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; }
 
+	.bio__arr-wrap { display: flex; gap: 15px; }
+	.bio__arr-item { border: 1px solid #333; padding: 4px 10px; background: rgba(0,0,0,0.5); min-width: 80px; text-align: center; }
+	.bio__arr-item--ok { border-color: var(--bio-yellow); background: rgba(255,204,0,0.1); }
+	.bio__arr-lbl { display: block; font-size: 0.55rem; color: #666; font-weight: bold; }
+	.bio__arr-item--ok .bio__arr-lbl { color: var(--bio-yellow); }
+	.bio__arr-status { font-size: 0.7rem; font-weight: 900; }
+	.bio__arr-item:not(.bio__arr-item--ok) .bio__arr-status { color: var(--bio-red); animation: fast-blink 0.2s infinite; }
+
 	.bio__cpu-danger { text-align: right; border: 2px solid var(--bio-yellow); padding: 10px; background: rgba(255,204,0,0.1); }
 	.bio__cpu-lbl { display: block; font-size: 0.7rem; font-weight: bold; }
 	.bio__cpu-val { font-size: 1.5rem; font-weight: 900; }
@@ -226,6 +246,7 @@
 		.bio__side { display: none; }
 		.bio__header-content { flex-direction: column; text-align: center; gap: 1rem; }
 		.bio__cpu-danger { text-align: center; width: 100%; }
+		.bio__arr-wrap { order: 2; }
 	}
 
 	.bio__panel {
@@ -242,19 +263,6 @@
 		font-weight: 900;
 		padding: 2px 10px;
 	}
-
-	.bio__batch-actions { display: flex; gap: 10px; }
-	.bio__batch-btn {
-		background: var(--bio-black);
-		border: 1px solid var(--bio-black);
-		color: var(--bio-yellow);
-		font-size: 0.6rem;
-		padding: 1px 6px;
-		cursor: pointer;
-		font-weight: 900;
-	}
-	.bio__batch-btn--start:hover { background: #00ff00; color: #000; }
-	.bio__batch-btn--stop:hover { background: var(--bio-red); color: #fff; }
 
 	.bio__service-grid {
 		padding: 10px;
@@ -339,4 +347,6 @@
 		box-shadow: 0 0 15px var(--bio-red);
 	}
 	.bio__footer-msg { font-size: 0.65rem; font-weight: 900; letter-spacing: 1px; }
+
+	@keyframes fast-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 </style>

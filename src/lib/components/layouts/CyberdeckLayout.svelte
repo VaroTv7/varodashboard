@@ -3,6 +3,7 @@
 	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import { onMount } from 'svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -17,8 +18,6 @@
 		statuses: Record<string, string>;
 		onOpenSettings: () => void;
 	} = $props();
-
-	import { ui } from '$lib/stores/ui.svelte';
 
 	async function batchControl(action: 'start' | 'stop') {
 		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
@@ -89,6 +88,10 @@
 	<header class="deck__header">
 		<div class="deck__title">CYBERDECK_V4 // {(settings.title as string || 'VAROSERVER').toUpperCase()}</div>
 		<div class="deck__header-stats">
+			<div class="deck__arr-group">
+				<span class="deck__arr-item" class:deck__arr-item--ok={telemetry.arrStatus.radarr === 'ONLINE'}>RADR</span>
+				<span class="deck__arr-item" class:deck__arr-item--ok={telemetry.arrStatus.sonarr === 'ONLINE'}>SONR</span>
+			</div>
 			<span>CPU: {telemetry.cpu.toFixed(1)}%</span>
 			<span>MEM: {telemetry.mem.toFixed(1)}%</span>
 			<span>TIME: {timeStr}</span>
@@ -184,6 +187,7 @@
 		position: relative;
 		overflow: hidden;
 		text-transform: uppercase;
+		letter-spacing: 1px;
 	}
 
 	.deck__overlay {
@@ -205,7 +209,11 @@
 	}
 
 	.deck__title { font-size: 1.2rem; font-weight: bold; }
-	.deck__header-stats { display: flex; gap: 20px; font-size: 0.8rem; }
+	.deck__header-stats { display: flex; align-items: center; gap: 20px; font-size: 0.8rem; }
+
+	.deck__arr-group { display: flex; gap: 10px; margin-right: 10px; border-right: 1px solid rgba(255,0,0,0.3); padding-right: 20px; }
+	.deck__arr-item { color: #555; font-weight: bold; }
+	.deck__arr-item--ok { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
 
 	.deck__main {
 		flex: 1;
