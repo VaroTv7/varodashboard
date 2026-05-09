@@ -77,6 +77,15 @@
 			services: g.services.filter(s => !q || (s.name as string || '').toLowerCase().includes(q) || (s.description as string || '').toLowerCase().includes(q))
 		})).filter(g => g.services.length > 0)
 	);
+
+	// Pre-calculate containers per group for FleetControl
+	const servicesWithContainers = $derived(
+		filteredServices.map(g => ({
+			...g,
+			containerList: g.services.filter(s => s.containerName).map(s => s.containerName as string)
+		}))
+	);
+
 	const filteredScripts = $derived(
 		(scripts?.scripts || []).filter(s => !q || (s.name as string || '').toLowerCase().includes(q))
 	);
@@ -190,7 +199,7 @@
 				<span>TIEMPO DE ACTIVIDAD: {Math.floor(telemetry.uptime / 3600)}h {Math.floor((telemetry.uptime % 3600) / 60)}m</span>
 				<span>PROCESOS EN EJECUCIÓN: {telemetry.procs}</span>
 				<span>CARGA DE RED: {telemetry.netRX.toFixed(1)} Mb/s</span>
-				<span>ALMACENAMIENTO: {telemetry.disk.toFixed(1)}% EN USO</span>
+				<span>ALMACENAMIENTO: {telemetry.disk?.toFixed(1) || '0.0'}% EN USO</span>
 				<span>TEMPERATURA: {Math.floor(35 + telemetry.cpu * 0.2)}°C</span>
 			{/each}
 		</div>
@@ -222,8 +231,8 @@
 						</div>
 						<div class="ata__stat">
 							<div class="ata__stat-lbl">E/S_DISCO</div>
-							<div class="ata__stat-val">{telemetry.disk.toFixed(1)}%</div>
-							<div class="ata__stat-bar"><div class="ata__stat-fill" style="width:{telemetry.disk}%"></div></div>
+							<div class="ata__stat-val">{telemetry.disk?.toFixed(1) || '0.0'}%</div>
+							<div class="ata__stat-bar"><div class="ata__stat-fill" style="width:{telemetry.disk || 0}%"></div></div>
 						</div>
 						<div class="ata__stat">
 							<div class="ata__stat-lbl">TX_RED</div>
@@ -264,16 +273,15 @@
 				<div class="ata__panel ata__panel--flex">
 					<div class="ata__panel-title">PULSO_NODO</div>
 					<div class="ata__services">
-						{#each filteredServices as group}
+						{#each servicesWithContainers as group}
 							<div class="ata__group">
 								<h3 class="ata__group-title">
 									<div class="ata__group-title-text">
 										<span class="ata__group-icon">{group.icon}</span> {group.name}
 									</div>
-									{@const containerServices = group.services.filter(s => s.containerName).map(s => s.containerName as string)}
-									{#if containerServices.length > 0}
+									{#if group.containerList.length > 0}
 										<div class="ata__group-actions">
-											<FleetControl containers={containerServices} groupName={group.name} />
+											<FleetControl containers={group.containerList} groupName={group.name} />
 										</div>
 									{/if}
 								</h3>

@@ -36,6 +36,11 @@ function initNetworkData() {
 }
 initNetworkData();
 
+/**
+ * Gets the total number of running processes.
+ * NOTE: When running inside Docker, this will only see processes in the container
+ * unless --pid host is used or /proc is mapped correctly.
+ */
 async function getProcessCount(): Promise<number> {
 	try {
 		if (os.platform() === 'win32') {
