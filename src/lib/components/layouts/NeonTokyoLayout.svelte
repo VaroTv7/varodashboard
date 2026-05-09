@@ -18,6 +18,7 @@
 	} = $props();
 
 	const allServices = $derived((services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name }))));
+	const containerServices = $derived(allServices.filter(s => s.containerName).map(s => s.containerName as string));
 </script>
 
 <div class="tokyo">
@@ -46,7 +47,6 @@
 			<div class="tokyo__col tokyo__col--services">
 				<div class="tokyo__section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
 					<h2 class="tokyo__section-title" style="margin: 0;">ACTIVE_SYSTEMS</h2>
-					{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
 					{#if containerServices.length > 0}
 						<FleetControl containers={containerServices} groupName="SYSTEMS" variant="compact" />
 					{/if}
@@ -94,7 +94,7 @@
 	<footer class="tokyo__footer">
 		<div class="tokyo__marquee">
 			<div class="tokyo__marquee-content">
-				SYSTEM_STATUS: NOMINAL // UPTIME: {telemetry.uptime}S // NEON_TOKYO_THEME_INITIALIZED // WELCOME TO THE GRID...
+				SYSTEM_STATUS: NOMINAL // UPTIME: {telemetry.uptime}S // NEON_TOKYO_V7.4 // WELCOME TO THE GRID...
 			</div>
 		</div>
 	</footer>

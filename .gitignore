@@ -1,12 +1,18 @@
 node_modules
+.svelte-kit
+/build
+
+# Config (Secrets)
+config/api_keys.json
+config/services.json
+config/bookmarks.json
+config/settings.json
 
 # Output
 .output
 .vercel
 .netlify
 .wrangler
-/.svelte-kit
-/build
 
 # OS
 .DS_Store

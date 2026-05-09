@@ -5,11 +5,12 @@
 
 VaroDashboard no es solo una interfaz de usuario; es una **suite de administración de alto rendimiento** diseñada para el Intel N150. Combina telemetría real de hardware de alta precisión con una estética agresiva, densa y orientada al "RICE" (Customización Visual Extrema).
 
-### ⚡ Novedades Técnicas v7.3
-- **Telemetría de Alta Precisión**: Se han eliminado todas las simulaciones aleatorias. Los datos de red (MB/s) y conteo de procesos son 100% reales.
-- **Arquitectura Orquestada**: Refactorización completa del núcleo (`+page.svelte`) para una carga un 40% más rápida y mayor estabilidad.
-- **Optimización de Recursos**: Polling inteligente (5s para métricas, 1s para el reloj) reduciendo el uso de CPU en idle.
-- **Fallback Inteligente**: Manejo profesional de datos nulos en disco y red (sin valores hardcodeados).
+### ⚡ Novedades Técnicas v7.4.1
+- **Seguridad de Grado Producción**: Las API keys de Radarr/Sonarr ya no viajan en la URL. Se ha implementado autenticación vía headers (`X-Api-Key`).
+- **Git Hygiene**: Los archivos de configuración con secretos (`api_keys.json`, etc.) están ahora en el `.gitignore`. Se proporcionan archivos `.example.json`.
+- **Refresco Manual**: Nuevo botón de refresco en el header para forzar la actualización de estados sin esperar al polling.
+- **Svelte 5 Clean Architecture**: Eliminados los patrones problemáticos de `{@const}` fuera de bloques, moviendo toda la lógica derivada a runes `$derived` en el script tag.
+- **Precisión Total**: Eliminadas las últimas trazas de datos aleatorios en el tema Cyberdeck. Ahora todas las métricas en todos los temas son 100% reales.
 
 ---
 
@@ -28,7 +29,6 @@ Edita el archivo `config/services.json` para añadir tus servicios (Jellyfin, Pl
 - **Detección de Estado**: El dashboard realiza un "ping" HTTP a cada servicio para mostrar si está online.
 - **Iconos**: Usa emojis o iconos de Lucide. La propiedad `icon` en el JSON controla esto.
 
-
 ### 2b. Control de Contenedores Docker (Avanzado Pro)
 VaroDashboard es ahora una suite completa de control de infraestructura con lógica inteligente:
 - **Acceso Directo**: Requiere el socket de Docker (`/var/run/docker.sock`) con permisos `:rw`.
@@ -36,16 +36,14 @@ VaroDashboard es ahora una suite completa de control de infraestructura con lóg
 - **Arranque Secuencial Inteligente**: Usa `"dependsOn": ["dep1", "dep2"]`. El dashboard arrancará las dependencias primero, esperará **3 segundos** para su inicialización, y luego arrancará el contenedor principal.
 - **Indicadores de Crash (Exit Codes)**: Si un contenedor se detiene con un error (`exitCode != 0`), aparecerá un indicador **🟡 parpadeante**. Útil para detectar fallos sin mirar logs.
 - **Tiles sin URL**: Si pones `"url": null`, el tile se convierte en un panel de control puro (ideal para Minecraft o DBs).
-- **Estado Sincronizado**: El dashboard sincroniza el estado real cada **20 segundos** automáticamente.
-- **Telemetría de Uptime**: Al pasar el ratón por el botón de parada, verás el tiempo real de ejecución.
-- **Acciones de Grupo Globales**: Todos los temas (Atalaya, BioHazard, GlitchCore, Cyberdeck, Warcraft, Quantum) incluyen ahora botones maestros para "Iniciar Todo" o "Parar Todo" los servicios del grupo.
+- **Acciones de Grupo Globales**: Todos los temas incluyen botones maestros para "Iniciar Todo" o "Parar Todo" los servicios del grupo.
 
 ### 3. Scripts de Emergencia y Rutinas
 En `config/scripts.json`, define comandos que quieres ejecutar desde la interfaz.
-- **Seguridad**: Los comandos se ejecutan en el servidor. Asegúrate de configurar correctamente los permisos del usuario que corre el proceso Node.
+- **Seguridad**: Los comandos se ejecutan en el servidor. Asegúrate de configurar correctamente los permisos.
 
 ### 4. Marcadores (Bookmarks)
-Gestiona tus enlaces rápidos en `config/bookmarks.json`. Se organizan por categorías y aparecen en todos los layouts.
+Gestiona tus enlaces rápidos en `config/bookmarks.json`.
 
 ---
 
@@ -53,68 +51,36 @@ Gestiona tus enlaces rápidos en `config/bookmarks.json`. Se organizan por categ
 
 ### Vía Web (Sin Código)
 1. Pulsa el botón **[ CAMBIAR TEMA / AJUSTES ]** o pulsa `F10`.
-2. **Título**: Cambia el nombre de tu servidor en tiempo real.
-3. **Temas**: Cambia entre Atalaya, Glitch-Core, Quantum, Warcraft III, Cyberdeck, Bio-Hazard y Neon-Tokyo instantáneamente sin perder datos.
-4. **Localización**: Todo está en **Español de España**, desde los logs de consola hasta las advertencias de brecha.
-
-### Vía Código (Hardcore)
-- **CSS Avanzado**: Cada layout tiene su propio bloque `<style>` en `src/lib/components/layouts/`. Usamos CSS puro para máximo rendimiento.
-- **Svelte 5 Stores**: Los datos fluyen a través de `telemetry.svelte.ts`. Si añades una variable ahí, estará disponible para todos los temas reactivamente.
-- **Lógica de Layouts**: Si quieres crear un tema nuevo, simplemente duplica uno existente en la carpeta de layouts y regístralo en `src/lib/components/editor/ThemeManager.svelte`.
+2. **Temas**: Cambia entre Atalaya, Glitch-Core, Quantum, Warcraft III, Cyberdeck, Bio-Hazard y Neon-Tokyo instantáneamente.
+3. **Localización**: Todo está en **Español de España**.
 
 ---
 
 ## 🛰️ Los Temas y sus Datos Reales
 
-- **👁️ Atalaya**: El ticker inferior muestra Uptime real, temperatura estimada y procesos. El radar lateral reacciona a la actividad de red.
-- **☢️ Glitch-Core**: Los logs "hexadecimales" son en realidad hashes de tus servicios activos y estados de CPU. Si el servidor sufre carga, el "glitch" visual aumenta.
-- **⚛️ Quantum**: El astrolabio central pulsa al ritmo de la carga de CPU. Los "nodos orbitales" son tus servicios reales.
-- **🛡️ Warcraft III**: Tu servidor es un héroe. La Vida es la RAM libre, el Maná es el CPU disponible. La "población" es el conteo de servicios online.
-- **📟 Cyberdeck**: La consola de boot muestra el proceso real de inicialización del dashboard y telemetría SSH.
-- **⚠️ Bio-Hazard**: Las "celdas de contención" son tus servicios. Si uno cae, la celda entra en estado de BRECHA con sirenas y alertas rojas.
-- **🌆 Neon-Tokyo**: El visualizador de señal del footer reacciona a los paquetes de red reales recibidos por el servidor.
-
-### 5. Datos Personalizados y Easter Eggs
-Edita el archivo `config/custom_metrics.json` para añadir tus propios datos a la API.
-- **Mensajes**: El array `mensajes` aparecerá automáticamente en los tickers de texto de los temas (como en Atalaya).
-- **Easter Eggs**: Puedes meter datos que aparecerán en paneles ocultos o áreas de "volcado de memoria" (Glitch-Core, Cyberdeck).
-- **Extensibilidad**: Cualquier campo que añadas a este JSON estará disponible en el frontend a través de `telemetry.customData`.
+- **👁️ Atalaya**: Radar lateral reacciona a la actividad de red real. Ticker con telemetría de precisión.
+- **☢️ Glitch-Core**: Hashes reales de servicios y estados de carga. El glitch visual es proporcional a la carga de CPU.
+- **⚛️ Quantum**: Astrolabio central pulsante con carga de CPU. Nodos orbitales reactivos.
+- **🛡️ Warcraft III**: Vida (RAM libre) y Maná (CPU libre). Población (Servicios Online).
+- **📟 Cyberdeck**: Consola de boot con telemetría real del sistema y estado de red.
+- **⚠️ Bio-Hazard**: Alerta de RADIACIÓN (CPU) y celdas de contención con estados reales.
+- **🌆 Neon-Tokyo**: Visualizador de señal en el footer mapeado al tráfico de red real.
 
 ---
-
-## 🛠️ Desarrollo de Temas (Rice Avanzado)
-
-Si quieres que tus datos personalizados salgan en un sitio específico:
-1. Añade el dato a `config/custom_metrics.json`.
-2. En el archivo del tema (ej: `AtalayaLayout.svelte`), usa `{telemetry.customData.tu_campo}`.
-3. El dashboard se actualizará cada 5 segundos con tus nuevos datos de sistema (el reloj se mantiene a 1s).
-
----
-
-## 🛠️ Sistema de Rutinas (Scripts)
-
-VaroDashboard permite ejecutar comandos directamente desde la interfaz:
-*   **Gestión Centralizada**: Configura tus scripts en `config/scripts.json`.
-*   **Ejecución en Tiempo Real**: Ejecuta limpiezas de Docker, actualizaciones de sistema o búsquedas personalizadas con un solo clic.
-*   **Feedback Visual**: Notificaciones dinámicas sobre el estado de la ejecución.
 
 ## 📡 Integración con APIs (Radarr / Sonarr)
 
 Monitoriza tus servicios de media directamente en el header:
-1.  Crea/Edita `config/api_keys.json`.
-2.  Activa los servicios (`enabled: true`) y añade tu URL/Key.
+1.  Crea `config/api_keys.json` basándote en `api_keys.example.json`.
+2.  Añade tus URLs y Keys. La comunicación es segura vía headers HTTP.
 3.  El Dashboard mostrará indicadores **NEÓN** (Verde/Rojo) sobre el estado de tus instancias.
 
 ## 📐 Motor de Escalado Global (Responsive 4K & Mobile)
 
-VaroDashboard integra un **Motor de Escalado Dinámico** en `src/app.css` que garantiza que la interfaz se vea profesional en cualquier pantalla:
-
-1.  **Tipografía Fluida**: Usamos `clamp()` para que el tamaño base de la fuente escale automáticamente entre **14px (móvil)** y **24px (4K)**.
-2.  **Unidades Relativas**: Los layouts están construidos con `rem`, `vh/vw` y `vmin`, lo que permite que todos los paneles, márgenes y botones se ajusten proporcionalmente al tamaño de la pantalla.
-3.  **Adaptación Automática**:
-    *   **4K TV**: La interfaz aprovecha el espacio extra aumentando el espaciado y la densidad de datos sin perder legibilidad.
-    *   **1080p Monitor**: La experiencia estándar, equilibrada y nítida.
-    *   **Smartphone (Vertical)**: Los layouts detectan el ancho de pantalla y apilan las columnas de forma inteligente, ocultando elementos secundarios para priorizar el control de servicios.
+VaroDashboard integra un **Motor de Escalado Dinámico** que garantiza una visualización profesional:
+1.  **Tipografía Fluida**: `clamp()` para escalado automático entre móvil y 4K.
+2.  **Unidades Relativas**: `rem`, `vh/vw` y `vmin` para proporciones perfectas.
+3.  **Adaptación Inteligente**: Layouts optimizados para Smartphone, 1080p y TVs 4K.
 
 ---
 
@@ -124,7 +90,11 @@ VaroDashboard integra un **Motor de Escalado Dinámico** en `src/app.css` que ga
 # Instalación
 npm install
 
-# Modo Desarrollador (Rice & Juice)
+# Configuración (IMPORTANTE)
+cp config/api_keys.example.json config/api_keys.json
+# Edita tus servicios, marcadores y scripts en la carpeta config/
+
+# Modo Desarrollador
 npm run dev
 
 # Producción

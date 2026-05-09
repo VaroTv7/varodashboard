@@ -2,6 +2,7 @@
 	import { telemetry } from '$lib/stores/telemetry.svelte';
 	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -65,10 +66,6 @@
 		return Array.from({length: len}, () => hexChars[Math.floor(Math.random() * hexChars.length)]).join('');
 	}
 
-	function randomGarble(len: number) {
-		return Array.from({length: len}, () => garbleChars[Math.floor(Math.random() * garbleChars.length)]).join('');
-	}
-
 	let tick = 0;
 	$effect(() => {
 		const id = setInterval(() => {
@@ -104,6 +101,7 @@
 	
 	const timeStr = $derived(now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3 }));
 	const sinePath = $derived(`M ${sineWave.map((y, x) => `${x * 2},${y}`).join(' L ')}`);
+	const containerServices = $derived(allServices.filter(s => s.containerName).map(s => s.containerName as string));
 </script>
 
 <div class="glc" class:glitch-active={glitchTrigger}>
@@ -133,7 +131,7 @@
 			<div class="glc__title" data-text="{(settings.title as string || 'VAROSERVER').toUpperCase()}">
 				{(settings.title as string || 'VAROSERVER').toUpperCase()}
 			</div>
-			<div class="glc__sub-title">NÚCLEO_V7.2.9 // ENLACE_CIFRADO</div>
+			<div class="glc__sub-title">NÚCLEO_V7.4 // ENLACE_CIFRADO</div>
 		</div>
 		
 		<div class="glc__crypto-ticker">
@@ -240,7 +238,6 @@
 					<div class="glc__panel-corner"></div>
 					<div class="glc__panel-head" style="display: flex; justify-content: space-between; align-items: center;">
 						<div class="glc__panel-title">ENLACE_NODOS</div>
-						{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
 						{#if containerServices.length > 0}
 							<div class="glc__batch">
 								<FleetControl containers={containerServices} groupName="NODOS" variant="compact" />
@@ -251,12 +248,12 @@
 						{#each allServices as svc}
 							{@const isOnline = statuses[svc.name as string] === 'online'}
 							<a href={svc.url as string} target="_blank" rel="noopener" class="glc__node" class:glc__node--err={!isOnline}>
-								<div class="glc__node-status-bar" style="height: {isOnline ? Math.random()*80+20 : 10}%"></div>
+								<div class="glc__node-status-bar" style="height: {isOnline ? 100 : 10}%"></div>
 								<div class="glc__node-info">
 									<div class="glc__node-name">{svc.name}</div>
 									<div class="glc__node-meta">
-										<span>{isOnline ? 'PING: 12ms' : 'CAÍDO'}</span>
-										<span>IP: 192.168.{Math.floor(Math.random()*255)}.{Math.floor(Math.random()*255)}</span>
+										<span>{isOnline ? 'CONECTADO' : 'CAÍDO'}</span>
+										<span>{svc.url ? new URL(svc.url as string).hostname : 'LOCAL'}</span>
 									</div>
 								</div>
 								{#if svc.containerName}
@@ -391,17 +388,6 @@
 	.glc__panel--red .glc__panel-title { background: #ff003c; color: #fff; }
 
 	.glc__batch { display: flex; gap: 10px; }
-	.glc__batch-btn {
-		background: transparent;
-		border: 1px solid rgba(0,255,0,0.3);
-		color: #39ff14;
-		font-size: 0.6rem;
-		padding: 1px 6px;
-		cursor: pointer;
-		font-family: inherit;
-	}
-	.glc__batch-btn:hover { background: rgba(0,255,0,0.1); border-color: #39ff14; }
-	.glc__batch-btn--stop:hover { border-color: #f00; color: #f00; }
 
 	.glc__scroll { overflow-y: auto; padding: 10px; }
 

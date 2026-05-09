@@ -2,6 +2,7 @@
 	import { telemetry } from '$lib/stores/telemetry.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -16,8 +17,6 @@
 		statuses: Record<string, string>;
 		onOpenSettings: () => void;
 	} = $props();
-
-	import { ui } from '$lib/stores/ui.svelte';
 
 	async function batchControl(groupName: string, action: 'start' | 'stop') {
 		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
@@ -47,6 +46,7 @@
 	}
 
 	const allServices = $derived((services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name }))));
+	const containerServices = $derived(allServices.filter(s => s.containerName).map(s => s.containerName as string));
 </script>
 
 <div class="bio" class:bio--alert={telemetry.cpu > 70}>
@@ -72,7 +72,6 @@
 			<div class="bio__panel bio__panel--center">
 				<div class="bio__panel-label" style="display: flex; justify-content: space-between; align-items: center;">
 					<span>CELDAS_DE_CONTENCIÓN (SERVICIOS)</span>
-					{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
 					{#if containerServices.length > 0}
 						<div class="bio__batch-actions">
 							<FleetControl containers={containerServices} groupName="CELDAS" variant="compact" />
@@ -135,8 +134,8 @@
 	</main>
 
 	<footer class="bio__footer">
-		<button class="bio__access-btn" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
-		<div class="bio__footer-msg">ADVERTENCIA: CUALQUIER ANOMALÍA DEBE SER REPORTADA INMEDIATAMENTE.</div>
+		<button class="bio__access-btn" onclick={onOpenSettings}>[ AJUSTES / SISTEMA ]</button>
+		<div class="bio__footer-msg">ADVERTENCIA: PROTOCOLO V7.4 ACTIVO.</div>
 	</footer>
 </div>
 

@@ -41,6 +41,7 @@
 	let bootSequence = $state(true);
 	
 	const allServices = $derived((services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name }))));
+	const containerServices = $derived(allServices.filter(s => s.containerName).map(s => s.containerName as string));
 
 	onMount(() => {
 		const initialLogs = [
@@ -67,7 +68,7 @@
 		if (!bootSequence) {
 			const id = setInterval(() => {
 				const randomEvent = [
-					`[TELEMETRÍA] CPU: ${telemetry.cpu.toFixed(1)}% | RAM: ${telemetry.mem.toFixed(1)}% | DISCO: ${telemetry.disk.toFixed(1)}%`,
+					`[TELEMETRÍA] CPU: ${telemetry.cpu.toFixed(1)}% | RAM: ${telemetry.mem.toFixed(1)}% | DISCO: ${telemetry.disk?.toFixed(1) || '--'}%`,
 					`[SISTEMA] UPTIME: ${Math.floor(telemetry.uptime/3600)}H ${Math.floor((telemetry.uptime%3600)/60)}M`,
 					`[RED] ESCANEANDO TRÁFICO... RX: ${telemetry.netRX.toFixed(1)} Mb/s`,
 					`[NÚCLEO] PROCESOS ACTIVOS: ${telemetry.procs}`,
@@ -125,7 +126,6 @@
 			<div class="deck__panel">
 				<div class="deck__panel-head" style="display: flex; justify-content: space-between; align-items: center;">
 					<span>SERVICIOS_ACTIVOS</span>
-					{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
 					{#if containerServices.length > 0}
 						<div class="deck__batch">
 							<FleetControl containers={containerServices} groupName="SERVICES" variant="compact" />
@@ -142,7 +142,7 @@
 									<ContainerControl containerName={svc.containerName} variant="compact" />
 								</div>
 							{/if}
-							<span class="deck__svc-addr">192.168.1.{Math.floor(Math.random()*255)}</span>
+							<span class="deck__svc-addr">{svc.url ? new URL(svc.url as string).hostname : 'LOCAL'}</span>
 						</div>
 					{/each}
 				</div>
@@ -163,7 +163,7 @@
 
 	<footer class="deck__footer">
 		<div class="deck__status-bar">
-			SISTEMA OPERATIVO VARO-OS v7.2 // SEGURIDAD: NIVEL_5 // CONEXIÓN: ESTABLE
+			SISTEMA OPERATIVO VARO-OS v7.4 // SEGURIDAD: NIVEL_5 // CONEXIÓN: ESTABLE
 		</div>
 		<button class="deck__menu-trigger" onclick={onOpenSettings}>[ CAMBIAR TEMA / AJUSTES ]</button>
 	</footer>
@@ -228,20 +228,14 @@
 	}
 
 	.deck__panel-head {
+		padding: 4px 8px;
+		background: rgba(255,0,0,0.1);
+		font-size: 0.8rem;
 		font-weight: bold;
+		border-bottom: 1px solid var(--deck-red);
 	}
 
 	.deck__batch { display: flex; gap: 10px; }
-	.deck__batch-btn {
-		background: transparent;
-		border: none;
-		color: var(--deck-red);
-		font-size: 0.6rem;
-		cursor: pointer;
-		font-family: inherit;
-		padding: 0;
-	}
-	.deck__batch-btn:hover { color: #fff; text-shadow: 0 0 5px var(--deck-red); }
 
 	.deck__console {
 		flex: 1;
@@ -277,9 +271,11 @@
 		gap: 10px;
 		border: 1px solid rgba(255,0,0,0.1);
 		padding: 4px;
+		align-items: center;
 	}
 	.deck__svc--off { color: #555; border-color: #333; }
-	.deck__svc-status { font-weight: bold; }
+	.deck__svc-status { font-weight: bold; min-width: 40px; }
+	.deck__svc-addr { font-size: 0.7rem; color: var(--deck-orange); opacity: 0.8; }
 
 	.deck__script-grid {
 		padding: 10px;

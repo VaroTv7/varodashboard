@@ -92,7 +92,8 @@ async function checkArrStatus(url: string, apiKey: string): Promise<string> {
 		const id = setTimeout(() => controller.abort(), 2000); // 2s timeout
 		
 		const baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
-		const res = await fetch(`${baseUrl}/api/v3/system/status?apiKey=${apiKey}`, {
+		const res = await fetch(`${baseUrl}/api/v3/system/status`, {
+			headers: { 'X-Api-Key': apiKey },
 			signal: controller.signal
 		});
 		clearTimeout(id);

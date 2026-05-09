@@ -2,6 +2,7 @@
 	import { telemetry } from '$lib/stores/telemetry.svelte';
 	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -22,8 +23,6 @@
 		onOpenSettings: () => void;
 		onSearch: (q: string) => void;
 	} = $props();
-
-	import { ui } from '$lib/stores/ui.svelte';
 
 	async function batchControl(action: 'start' | 'stop') {
 		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
@@ -72,6 +71,7 @@
 	// Calculate positions for orbital services
 	const orbitRadius = 260; // px
 	const numServices = $derived(allServices.length || 1);
+	const containerServices = $derived(allServices.filter(s => s.containerName).map(s => s.containerName as string));
 </script>
 
 <div class="qtm">
@@ -134,7 +134,7 @@
 				<div class="qtm__vital qtm__vital--net">
 					<svg viewBox="0 0 100 100" class="qtm__vital-svg">
 						<circle cx="50" cy="50" r="45" class="qtm__vital-track"></circle>
-						<circle cx="50" cy="50" r="45" class="qtm__vital-fill" stroke-dasharray="282" stroke-dashoffset={282 - (282 * (onlineCount/totalCount)*100 / 100)}></circle>
+						<circle cx="50" cy="50" r="45" class="qtm__vital-fill" stroke-dasharray="282" stroke-dashoffset={282 - (282 * (onlineCount/Math.max(1, totalCount))*100 / 100)}></circle>
 					</svg>
 					<span class="qtm__vital-text">RED</span>
 				</div>
@@ -166,7 +166,6 @@
 			</div>
 			
 			<!-- BATCH CONTROLS (QUANTUM STYLE) -->
-			{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
 			{#if containerServices.length > 0}
 				<div class="qtm__batch-orbit">
 					<FleetControl containers={containerServices} groupName="CORE" variant="compact" />
@@ -328,21 +327,6 @@
 		pointer-events: none;
 		z-index: 5;
 	}
-	.qtm__batch-btn {
-		pointer-events: auto;
-		background: rgba(0,0,0,0.8);
-		border: 1px solid var(--dfbbff);
-		color: #dfbbff;
-		border-radius: 50%;
-		width: 45px;
-		height: 45px;
-		font-size: 0.5rem;
-		cursor: pointer;
-		transition: all 0.3s;
-		box-shadow: 0 0 10px rgba(223,187,255,0.3);
-	}
-	.qtm__batch-btn:hover { background: #dfbbff; color: #000; box-shadow: 0 0 20px #dfbbff; transform: scale(1.1); }
-	.qtm__batch-btn--stop:hover { background: #ff0055; border-color: #ff0055; box-shadow: 0 0 20px #ff0055; }
 
 	.qtm__node-wrapper {
 		position: absolute; top: 50%; left: 50%;

@@ -3,6 +3,7 @@
 	import FleetControl from '$lib/components/tiles/FleetControl.svelte';
 	import ContainerControl from '$lib/components/tiles/ContainerControl.svelte';
 	import { onMount } from 'svelte';
+	import { ui } from '$lib/stores/ui.svelte';
 
 	let {
 		settings = {} as Record<string, unknown>,
@@ -17,8 +18,6 @@
 		statuses: Record<string, string>;
 		onOpenSettings: () => void;
 	} = $props();
-
-	import { ui } from '$lib/stores/ui.svelte';
 
 	async function batchControl(action: 'start' | 'stop') {
 		const containers = allServices.filter(s => s.containerName).map(s => s.containerName as string);
@@ -39,6 +38,7 @@
 
 	const allServices = $derived((services?.groups || []).flatMap(g => g.services.map(s => ({ ...s, group: g.name }))));
 	const onlineCount = $derived(Object.values(statuses).filter(s => s === 'online').length);
+	const containerServices = $derived(allServices.filter(s => s.containerName).map(s => s.containerName as string));
 	
 	let now = $state(new Date());
 	$effect(() => {
@@ -129,10 +129,9 @@
 		<div class="wc3__inventory">
 			<div class="wc3__inv-title">ESTADO_DEL_REINO</div>
 			<div class="wc3__inv-grid">
-				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="DISCO">{Math.floor(telemetry.disk)}% 🗄️</div></div>
+				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="DISCO">{Math.floor(telemetry.disk || 0)}% 🗄️</div></div>
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="RED">{Math.floor(telemetry.netRX)}M 📡</div></div>
 				<div class="wc3__inv-slot"><div class="wc3__inv-item" title="PROCS">{telemetry.procs} 👥</div></div>
-				{@const containerServices = allServices.filter(s => s.containerName).map(s => s.containerName as string)}
 				<div class="wc3__inv-slot" style="grid-column: span 2;">
 					{#if containerServices.length > 0}
 						<FleetControl containers={containerServices} groupName="ALIANZA" />
@@ -155,7 +154,7 @@
 		</div>
 	</div>
 	
-	<button class="wc3__menu-btn" onclick={onOpenSettings}>MENÚ / CAMBIAR TEMA (F10)</button>
+	<button class="wc3__menu-btn" onclick={onOpenSettings}>MENÚ / SISTEMA v7.4 (F10)</button>
 </div>
 
 <style>
@@ -316,19 +315,6 @@
 	}
 	.wc3__inv-slot { background: #000; border: 1px solid #222; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 	.wc3__inv-item { font-size: 0.6rem; color: var(--wc3-gold); text-align: center; }
-
-	.wc3__batch-btn {
-		background: transparent;
-		border: none;
-		color: var(--wc3-gold);
-		font-size: 0.5rem;
-		font-family: inherit;
-		cursor: pointer;
-		width: 100%;
-		height: 100%;
-	}
-	.wc3__batch-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-	.wc3__batch-btn--stop:hover { color: #ff3333; }
 
 	.wc3__commands {
 		display: grid;

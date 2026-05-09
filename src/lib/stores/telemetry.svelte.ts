@@ -10,7 +10,7 @@ export function createTelemetryStore() {
 	let time = $state('');
 	let customData = $state<Record<string, any>>({});
 
-	let isFetching = false;
+	let isFetching = $state(false);
 
 	async function fetchStats() {
 		if (isFetching) return;
@@ -69,6 +69,8 @@ export function createTelemetryStore() {
 		get customData() { return customData; },
 		get arrStatus() { return arrStatus; },
 		get time() { return time; },
+		get isFetching() { return isFetching; },
+		refresh: fetchStats,
 		start,
 		stop
 	};
