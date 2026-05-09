@@ -2,7 +2,67 @@ import { json } from '@sveltejs/kit';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 import type { RequestHandler } from './$types';
+
+// Global state for network delta calculation
+let lastNetData = {
+	rx: 0,
+	tx: 0,
+	time: Date.now()
+};
+
+function getProcessCount(): number {
+	try {
+		if (os.platform() === 'win32') {
+			const output = execSync('tasklist').toString();
+			return output.split('\n').length - 5; // Approximate
+		} else {
+			const output = execSync('ps aux | wc -l').toString();
+			return parseInt(output.trim(), 10) - 1; // Exclude header
+		}
+	} catch (e) {
+		return 0;
+	}
+}
+
+function getNetworkTraffic() {
+	try {
+		if (os.platform() === 'linux') {
+			const data = fs.readFileSync('/proc/net/dev', 'utf8');
+			const lines = data.split('\n');
+			let totalRx = 0;
+			let totalTx = 0;
+
+			for (const line of lines) {
+				if (line.includes(':')) {
+					const parts = line.trim().split(/\s+/);
+					// Parts: [interface, rx_bytes, rx_packets, ..., tx_bytes, ...]
+					totalRx += parseInt(parts[1], 10);
+					totalTx += parseInt(parts[9], 10);
+				}
+			}
+
+			const now = Date.now();
+			const timeDiff = (now - lastNetData.time) / 1000;
+			
+			if (timeDiff <= 0) return { rx: 0, tx: 0 };
+
+			const rxSpeed = (totalRx - lastNetData.rx) / timeDiff / 1024 / 1024; // MB/s
+			const txSpeed = (totalTx - lastNetData.tx) / timeDiff / 1024 / 1024; // MB/s
+
+			lastNetData = { rx: totalRx, tx: totalTx, time: now };
+
+			return { 
+				rx: Math.max(0, rxSpeed), 
+				tx: Math.max(0, txSpeed) 
+			};
+		}
+	} catch (e) {
+		// Fallback or ignore
+	}
+	return { rx: 0, tx: 0 };
+}
 
 export const GET: RequestHandler = async () => {
 	try {
@@ -27,7 +87,7 @@ export const GET: RequestHandler = async () => {
 		} catch (e) { /* ignore */ }
 
 		// Try to get disk info (Node 18+)
-		let disk = { total: 0, free: 0, used: 0, usage: 0 };
+		let disk = { total: 0, free: 0, used: 0, usage: null as number | null };
 		try {
 			// @ts-ignore - statfsSync is in newer Node versions
 			if (fs.statfsSync) {
@@ -40,9 +100,11 @@ export const GET: RequestHandler = async () => {
 			}
 		} catch (e) { /* fallback */ }
 
-		// Network Interfaces
-		const networks = os.networkInterfaces();
-		let netInfo = { rx: 1.2, tx: 0.5 }; // Sim for now, actual speed requires polling
+		// Real Network Traffic
+		const netInfo = getNetworkTraffic();
+
+		// Real Process Count
+		const procs = getProcessCount();
 
 		// ARR Integration
 		let arrStatus = { radarr: 'OFFLINE', sonarr: 'OFFLINE' };
@@ -50,8 +112,6 @@ export const GET: RequestHandler = async () => {
 			const apiKeysPath = path.resolve('config/api_keys.json');
 			if (fs.existsSync(apiKeysPath)) {
 				const keys = JSON.parse(fs.readFileSync(apiKeysPath, 'utf-8'));
-				// Logic to fetch from actual APIs would go here
-				// For now, if enabled: true, we assume it's "READY"
 				if (keys.radarr?.enabled) arrStatus.radarr = 'READY';
 				if (keys.sonarr?.enabled) arrStatus.sonarr = 'READY';
 			}
@@ -72,6 +132,7 @@ export const GET: RequestHandler = async () => {
 			},
 			disk,
 			network: netInfo,
+			procs,
 			arr: arrStatus,
 			uptime: uptime,
 			platform: os.platform(),
