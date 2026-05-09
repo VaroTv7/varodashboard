@@ -1,3 +1,5 @@
+import type { ArrStatus } from '$lib/types';
+
 export function createTelemetryStore() {
 	let cpu = $state(0);
 	let mem = $state(0);
@@ -6,7 +8,7 @@ export function createTelemetryStore() {
 	let netRX = $state(0);
 	let procs = $state(0);
 	let uptime = $state(0);
-	let arrStatus = $state({ radarr: 'OFFLINE', sonarr: 'OFFLINE' });
+	let arrStatus = $state<{ radarr: ArrStatus; sonarr: ArrStatus }>({ radarr: 'OFFLINE', sonarr: 'OFFLINE' });
 	let time = $state('');
 	let customData = $state<Record<string, any>>({});
 

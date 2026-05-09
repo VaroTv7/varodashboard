@@ -5,6 +5,7 @@ import * as path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import type { RequestHandler } from './$types';
+import type { ArrStatus } from '$lib/types';
 
 const execAsync = promisify(exec);
 
@@ -90,7 +91,7 @@ function getNetworkTraffic() {
 	return { rx: 0, tx: 0 };
 }
 
-async function checkArrStatus(url: string, apiKey: string): Promise<string> {
+async function checkArrStatus(url: string, apiKey: string): Promise<ArrStatus> {
 	if (!url || !apiKey) return 'OFFLINE';
 	try {
 		const controller = new AbortController();
@@ -102,7 +103,7 @@ async function checkArrStatus(url: string, apiKey: string): Promise<string> {
 			signal: controller.signal
 		});
 		clearTimeout(id);
-		return res.ok ? 'ONLINE' : 'OFFLINE';
+		return res.ok ? 'ONLINE' as ArrStatus : 'OFFLINE' as ArrStatus;
 	} catch (e) {
 		return 'OFFLINE';
 	}
@@ -151,7 +152,7 @@ export const GET: RequestHandler = async () => {
 		]);
 
 		// ARR Integration with real checks
-		let arrStatus = { radarr: 'OFFLINE', sonarr: 'OFFLINE' };
+		let arrStatus = { radarr: 'OFFLINE' as ArrStatus, sonarr: 'OFFLINE' as ArrStatus };
 		try {
 			const apiKeysPath = path.resolve('config/api_keys.json');
 			if (fs.existsSync(apiKeysPath)) {

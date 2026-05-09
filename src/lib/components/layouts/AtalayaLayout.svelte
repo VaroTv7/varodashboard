@@ -158,11 +158,11 @@
 				</div>
 				<div class="ata__h-sep"></div>
 				<div class="ata__h-arr">
-					<span class="ata__h-arr-dot" class:ata__h-arr-dot--ok={telemetry.arrStatus.radarr === 'READY'} title="RADARR"></span>
+					<span class="ata__h-arr-dot" class:ata__h-arr-dot--ok={telemetry.arrStatus.radarr === 'ONLINE'} title="RADARR"></span>
 					<span class="ata__h-arr-lbl">RADR</span>
 				</div>
 				<div class="ata__h-arr">
-					<span class="ata__h-arr-dot" class:ata__h-arr-dot--ok={telemetry.arrStatus.sonarr === 'READY'} title="SONARR"></span>
+					<span class="ata__h-arr-dot" class:ata__h-arr-dot--ok={telemetry.arrStatus.sonarr === 'ONLINE'} title="SONARR"></span>
 					<span class="ata__h-arr-lbl">SONR</span>
 				</div>
 			</div>
