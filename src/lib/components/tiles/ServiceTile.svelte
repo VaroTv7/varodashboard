@@ -198,16 +198,16 @@
 
 	.service-tile__name-row {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		gap: var(--space-sm);
-		flex-wrap: wrap;
 	}
 
 	.service-tile__name {
 		font-size: var(--font-base);
 		font-weight: 600;
 		color: var(--color-text);
-		word-break: break-word;
+		white-space: normal;
+		overflow-wrap: anywhere;
 		line-height: 1.3;
 	}
 
@@ -219,7 +219,8 @@
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 		margin-top: 2px;
-		word-break: break-word;
+		white-space: normal;
+		overflow-wrap: anywhere;
 		line-height: 1.3;
 	}
 

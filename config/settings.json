@@ -8,7 +8,7 @@
 	},
 	"layout": {
 		"style": "grid",
-		"columns": "auto",
+		"columns": "5",
 		"tileSize": "normal",
 		"showHeader": true,
 		"showSearch": true,
