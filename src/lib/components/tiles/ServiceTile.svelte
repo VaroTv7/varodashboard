@@ -207,7 +207,8 @@
 		font-weight: 600;
 		color: var(--color-text);
 		white-space: normal;
-		overflow-wrap: anywhere;
+		overflow-wrap: break-word;
+		word-break: normal;
 		line-height: 1.3;
 	}
 
@@ -220,7 +221,8 @@
 		overflow: hidden;
 		margin-top: 2px;
 		white-space: normal;
-		overflow-wrap: anywhere;
+		overflow-wrap: break-word;
+		word-break: normal;
 		line-height: 1.3;
 	}
 
