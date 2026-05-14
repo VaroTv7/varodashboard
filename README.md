@@ -5,9 +5,12 @@
 
 VaroDashboard no es solo una interfaz de usuario; es una **suite de administración de alto rendimiento** diseñada para el Intel N150. Combina telemetría real de hardware de alta precisión con una estética agresiva, densa y orientada al "RICE" (Customización Visual Extrema).
 
-### ⚡ Novedades Técnicas v7.4.2
-- **Escalado Responsivo de Tiles**: Aumentado el ancho mínimo de los tiles de servicio (200px en móvil, 260px en escritorio) para mejorar la usabilidad en pantallas de alta resolución.
-- **Legibilidad Extrema (Word-Wrap)**: Eliminado el truncamiento de texto (`ellipsis`) en nombres y descripciones de servicios largos. Ahora el texto hace wrap correctamente, garantizando que servicios como "Minecraft (Survival)" sean 100% legibles.
+### ⚡ Novedades Técnicas v7.4.7 (UI/UX Profesional y Estabilidad)
+- **Corrección Definitiva del Ancho de Cuadrícula**: Se ha ampliado el espacio mínimo en todos los temas (`minmax(260px, 1fr)`) para garantizar que la información de Uptime y controles de Docker quepan a la perfección sin aplastar los nombres de los servicios.
+- **Alineación Visual Premium**: El indicador de estado (punto rojo/verde) ahora está anclado a la parte superior izquierda, asegurando una estética profesional incluso cuando los nombres o descripciones saltan a múltiples líneas.
+- **Controles de Docker Resilientes**: Los botones de inicio y parada ya no desaparecen si la API devuelve un estado `unknown` o de error; en su lugar, muestran un botón de arranque (▶) seguro por defecto.
+- **Descripciones Siempre Visibles**: Eliminada la restricción de 2 líneas (`line-clamp`). Todas las descripciones se renderizan enteras para no perder información crítica.
+- **Mapeo Directo de Puertos**: Actualizado el `docker-compose.yml` para exponer directamente el puerto SSR nativo (`3000:3000`), simplificando la configuración de Nginx Proxy Manager.
 
 ### ⚡ Novedades Técnicas v7.4.1
 - **Seguridad de Grado Producción**: Las API keys de Radarr/Sonarr ya no viajan en la URL. Se ha implementado autenticación vía headers (`X-Api-Key`).
