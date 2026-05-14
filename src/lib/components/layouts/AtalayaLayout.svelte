@@ -504,7 +504,7 @@
 	.ata__group-btn--start:hover { color: #00ff88; border-color: #00ff88; }
 	.ata__group-btn--stop:hover { color: #ff3366; border-color: #ff3366; }
 
-	.ata__group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+	.ata__group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
 	
 	.ata__global-fleet {
 		display: flex;
@@ -540,6 +540,6 @@
 		.ata__grid { grid-template-columns: 500px 1fr 400px; gap: 40px; }
 		.ata__header { padding: 30px 60px; }
 		.ata__ticker { height: 40px; }
-		.ata__group-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
+		.ata__group-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
 	}
 </style>

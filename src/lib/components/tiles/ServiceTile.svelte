@@ -198,27 +198,29 @@
 
 	.service-tile__name-row {
 		display: flex;
-		align-items: center;
+		align-items: baseline;
 		gap: var(--space-sm);
+		flex-wrap: wrap;
 	}
 
 	.service-tile__name {
 		font-size: var(--font-base);
 		font-weight: 600;
 		color: var(--color-text);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		word-break: break-word;
+		line-height: 1.3;
 	}
 
 	.service-tile__desc {
 		font-size: var(--font-xs);
 		color: var(--color-text-secondary);
-		display: block;
-		margin-top: 2px;
-		white-space: nowrap;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
 		overflow: hidden;
-		text-overflow: ellipsis;
+		margin-top: 2px;
+		word-break: break-word;
+		line-height: 1.3;
 	}
 
 	.service-tile__actions {

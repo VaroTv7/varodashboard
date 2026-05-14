@@ -203,7 +203,7 @@
 
 	.tokyo__section-title { font-size: 1rem; font-weight: 900; letter-spacing: 5px; color: var(--tokyo-pink); margin-bottom: 30px; border-left: 4px solid var(--tokyo-pink); padding-left: 15px; }
 
-	.tokyo__service-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+	.tokyo__service-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
 
 	.tokyo__node {
 		background: rgba(255,0,255,0.05);

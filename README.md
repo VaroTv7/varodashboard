@@ -5,6 +5,10 @@
 
 VaroDashboard no es solo una interfaz de usuario; es una **suite de administración de alto rendimiento** diseñada para el Intel N150. Combina telemetría real de hardware de alta precisión con una estética agresiva, densa y orientada al "RICE" (Customización Visual Extrema).
 
+### ⚡ Novedades Técnicas v7.4.2
+- **Escalado Responsivo de Tiles**: Aumentado el ancho mínimo de los tiles de servicio (200px en móvil, 260px en escritorio) para mejorar la usabilidad en pantallas de alta resolución.
+- **Legibilidad Extrema (Word-Wrap)**: Eliminado el truncamiento de texto (`ellipsis`) en nombres y descripciones de servicios largos. Ahora el texto hace wrap correctamente, garantizando que servicios como "Minecraft (Survival)" sean 100% legibles.
+
 ### ⚡ Novedades Técnicas v7.4.1
 - **Seguridad de Grado Producción**: Las API keys de Radarr/Sonarr ya no viajan en la URL. Se ha implementado autenticación vía headers (`X-Api-Key`).
 - **Git Hygiene**: Los archivos de configuración con secretos (`api_keys.json`, etc.) están ahora en el `.gitignore`. Se proporcionan archivos `.example.json`.
