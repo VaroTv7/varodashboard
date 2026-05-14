@@ -57,7 +57,9 @@
 			<div class="service-tile__name-row">
 				<span class="service-tile__name">{service.name}</span>
 				{#if service.statusCheck}
-					<StatusDot {status} size="sm" />
+					<div class="service-tile__dot-wrap">
+						<StatusDot {status} size="sm" />
+					</div>
 				{/if}
 			</div>
 			{#if service.description}
@@ -198,8 +200,13 @@
 
 	.service-tile__name-row {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: var(--space-sm);
+	}
+
+	.service-tile__dot-wrap {
+		margin-top: 4px;
+		flex-shrink: 0;
 	}
 
 	.service-tile__name {
@@ -215,10 +222,7 @@
 	.service-tile__desc {
 		font-size: var(--font-xs);
 		color: var(--color-text-secondary);
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+		display: block;
 		margin-top: 2px;
 		white-space: normal;
 		overflow-wrap: break-word;
@@ -232,6 +236,7 @@
 		justify-content: center;
 		margin-right: 4px;
 		z-index: 10;
+		flex-shrink: 0;
 	}
 
 	.service-tile__arrow {

@@ -121,7 +121,7 @@
 				<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
 			</button>
 		</div>
-	{:else if containerStatus === 'exited'}
+	{:else if containerStatus === 'exited' || containerStatus === 'unknown'}
 		<div class="control-group">
 			{#if exitCode !== 0 && !manualStop}
 				<span class="crash-indicator" title="CRASH DETECTADO (Exit Code: {exitCode})">🟡</span>
