@@ -504,7 +504,7 @@
 	.ata__group-btn--start:hover { color: #00ff88; border-color: #00ff88; }
 	.ata__group-btn--stop:hover { color: #ff3366; border-color: #ff3366; }
 
-	.ata__group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+	.ata__group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
 	
 	.ata__global-fleet {
 		display: flex;

@@ -268,7 +268,7 @@
 	.deck__service-list {
 		padding: 10px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 		gap: 10px;
 		overflow-y: auto;
 	}
@@ -288,7 +288,7 @@
 	.deck__script-grid {
 		padding: 10px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 		gap: 10px;
 	}
 
